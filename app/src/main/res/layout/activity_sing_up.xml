@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.ghteam.eventgo.ui.activity.singup.SingUpActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:elevation="4dp"
+        android:layout_height="?attr/actionBarSize"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="10dp"
+        android:orientation="vertical">
+
+        <include layout="@layout/layout_change_profile_photo" />
+
+        <EditText
+            android:id="@+id/et_first_name"
+            style="@style/DefaultEditText"
+            android:hint="first name" />
+
+        <EditText
+            android:id="@+id/et_last_name"
+            style="@style/DefaultEditText"
+            android:hint="last name" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="birthday"
+
+            android:textColor="#000"
+            android:textSize="18dp" />
+
+        <TextView
+            android:id="@+id/tv_birthday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="10 october 2001"
+            android:textColor="#000"
+            android:textSize="20dp"
+            android:textStyle="italic" />
+
+        <EditText
+            android:id="@+id/et_email"
+            style="@style/DefaultEditText"
+            android:hint="email"
+            android:inputType="textEmailAddress" />
+
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/et_password"
+                style="@style/DefaultEditText"
+                android:hint="password"
+                android:inputType="textPassword" />
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center_vertical|end"
+                android:layout_marginRight="10dp"
+                android:alpha="0.5"
+                android:src="@drawable/password_invisible" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/et_repeat_password"
+                style="@style/DefaultEditText"
+                android:hint="repeat password"
+                android:inputType="textPassword" />
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center_vertical|end"
+                android:layout_marginRight="10dp"
+                android:alpha="0.5"
+                android:src="@drawable/password_invisible" />
+        </FrameLayout>
+
+
+        <Button
+            android:id="@+id/bt_submit"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:text="submit" />
+
+    </LinearLayout>
+</FrameLayout>
