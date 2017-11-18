@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "78400002663",
+    "firebase_url": "https://eventgo-c6240.firebaseio.com",
+    "project_id": "eventgo-c6240",
+    "storage_bucket": "eventgo-c6240.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:78400002663:android:354d45a6d6e245dc",
+        "android_client_info": {
+          "package_name": "com.ghteam.eventgo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "78400002663-65uo31srh2adiebsshgd148uc2s3drmc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ghteam.eventgo",
+            "certificate_hash": "771cf083594225b310fc44781bb6d78fc1098df8"
+          }
+        },
+        {
+          "client_id": "78400002663-5hbsr8ddh243r3ul9jr516cfpmnkr7sd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBoRmOT7JmLeMYnuuiaAaDRiGRSxUkCTy0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "78400002663-5hbsr8ddh243r3ul9jr516cfpmnkr7sd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
