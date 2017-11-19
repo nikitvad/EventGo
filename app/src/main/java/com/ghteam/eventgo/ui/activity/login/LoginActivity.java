@@ -19,7 +19,7 @@ import com.facebook.FacebookException;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.ghteam.eventgo.R;
-import com.ghteam.eventgo.ui.activity.singup.SingUpActivity;
+import com.ghteam.eventgo.ui.activity.singup.SignUpActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -161,7 +161,7 @@ public class LoginActivity extends AppCompatActivity {
 
     @OnClick(R.id.tv_create_account)
     void showCreateSingUpActivity() {
-        Intent intent = new Intent(this, SingUpActivity.class);
+        Intent intent = new Intent(this, SignUpActivity.class);
         startActivity(intent);
     }
 
