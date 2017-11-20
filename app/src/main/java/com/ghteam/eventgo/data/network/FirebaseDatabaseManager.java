@@ -1,6 +1,7 @@
 package com.ghteam.eventgo.data.network;
 
 import android.arch.lifecycle.LiveData;
+import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 
 import com.ghteam.eventgo.data.entity.UserEntry;
@@ -47,4 +48,7 @@ class FirebaseDatabaseManager {
 
         void onFail(Exception e);
     }
+
+
+
 }

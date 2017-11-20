@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import com.ghteam.eventgo.R;
 import com.ghteam.eventgo.ui.activity.login.LoginActivity;
+import com.ghteam.eventgo.ui.activity.profilesettings.ProfileSettingsActivity;
 
 public class LaunchActivity extends AppCompatActivity {
 
@@ -16,10 +17,8 @@ public class LaunchActivity extends AppCompatActivity {
         setContentView(R.layout.activity_launch);
 
 
-        startActivity(LoginActivity.class);
+        startActivity(ProfileSettingsActivity.class);
     }
-
-
 
 
     private void startActivity(Class<? extends Activity> activity){
