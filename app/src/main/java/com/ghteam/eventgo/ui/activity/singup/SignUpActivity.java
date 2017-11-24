@@ -1,5 +1,7 @@
 package com.ghteam.eventgo.ui.activity.singup;
 
+import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,11 +15,17 @@ import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.format.DateUtils;
 import android.util.Log;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.DatePicker;
+import android.widget.Toast;
 
 import com.ghteam.eventgo.R;
 import com.ghteam.eventgo.data.network.FirebaseAccountManager;
 import com.ghteam.eventgo.databinding.ActivitySignUpBinding;
+import com.ghteam.eventgo.ui.activity.profilesettings.ProfileSettingsActivity;
 import com.ghteam.eventgo.util.network.FirebaseUtil;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -25,6 +33,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -37,43 +46,70 @@ public class SignUpActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private static final String TAG = SignUpActivity.class.getSimpleName();
-    private Validator validator;
+    private Validator mValidator;
+    private ActivitySignUpBinding mDataBinding;
+    Calendar dateAndTime = Calendar.getInstance();
 
-    private SignUpViewModel viewModel;
+    private SignUpViewModel mViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        viewModel = ViewModelProviders.of(this).get(SignUpViewModel.class);
-        ActivitySignUpBinding dataBinding = DataBindingUtil.setContentView(this, R.layout.activity_sign_up);
-        dataBinding.setViewModel(viewModel);
+        mViewModel = ViewModelProviders.of(this).get(SignUpViewModel.class);
+        mDataBinding = DataBindingUtil.setContentView(this, R.layout.activity_sign_up);
+        mDataBinding.setViewModel(mViewModel);
+
         ButterKnife.bind(this);
 
-        setSupportActionBar(dataBinding.toolbar);
+        setSupportActionBar(mDataBinding.toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        validator = new Validator(dataBinding);
-        validator.enableFormValidationMode();
-        validator.validate();
-    }
+        mValidator = new Validator(mDataBinding);
+        mValidator.enableFormValidationMode();
+        mValidator.validate();
 
+    }
 
     @OnClick(R.id.bt_submit)
     void onSubmitClick() {
-        if (validator.validate()) {
-            Log.d(TAG, "onSubmitClick: " + viewModel.toString());
+        if (mValidator.validate()) {
+            Log.d(TAG, "onSubmitClick: " + mViewModel.toString());
 
-            FirebaseAccountManager.getInstance()
-                    .createNewAccount(viewModel.getEmail(),
-                            viewModel.getPassword(), viewModel.getUserData());
+            showProgressBar();
 
+            FirebaseAccountManager.createNewAccount(mViewModel.getEmail(),
+                    mViewModel.getPassword(), mViewModel.getUserData(),
+                    new FirebaseAccountManager.OnResultListener() {
+                        @Override
+                        public void onSuccess() {
+                            hideProgressBar();
+                            //TODO: go to ProfileSettingsActivity if user not set up profile setting yet
+                            startActivity(ProfileSettingsActivity.class);
+                        }
+
+                        @Override
+                        public void onFailed() {
+                            mDataBinding.mainContainer.setAlpha(1.0f);
+                            mDataBinding.mainContainer.setClickable(true);
+
+                            Toast.makeText(SignUpActivity.this, "Fail",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    });
         }
 
     }
 
-    @OnClick(R.id.iv_profile_photo)
-    void getPhoto() {
-        selectImageDialog();
+    private void showProgressBar() {
+        mDataBinding.progressBar.setVisibility(View.VISIBLE);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        mDataBinding.mainContainer.setAlpha(0.5f);
+    }
+
+    private void hideProgressBar() {
+        mDataBinding.progressBar.setVisibility(View.GONE);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        mDataBinding.mainContainer.setAlpha(1f);
     }
 
     private void selectImageDialog() {
@@ -90,6 +126,11 @@ public class SignUpActivity extends AppCompatActivity {
         });
 
         builder.show();
+    }
+
+    @OnClick(R.id.tv_birthday)
+    void selectBirthDay() {
+        setDate();
     }
 
     @Override
@@ -112,6 +153,35 @@ public class SignUpActivity extends AppCompatActivity {
             }
         }
     }
+
+
+    public void setDate() {
+        DatePickerDialog datePickerDialog = new DatePickerDialog(SignUpActivity.this,
+                android.R.style.Theme_Holo_Light_Dialog, d,
+                dateAndTime.get(Calendar.YEAR),
+                dateAndTime.get(Calendar.MONTH),
+                dateAndTime.get(Calendar.DAY_OF_MONTH));
+        datePickerDialog.show();
+    }
+
+    private void setInitialDateTime() {
+        mDataBinding.tvBirthday.setText(DateUtils.formatDateTime(this,
+                dateAndTime.getTimeInMillis(),
+                DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_YEAR));
+    }
+
+    DatePickerDialog.OnDateSetListener d = new DatePickerDialog.OnDateSetListener() {
+        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+            dateAndTime.set(Calendar.YEAR, year);
+            dateAndTime.set(Calendar.MONTH, monthOfYear);
+            dateAndTime.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            setInitialDateTime();
+
+            mViewModel.getUserData().setBirthday(dateAndTime.getTime());
+
+        }
+    };
+
 
     private String photoPath;
 
@@ -156,6 +226,11 @@ public class SignUpActivity extends AppCompatActivity {
         }
     }
 
+
+    private void startActivity(Class<? extends Activity> activity) {
+        Intent intent = new Intent(this, activity);
+        startActivity(intent);
+    }
 
 }
 

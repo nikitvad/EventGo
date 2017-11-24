@@ -1,4 +1,4 @@
-package com.ghteam.eventgo.ui.activity.profilesettings;
+package com.ghteam.eventgo.ui.dialog.selectcategories;
 
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
@@ -11,18 +11,18 @@ import com.ghteam.eventgo.data.Repository;
  */
 
 
-public class ProfileSettingViewModelFactory extends ViewModelProvider.NewInstanceFactory {
+public class CategoriesViewModelFactory extends ViewModelProvider.NewInstanceFactory {
     private final Repository mRepository;
 
 
-    public ProfileSettingViewModelFactory(Repository repository) {
+    public CategoriesViewModelFactory(Repository repository) {
         mRepository = repository;
     }
 
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-        return (T) new ProfileSettingsViewModel(mRepository);
+        return (T) new CategoriesViewModel(mRepository);
     }
 }
 

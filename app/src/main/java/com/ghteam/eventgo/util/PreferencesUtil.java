@@ -12,14 +12,10 @@ public class PreferencesUtil {
     private static Context mContext;
     private static SharedPreferences preferences;
 
-    public static void init(Context context){
+    public static void init(Context context) {
         mContext = context;
         preferences = context.getSharedPreferences(context.getPackageName(), Context.MODE_PRIVATE);
     }
-
-
-
-
 
 
 }

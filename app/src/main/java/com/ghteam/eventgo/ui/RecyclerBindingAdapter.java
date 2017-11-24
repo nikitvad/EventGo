@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import java.util.AbstractList;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by nikit on 20.11.2017.
@@ -33,7 +34,7 @@ public class RecyclerBindingAdapter<T>
         return new BindingHolder(v);
     }
 
-    public void changeItems(AbstractList<T> items) {
+    public void changeItems(List<T> items) {
         if (items != null) {
             this.items.clear();
             this.items.addAll(0, items);

@@ -1,11 +1,9 @@
 package com.ghteam.eventgo.ui.activity.singup;
 
-import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
-import android.databinding.ObservableField;
 
-import com.ghteam.eventgo.data.entity.UserEntry;
+import com.ghteam.eventgo.data.entity.User;
 
 /**
  * Created by nikit on 18.11.2017.
@@ -23,13 +21,13 @@ public class SignUpViewModel extends ViewModel {
 //    private String displayDate;
 //    private String date;
 
-    private UserEntry userData = new UserEntry();
+    private User userData = new User();
 
-    public UserEntry getUserData() {
+    public User getUserData() {
         return userData;
     }
 
-    public void setUserData(UserEntry userData) {
+    public void setUserData(User userData) {
         this.userData = userData;
     }
 
@@ -66,7 +64,7 @@ public class SignUpViewModel extends ViewModel {
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", copyOfPassword='" + copyOfPassword + '\'' +
-                userData.toString()+
+                userData.toString() +
 //                ", displayDate='" + displayDate + '\'' +
 //                ", date='" + date + '\'' +
                 '}';

@@ -1,63 +1,253 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_margin="10dp"
-    android:orientation="vertical"
+
+
     tools:context="com.ghteam.eventgo.ui.activity.profilesettings.ProfileSettingsActivity">
 
-    <LinearLayout
-        android:orientation="vertical"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_margin="10dp">
 
-        <include layout="@layout/layout_change_profile_photo" />
-
-        <EditText
-            android:id="@+id/et_describe_yourself"
+        <ScrollView
+            android:id="@+id/main_container"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:gravity="top"
-            android:hint="describe yourself" />
+            android:layout_height="match_parent">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:orientation="vertical">
 
-            <CheckBox
-                android:id="@+id/cb_public_account"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:checked="false"
-                android:text="public account" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/tv_what_is_public_profile"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:text="What is it?"
-                android:textColor="#FF1C77FF" />
+                    <include
+                        android:id="@+id/profile_photo"
+                        layout="@layout/layout_change_profile_photo"
+                        android:layout_width="90dp"
+                        android:layout_height="90dp" />
 
-        </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/first_name_editor"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@id/profile_photo"
+                        android:orientation="vertical">
 
-        <RelativeLayout
-            android:id="@+id/rl_category_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-        </RelativeLayout>
+                        <FrameLayout
+                            android:id="@+id/layout_first_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
 
-        <Button
-            android:id="@+id/bt_submit"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:text="SUBMIT" />
-    </LinearLayout>
-</ScrollView>
+                            <TextView
+                                android:id="@+id/tv_first_name"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="10dp"
+                                android:textColor="#000"
+                                android:textSize="24dp" />
+
+                            <ImageView
+                                android:id="@+id/iv_edit_first_name"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_gravity="end|bottom"
+                                android:src="@drawable/pencil" />
+                        </FrameLayout>
+
+                        <FrameLayout
+                            android:id="@+id/layout_edit_first_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone">
+
+                            <EditText
+                                android:id="@+id/et_first_name"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="10dp"
+                                android:textSize="24dp" />
+
+                            <ImageView
+                                android:id="@+id/iv_save_first_name"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_gravity="end|bottom"
+                                android:src="@drawable/ok" />
+                        </FrameLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/last_name_editor"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/first_name_editor"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_toRightOf="@id/profile_photo"
+                        android:orientation="vertical">
+
+                        <FrameLayout
+                            android:id="@+id/layout_last_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:id="@+id/tv_last_name"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="#000"
+                                android:textSize="24dp" />
+
+                            <ImageView
+                                android:id="@+id/iv_edit_last_name"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_gravity="end|bottom"
+                                android:src="@drawable/pencil" />
+                        </FrameLayout>
+
+                        <FrameLayout
+
+                            android:id="@+id/layout_edit_last_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone">
+
+                            <EditText
+                                android:id="@+id/et_last_name"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textSize="24dp" />
+
+                            <ImageView
+                                android:id="@+id/iv_save_last_name"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_gravity="end|bottom"
+                                android:src="@drawable/ok" />
+                        </FrameLayout>
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tv_birthday"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_toRightOf="@+id/profile_photo"
+                        android:textColor="#000"
+                        android:textSize="24dp" />
+
+                </RelativeLayout>
+
+                <FrameLayout
+                    android:id="@+id/layout_edit_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
+
+                    <EditText
+                        android:id="@+id/et_describe_yourself"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingRight="30dp" />
+
+                    <ImageView
+                        android:id="@+id/iv_save_description"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_gravity="right|bottom"
+                        android:src="@drawable/ok" />
+
+                </FrameLayout>
+
+                <FrameLayout
+                    android:id="@+id/layout_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/tv_description"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="describe yourself"
+                        android:paddingRight="30dp"
+                        android:textColor="#000"
+                        android:textSize="18dp" />
+
+                    <ImageView
+                        android:id="@+id/iv_edit_description"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_gravity="right|bottom"
+                        android:src="@drawable/pencil" />
+
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <CheckBox
+                        android:id="@+id/cb_public_account"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:checked="false"
+                        android:text="public account" />
+
+                    <TextView
+                        android:id="@+id/tv_what_is_public_profile"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center_horizontal"
+                        android:text="What is it?"
+                        android:textColor="#FF1C77FF" />
+
+                </LinearLayout>
+
+                <com.ghteam.eventgo.ui.view.ExpandableHeightGridView
+                    android:id="@+id/gl_selected_categories"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:horizontalSpacing="2dp"
+                    android:isScrollContainer="false"
+                    android:numColumns="3"
+                    android:stretchMode="columnWidth"
+                    android:verticalSpacing="20dp" />
+
+                <Button
+                    android:id="@+id/bt_add_interests"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:text="add interests" />
+
+                <Button
+                    android:id="@+id/bt_submit"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:text="save" />
+            </LinearLayout>
+        </ScrollView>
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_centerInParent="true"
+            android:visibility="gone" />
+
+    </RelativeLayout>
+</layout>

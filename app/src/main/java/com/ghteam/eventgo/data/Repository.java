@@ -3,9 +3,13 @@ package com.ghteam.eventgo.data;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.content.Context;
+import android.support.annotation.Nullable;
 
-import com.ghteam.eventgo.data.entity.CategoryEntry;
+import com.ghteam.eventgo.data.entity.Category;
+import com.ghteam.eventgo.data.entity.User;
 import com.ghteam.eventgo.data.network.CategoriesDataSource;
+import com.ghteam.eventgo.data.network.FirebaseAccountManager;
+import com.ghteam.eventgo.data.network.FirebaseDatabaseManager;
 
 import java.util.List;
 
@@ -17,10 +21,9 @@ public class Repository {
     private static Repository sInstance;
     private static CategoriesDataSource categoriesDataSource;
 
-    private static LiveData<List<CategoryEntry>> eventsCategories;
+    private static LiveData<List<Category>> eventsCategories;
 
     private static Context mContext;
-
 
     public static Repository getInstance(Context context) {
         if (sInstance == null) {
@@ -36,37 +39,34 @@ public class Repository {
     private Repository(Context context) {
         mContext = context;
         categoriesDataSource = CategoriesDataSource.getInstance(context);
-
         eventsCategories = categoriesDataSource.getCurrentCategories();
     }
 
 
-    public void createNewUser() {
-
-    }
-
-
-    public LiveData<List<CategoryEntry>> getEventCategories() {
+    public LiveData<List<Category>> getEventCategories() {
 
         //TODO: return data from db
         initializeCategories();
         return eventsCategories;
     }
 
+    public void pullUser(String uid, User user, @Nullable FirebaseDatabaseManager.OnPullUserResultListener listener) {
+        FirebaseDatabaseManager.pullUserInfo(uid, user, listener);
+    }
 
     private void initializeCategories() {
         if (!isActualCategoriesList()) {
-                categoriesDataSource.fetchCategories();
+            categoriesDataSource.fetchCategories();
         }
     }
 
-    private boolean isActualCategoriesList() {
+    public MutableLiveData<User> getCurrentUser() {
 
-        //TODO: implement this method
-        return false;
+        return FirebaseAccountManager.getCurrentUser();
     }
 
-    private void startFetchCategoriesService() {
-
+    private boolean isActualCategoriesList() {
+        //TODO: implement this method
+        return false;
     }
 }

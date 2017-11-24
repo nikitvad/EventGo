@@ -3,12 +3,9 @@ package com.ghteam.eventgo.data.network;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
 
-import com.ghteam.eventgo.AppExecutors;
-import com.ghteam.eventgo.data.entity.CategoryEntry;
-import com.google.firebase.firestore.DocumentSnapshot;
+import com.ghteam.eventgo.data.entity.Category;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -26,20 +23,19 @@ public class CategoriesDataSource {
     public static final String FIRESTORE_EVENT_CATEGORIES = "event_categories";
     public static final String TAG = CategoriesDataSource.class.getSimpleName();
 
-    private MutableLiveData<List<CategoryEntry>> mDownloadedCategories;
+    private static MutableLiveData<List<Category>> mDownloadedCategories;
 
     private final Context mContext;
-//    private final AppExecutors mExecutors;
 
     private static CategoriesDataSource sInstance;
 
     private CategoriesDataSource(Context context) {
         mContext = context;
 
-        mDownloadedCategories = new MutableLiveData<List<CategoryEntry>>();
+        mDownloadedCategories = new MutableLiveData<List<Category>>();
     }
 
-    public LiveData<List<CategoryEntry>> getCurrentCategories() {
+    public LiveData<List<Category>> getCurrentCategories() {
         return mDownloadedCategories;
     }
 
@@ -54,23 +50,17 @@ public class CategoriesDataSource {
         return sInstance;
     }
 
-    public void fetchCategories() {
+    public static void fetchCategories() {
         firestore.collection(FIRESTORE_EVENT_CATEGORIES).addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
                 if (documentSnapshots != null && documentSnapshots.size() > 0) {
                     Log.d(TAG, "onEvent documents count: " + documentSnapshots.size());
-                    List<CategoryEntry> categoryItems = documentSnapshots.toObjects(CategoryEntry.class);
+                    List<Category> categoryItems = documentSnapshots.toObjects(Category.class);
 
                     Log.d(TAG, "onEvent categories: " + categoryItems.toString());
 
                     mDownloadedCategories.setValue(categoryItems);
-
-//                    for (DocumentSnapshot document : documentSnapshots.getDocuments()) {
-//                        CategoryEntry categoryItem = document.toObject(CategoryEntry.class);
-//                        Log.d(TAG, "onEvent categoryItem: " + categoryItem.toString());
-//
-//                    }
                 }
             }
         });

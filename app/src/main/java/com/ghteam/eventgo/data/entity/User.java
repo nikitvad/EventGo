@@ -1,24 +1,26 @@
 package com.ghteam.eventgo.data.entity;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by nikit on 19.11.2017.
  */
 
-public class UserEntry {
-//    private String firebaseId;
-    private String firstName;
-    private String lastName;
-    private Date birthday;
-    private String profileImageUri;
-    private String[] interests;
+public class User {
+    //    private String firebaseId;
+    private String firstName = "";
+    private String lastName = "";
+    private Date birthday = new Date(0);
+    private String description = "";
+    private String profileImageUri = "";
+    private List<Category> interests = new ArrayList<>();
 
-    public UserEntry() {
+    public User() {
     }
 
-    public UserEntry(String firstName, String lastName) {
+    public User(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
     }
@@ -51,6 +53,14 @@ public class UserEntry {
         return birthday;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public void setBirthday(Date birthday) {
         this.birthday = birthday;
     }
@@ -63,22 +73,23 @@ public class UserEntry {
         this.profileImageUri = profileImageUri;
     }
 
-    public String[] getInterests() {
+    public List<Category> getInterests() {
         return interests;
     }
 
-    public void setInterests(String[] interests) {
+    public void setInterests(List<Category> interests) {
         this.interests = interests;
     }
 
     @Override
     public String toString() {
-        return "UserEntry{" +
+        return "User{" +
                 "firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", birthday=" + birthday +
+                ", description='" + description + '\'' +
                 ", profileImageUri='" + profileImageUri + '\'' +
-                ", interests=" + Arrays.toString(interests) +
+                ", interests=" + interests +
                 '}';
     }
 }

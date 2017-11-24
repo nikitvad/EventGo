@@ -1,12 +1,11 @@
-package com.ghteam.eventgo.ui.dialog;
+package com.ghteam.eventgo.ui.dialog.selectcategories;
 
 import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
-import android.support.annotation.Nullable;
 
 import com.ghteam.eventgo.data.Repository;
-import com.ghteam.eventgo.data.entity.CategoryEntry;
+import com.ghteam.eventgo.data.entity.Category;
 
 import java.util.List;
 
@@ -15,9 +14,9 @@ import java.util.List;
  */
 
 public class CategoriesViewModel extends ViewModel {
-    private boolean isLoading = false;
+    private MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
     private Repository mRepository;
-    private LiveData<List<CategoryEntry>> mCategoriesList;
+    private LiveData<List<Category>> mCategoriesList;
 
     public CategoriesViewModel(Repository repository) {
         mRepository = repository;
@@ -27,16 +26,12 @@ public class CategoriesViewModel extends ViewModel {
 
     }
 
-    public LiveData<List<CategoryEntry>> getCategoriesList() {
+    public LiveData<List<Category>> getCategoriesList() {
         return mCategoriesList;
     }
 
-    public boolean isLoading() {
+    public MutableLiveData<Boolean> getIsLoading() {
         return isLoading;
-    }
-
-    public void setLoading(boolean loading) {
-        isLoading = loading;
     }
 
 }

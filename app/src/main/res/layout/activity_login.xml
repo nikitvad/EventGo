@@ -8,100 +8,86 @@
 
     tools:context="com.ghteam.eventgo.ui.activity.login.LoginActivity">
 
-        <ImageView
-            android:id="@+id/iv_logo"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_centerHorizontal="true"
-            android:src="@mipmap/ic_launcher" />
+    <ImageView
+        android:id="@+id/iv_logo"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_centerHorizontal="true"
+        android:src="@mipmap/ic_launcher" />
 
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/et_email"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:hint="email"
+            android:inputType="textEmailAddress"
+            android:text="" />
+
+        <EditText
+            android:id="@+id/et_password"
+            style="@style/DefaultEditText"
+            android:hint="password"
+            android:inputType="textPassword" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
+            android:orientation="horizontal">
 
-            android:orientation="vertical">
-
-            <EditText
-                android:id="@+id/et_email"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:text=""
-                android:hint="email"
-                android:inputType="textEmailAddress" />
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <EditText
-                    android:id="@+id/et_password"
-                    style="@style/DefaultEditText"
-                    android:hint="password"
-                    android:inputType="textPassword" />
-
-                <ImageView
-                    android:id="@+id/iv_show_password"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="center_vertical|end"
-                    android:layout_marginRight="10dp"
-                    android:alpha="0.5"
-                    android:src="@drawable/password_invisible" />
-            </FrameLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
+            <CheckBox
+                android:id="@+id/cb_show_password"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <CheckBox
-                    android:id="@+id/cb_show_password"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:checked="false"
-                    android:text="Show password" />
-
-                <TextView
-                    android:id="@+id/tv_forgot_your_password"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="end"
-                    android:text="Forgot your password?"
-                    android:textColor="#FF1C77FF" />
-
-            </LinearLayout>
-
-            <Button
-                android:id="@+id/bt_sign_in"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:text="sign in" />
-
-            <Button
-                android:id="@+id/bt_facebook_login"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:text="facebook" />
+                android:layout_weight="1"
+                android:checked="false"
+                android:text="Show password" />
 
             <TextView
-                android:id="@+id/tv_create_account"
-                android:layout_width="match_parent"
+                android:id="@+id/tv_forgot_your_password"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
                 android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:text="Create an account?"
+                android:gravity="end"
+                android:text="Forgot your password?"
                 android:textColor="#FF1C77FF" />
 
-
         </LinearLayout>
+
+        <Button
+            android:id="@+id/bt_sign_in"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:text="sign in" />
+
+        <Button
+            android:id="@+id/bt_facebook_login"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:text="facebook" />
+
+        <TextView
+            android:id="@+id/tv_create_account"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:text="Create an account?"
+            android:textColor="#FF1C77FF" />
+
+
+    </LinearLayout>
 
 </RelativeLayout>

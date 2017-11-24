@@ -44,9 +44,6 @@ public class LoginActivity extends AppCompatActivity {
     @BindView(R.id.et_email)
     EditText etEmail;
 
-    @BindView(R.id.iv_show_password)
-    ImageView ivShowPassword;
-
     @BindView(R.id.et_password)
     EditText etPassword;
 
@@ -165,10 +162,6 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    @OnClick(R.id.iv_show_password)
-    void switchPasswordVisibility() {
-
-    }
 
     @OnClick(R.id.bt_sign_in)
     void login() {

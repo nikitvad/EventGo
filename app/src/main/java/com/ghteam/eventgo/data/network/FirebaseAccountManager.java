@@ -1,20 +1,17 @@
 package com.ghteam.eventgo.data.network;
 
-import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
-import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.ghteam.eventgo.AppExecutors;
-import com.ghteam.eventgo.data.entity.UserEntry;
-import com.ghteam.eventgo.ui.activity.singup.SignUpActivity;
-import com.google.android.gms.tasks.OnCompleteListener;
+import com.ghteam.eventgo.data.entity.User;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 /**
  * Created by nikit on 19.11.2017.
@@ -22,48 +19,72 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class FirebaseAccountManager {
 
-    private FirebaseAuth mAuth;
-    private final MutableLiveData<UserEntry> appUser = new MutableLiveData<>();
+    private static FirebaseAuth mAuth = FirebaseAuth.getInstance();
+
+    private static MutableLiveData<User> appUser = new MutableLiveData<>();
+    private static FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+
+    public static final String FIRESTORE_USERS = "users";
 
     private static final String TAG = FirebaseAccountManager.class.getSimpleName();
 
-    private static FirebaseAccountManager sInstance = null;
+    public static void createNewAccount(String email, String password, final User user,
+                                        @Nullable final OnResultListener listener) {
 
-    private FirebaseAccountManager() {
-        mAuth = FirebaseAuth.getInstance();
-    }
-
-    public static FirebaseAccountManager getInstance() {
-        if (sInstance == null) {
-            synchronized (FirebaseAccountManager.class) {
-                if (sInstance == null) {
-                    sInstance = new FirebaseAccountManager();
-                }
-            }
-        }
-        return sInstance;
-    }
-
-
-    public void createNewAccount(String email, String password, final UserEntry userEntry) {
         Log.d(TAG, "createNewAccount: ");
+
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                     @Override
                     public void onSuccess(AuthResult authResult) {
-                        FirebaseDatabaseManager.pullNewUser(authResult.getUser().getUid(), userEntry,
-                                new FirebaseDatabaseManager.OnPullResultListener() {
+                        FirebaseDatabaseManager.pullUserInfo(authResult.getUser().getUid(), user,
+                                new FirebaseDatabaseManager.OnPullUserResultListener() {
                                     @Override
                                     public void onSuccess() {
                                         Log.d(TAG, "onSuccess: userID:");
+
+                                        if (listener != null) {
+                                            listener.onSuccess();
+                                        }
                                     }
 
                                     @Override
                                     public void onFail(Exception e) {
                                         Log.d(TAG, "onFail: " + e.getMessage());
+                                        if (listener != null) {
+                                            listener.onFailed();
+                                        }
                                     }
                                 });
                     }
                 });
     }
+
+
+    public static MutableLiveData<User> getCurrentUser() {
+
+        Log.d(TAG, "getCurrentUser: ");
+        if (mAuth.getCurrentUser() != null) {
+            firestore.collection(FIRESTORE_USERS).document(mAuth.getCurrentUser().getUid())
+                    .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                        @Override
+                        public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
+                            if (documentSnapshot.exists()) {
+                                Log.d(TAG, "onEvent: " + documentSnapshot.toString());
+                                appUser.setValue(documentSnapshot.toObject(User.class));
+                            }
+                        }
+                    });
+        }
+
+
+        return appUser;
+    }
+
+    public interface OnResultListener {
+        void onSuccess();
+
+        void onFailed();
+    }
+
 }
