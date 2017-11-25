@@ -1,6 +1,7 @@
 package com.ghteam.eventgo.data.network;
 
 import android.arch.lifecycle.MutableLiveData;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -22,11 +23,23 @@ public class FirebaseAccountManager {
     private static FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
     private static MutableLiveData<User> appUser = new MutableLiveData<>();
+    private static MutableLiveData<Boolean> isRequireProfileUpdate = new MutableLiveData<>();
     private static FirebaseFirestore firestore = FirebaseFirestore.getInstance();
 
     public static final String FIRESTORE_USERS = "users";
 
     private static final String TAG = FirebaseAccountManager.class.getSimpleName();
+
+    static {
+        mAuth.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                Log.d(TAG, "onAuthStateChanged: ");
+                getIsRequireProfileUpdate();
+            }
+        });
+
+    }
 
     public static void createNewAccount(String email, String password, final User user,
                                         @Nullable final OnResultListener listener) {
@@ -60,25 +73,53 @@ public class FirebaseAccountManager {
                 });
     }
 
-
     public static MutableLiveData<User> getCurrentUser() {
 
-        Log.d(TAG, "getCurrentUser: ");
         if (mAuth.getCurrentUser() != null) {
-            firestore.collection(FIRESTORE_USERS).document(mAuth.getCurrentUser().getUid())
-                    .addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                        @Override
-                        public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
-                            if (documentSnapshot.exists()) {
-                                Log.d(TAG, "onEvent: " + documentSnapshot.toString());
-                                appUser.setValue(documentSnapshot.toObject(User.class));
-                            }
-                        }
-                    });
+            loadUserByID(mAuth.getCurrentUser().getUid(), new EventListener<DocumentSnapshot>() {
+                @Override
+                public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
+                    if (documentSnapshot.exists()) {
+                        Log.d(TAG, "onEvent: " + documentSnapshot.toString());
+                        appUser.setValue(documentSnapshot.toObject(User.class));
+                    }else{
+                        appUser.setValue(new User());
+                    }
+                }
+            });
         }
 
-
         return appUser;
+    }
+
+
+    public static void loadUserByID(String id, EventListener<DocumentSnapshot> eventListener) {
+        firestore.collection(FIRESTORE_USERS).document(id)
+                .addSnapshotListener(eventListener);
+    }
+
+    public static MutableLiveData<Boolean> getIsRequireProfileUpdate() {
+
+        if (mAuth.getCurrentUser() != null) {
+            loadUserByID(mAuth.getCurrentUser().getUid(), new EventListener<DocumentSnapshot>() {
+                @Override
+                public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
+                    if (documentSnapshot.exists()) {
+                        User user = documentSnapshot.toObject(User.class);
+
+                        if (user.getFirstName().length() > 0 && user.getInterests().size() > 0) {
+                            isRequireProfileUpdate.setValue(false);
+                        } else {
+                            isRequireProfileUpdate.setValue(true);
+                        }
+                    } else {
+                        isRequireProfileUpdate.setValue(true);
+                    }
+                }
+            });
+        }
+
+        return isRequireProfileUpdate;
     }
 
     public interface OnResultListener {

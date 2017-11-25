@@ -150,7 +150,7 @@ public class ProfileSettingsActivity extends AppCompatActivity {
 
     @OnClick(R.id.bt_submit)
     void saveChanges() {
-        viewModel.saveUser();
+        viewModel.saveUserData();
     }
 
     @OnClick(R.id.iv_edit_description)

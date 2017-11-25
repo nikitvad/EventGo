@@ -42,7 +42,6 @@ public class Repository {
         eventsCategories = categoriesDataSource.getCurrentCategories();
     }
 
-
     public LiveData<List<Category>> getEventCategories() {
 
         //TODO: return data from db
@@ -61,9 +60,13 @@ public class Repository {
     }
 
     public MutableLiveData<User> getCurrentUser() {
-
         return FirebaseAccountManager.getCurrentUser();
     }
+
+    public MutableLiveData<Boolean> getIsRequireUpdateProfile() {
+        return FirebaseAccountManager.getIsRequireProfileUpdate();
+    }
+
 
     private boolean isActualCategoriesList() {
         //TODO: implement this method

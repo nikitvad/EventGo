@@ -49,16 +49,17 @@ public class ProfileSettingsViewModel extends ViewModel {
         mCategoriesList = new MutableLiveData<>();
         mUserDescription = new MutableLiveData<>();
 
-
         mUser = repository.getCurrentUser();
 
         mUser.observeForever(new Observer<User>() {
             @Override
             public void onChanged(@Nullable User user) {
-                mFirstName.setValue(user.getFirstName());
-                mLastName.setValue(user.getLastName());
-                mCategoriesList.setValue(new HashSet<>(user.getInterests()));
-                mUserDescription.setValue(user.getDescription());
+                if (user != null) {
+                    mFirstName.setValue(user.getFirstName());
+                    mLastName.setValue(user.getLastName());
+                    mCategoriesList.setValue(new HashSet<>(user.getInterests()));
+                    mUserDescription.setValue(user.getDescription());
+                }
             }
         });
     }
@@ -103,11 +104,11 @@ public class ProfileSettingsViewModel extends ViewModel {
         mUser.getValue().setDescription(description);
     }
 
-    public void saveUser() {
+    public void saveUserData() {
 
         isLoading.setValue(true);
 
-        Log.d(TAG, "saveUser: " + mUser.getValue().toString());
+        Log.d(TAG, "saveUserData: " + mUser.getValue().toString());
 
         mRepository.pullUser(FirebaseAuth.getInstance().getUid(),
                 mUser.getValue(),
@@ -130,7 +131,6 @@ public class ProfileSettingsViewModel extends ViewModel {
     public MutableLiveData<Boolean> getIsLoading() {
         return isLoading;
     }
-
 
     public MutableLiveData<SaveUserResult> getSaveUserResult() {
         return mSaveUserInfoResult;
