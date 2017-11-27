@@ -36,7 +36,6 @@ public class ProfileSettingsViewModel extends ViewModel {
 
     private static final String TAG = ProfileSettingsViewModel.class.getSimpleName();
 
-
     public ProfileSettingsViewModel(Repository repository) {
         mRepository = repository;
 

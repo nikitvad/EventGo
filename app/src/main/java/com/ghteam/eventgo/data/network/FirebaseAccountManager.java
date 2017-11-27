@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.ghteam.eventgo.data.entity.User;
+import com.ghteam.eventgo.util.network.AccountStatus;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -23,7 +24,7 @@ public class FirebaseAccountManager {
     private static FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
     private static MutableLiveData<User> appUser = new MutableLiveData<>();
-    private static MutableLiveData<Boolean> isRequireProfileUpdate = new MutableLiveData<>();
+    private static MutableLiveData<AccountStatus> currentAccountStatus = new MutableLiveData<>();
     private static FirebaseFirestore firestore = FirebaseFirestore.getInstance();
 
     public static final String FIRESTORE_USERS = "users";
@@ -35,7 +36,12 @@ public class FirebaseAccountManager {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 Log.d(TAG, "onAuthStateChanged: ");
-                getIsRequireProfileUpdate();
+                if (mAuth.getCurrentUser() != null) {
+                    currentAccountStatus.setValue(AccountStatus.IN_PROCESS);
+                    getCurrentAccountStatus();
+                } else {
+                    currentAccountStatus.setValue(AccountStatus.NONE);
+                }
             }
         });
 
@@ -82,7 +88,8 @@ public class FirebaseAccountManager {
                     if (documentSnapshot.exists()) {
                         Log.d(TAG, "onEvent: " + documentSnapshot.toString());
                         appUser.setValue(documentSnapshot.toObject(User.class));
-                    }else{
+                    } else {
+                        //There is no user in DB whit that id so we initialize new Instance of user to add it to db
                         appUser.setValue(new User());
                     }
                 }
@@ -98,28 +105,32 @@ public class FirebaseAccountManager {
                 .addSnapshotListener(eventListener);
     }
 
-    public static MutableLiveData<Boolean> getIsRequireProfileUpdate() {
+    public static MutableLiveData<AccountStatus> getCurrentAccountStatus() {
 
         if (mAuth.getCurrentUser() != null) {
             loadUserByID(mAuth.getCurrentUser().getUid(), new EventListener<DocumentSnapshot>() {
                 @Override
                 public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
-                    if (documentSnapshot.exists()) {
-                        User user = documentSnapshot.toObject(User.class);
+                    if (e == null) {
+                        if (documentSnapshot.exists()) {
+                            User user = documentSnapshot.toObject(User.class);
 
-                        if (user.getFirstName().length() > 0 && user.getInterests().size() > 0) {
-                            isRequireProfileUpdate.setValue(false);
+                            if (user.getFirstName().length() > 0 && user.getInterests().size() > 0) {
+                                currentAccountStatus.setValue(AccountStatus.OK);
+                            } else {
+                                currentAccountStatus.setValue(AccountStatus.REQUIRE_UPDATE_PROFILE);
+                            }
                         } else {
-                            isRequireProfileUpdate.setValue(true);
+                            currentAccountStatus.setValue(AccountStatus.REQUIRE_UPDATE_PROFILE);
                         }
                     } else {
-                        isRequireProfileUpdate.setValue(true);
+                        currentAccountStatus.setValue(AccountStatus.NONE);
                     }
                 }
             });
         }
 
-        return isRequireProfileUpdate;
+        return currentAccountStatus;
     }
 
     public interface OnResultListener {

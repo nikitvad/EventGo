@@ -34,7 +34,7 @@ public class PrefsUtil {
     }
 
     private static void putString(String key, String value) {
-        mPreferences.edit().putString(key, value);
+        mPreferences.edit().putString(key, value).apply();
     }
 
     private static String getString(String key) {

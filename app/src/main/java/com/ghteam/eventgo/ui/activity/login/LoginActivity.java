@@ -16,15 +16,23 @@ import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.ghteam.eventgo.R;
 import com.ghteam.eventgo.data.Repository;
+import com.ghteam.eventgo.data.network.FirebaseDatabaseManager;
 import com.ghteam.eventgo.databinding.ActivityLoginBinding;
 import com.ghteam.eventgo.ui.activity.eventslist.EventsListActivity;
 import com.ghteam.eventgo.ui.activity.profilesettings.ProfileSettingsActivity;
 import com.ghteam.eventgo.ui.activity.singup.SignUpActivity;
+import com.ghteam.eventgo.util.FacebookUserJsonConverter;
+import com.ghteam.eventgo.util.LoginInResult;
 import com.ghteam.eventgo.util.PrefsUtil;
+import com.ghteam.eventgo.util.ProgressBarUtil;
+import com.ghteam.eventgo.util.network.AccountStatus;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -40,7 +48,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class LoginActivity extends LifecycleActivity {
-    private static final int RC_SIGN_IN = 1001;
 
     private static final String TAG = LoginActivity.class.getSimpleName();
 
@@ -49,7 +56,6 @@ public class LoginActivity extends LifecycleActivity {
 
     private LoginViewModel viewModel;
     private ActivityLoginBinding activityBinding;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,8 +96,19 @@ public class LoginActivity extends LifecycleActivity {
             }
         });
 
-        registerViewModelObservers();
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerViewModelObservers();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        removeViewModelObservers();
     }
 
     @Override
@@ -103,24 +120,32 @@ public class LoginActivity extends LifecycleActivity {
     }
 
     private void loginWithEmail(String email, String password) {
+
+        viewModel.getLoginInResult().setValue(LoginInResult.IN_PROCESS);
+
         firebaseAuth.signInWithEmailAndPassword(email, password)
                 .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                     @Override
                     public void onSuccess(AuthResult authResult) {
-
+                        viewModel.getLoginInResult().setValue(LoginInResult.SUCCESS);
                         PrefsUtil.setLoggedType(PrefsUtil.LOGGED_TYPE_EMAIL);
                         //TODO
+
                     }
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 //TODO
+                viewModel.getLoginInResult().setValue(LoginInResult.ACCOUNT_NOT_FOUND_ERROR);
             }
         });
     }
 
+
     private void handleFacebookAccessToken(final AccessToken token) {
         Log.d(TAG, "handleFacebookAccessToken:" + token);
+//        String[] fields = {"first_name", "last_name", "birthday", "about", "picture"};
+        viewModel.getLoginInResult().setValue(LoginInResult.IN_PROCESS);
 
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
         firebaseAuth.signInWithCredential(credential)
@@ -128,59 +153,100 @@ public class LoginActivity extends LifecycleActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-
+                            
                             PrefsUtil.setLoggedType(PrefsUtil.LOGGED_TYPE_FACEBOOK);
-                            //TODO: update UI
+                            viewModel.getLoginInResult().setValue(LoginInResult.SUCCESS);
                         } else {
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
-                            //TODO: update ui
+                            viewModel.getLoginInResult().setValue(LoginInResult.ERROR);
                         }
-
-                        // ...
                     }
                 });
 
     }
-
-
-    //    private void loadFacebookProfile(AccessToken token) {
-//        GraphRequest request = GraphRequest.newMeRequest(
-//                token,
-//                new GraphRequest.GraphJSONObjectCallback() {
-//                    @Override
-//                    public void onCompleted(JSONObject object, GraphResponse response) {
-//
-//                        Log.d(TAG, "onCompleted: facebook user: " + object.toString());
-//
-////                        // Application code
-////                        String email = object.getString("email");
-////                        String birthday = object.getString("birthday"); // 01/31/1980 format
-//                    }
-//                });
-//        request.executeAsync();
-//
-//    }
 
     private void startActivity(Class<? extends Activity> activity) {
         Intent intent = new Intent(this, activity);
         startActivity(intent);
     }
 
-    private void registerViewModelObservers() {
-
-        viewModel.getIsRequireUpdateProfile().observeForever(new Observer<Boolean>() {
-            @Override
-            public void onChanged(@Nullable Boolean aBoolean) {
-                if (aBoolean != null) {
-                    if (aBoolean == true) {
+    private void addNewFacebookUser() {
+        Log.d(TAG, "addNewFacebookUser: ");
+        viewModel.addNewFacebookUser(firebaseAuth.getCurrentUser().getUid(),
+                AccessToken.getCurrentAccessToken(),
+                new FirebaseDatabaseManager.OnPullUserResultListener() {
+                    @Override
+                    public void onSuccess() {
+                        Log.d(TAG, "onSuccess: ");
                         startActivity(ProfileSettingsActivity.class);
-                    } else {
-                        startActivity(EventsListActivity.class);
                     }
-                }
+
+                    @Override
+                    public void onFail(Exception e) {
+                        //TODO:
+                    }
+                });
+    }
+
+    private Observer<AccountStatus> accountStatusObserver = new Observer<AccountStatus>() {
+        @Override
+        public void onChanged(@Nullable AccountStatus accountStatus) {
+            switch (accountStatus) {
+                case IN_PROCESS:
+                    ProgressBarUtil.showProgressBar(activityBinding.progressBar,
+                            LoginActivity.this,
+                            activityBinding.mainContainer);
+                    return;
+
+                case OK:
+                    startActivity(EventsListActivity.class);
+                    return;
+
+                case REQUIRE_UPDATE_PROFILE:
+                    Log.d(TAG, "onChanged: " + PrefsUtil.getLoggedType());
+                    if (PrefsUtil.getLoggedType().equals(PrefsUtil.LOGGED_TYPE_FACEBOOK)) {
+                        addNewFacebookUser();
+                    } else {
+                        startActivity(ProfileSettingsActivity.class);
+                    }
+                    return;
+
+                default:
+                    ProgressBarUtil.hideProgressBar(activityBinding.progressBar,
+                            LoginActivity.this,
+                            activityBinding.mainContainer);
+                    return;
             }
-        });
+        }
+    };
+
+    private Observer<LoginInResult> loginInResultObserver = new Observer<LoginInResult>() {
+        @Override
+        public void onChanged(@Nullable LoginInResult loginInResult) {
+            switch (loginInResult) {
+                case IN_PROCESS:
+                    ProgressBarUtil.showProgressBar(activityBinding.progressBar,
+                            LoginActivity.this,
+                            activityBinding.mainContainer);
+                    return;
+
+                default:
+                    ProgressBarUtil.hideProgressBar(activityBinding.progressBar,
+                            LoginActivity.this,
+                            activityBinding.mainContainer);
+            }
+        }
+    };
+
+    private void registerViewModelObservers() {
+        viewModel.getAccountStatus().observeForever(accountStatusObserver);
+        viewModel.getLoginInResult().observeForever(loginInResultObserver);
+    }
+
+    private void removeViewModelObservers() {
+        viewModel.getAccountStatus().removeObserver(accountStatusObserver);
+        viewModel.getLoginInResult().removeObserver(loginInResultObserver);
     }
 
     @OnClick(R.id.tv_create_account)

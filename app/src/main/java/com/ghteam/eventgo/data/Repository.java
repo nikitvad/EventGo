@@ -10,6 +10,7 @@ import com.ghteam.eventgo.data.entity.User;
 import com.ghteam.eventgo.data.network.CategoriesDataSource;
 import com.ghteam.eventgo.data.network.FirebaseAccountManager;
 import com.ghteam.eventgo.data.network.FirebaseDatabaseManager;
+import com.ghteam.eventgo.util.network.AccountStatus;
 
 import java.util.List;
 
@@ -50,6 +51,8 @@ public class Repository {
     }
 
     public void pullUser(String uid, User user, @Nullable FirebaseDatabaseManager.OnPullUserResultListener listener) {
+
+
         FirebaseDatabaseManager.pullUserInfo(uid, user, listener);
     }
 
@@ -63,8 +66,8 @@ public class Repository {
         return FirebaseAccountManager.getCurrentUser();
     }
 
-    public MutableLiveData<Boolean> getIsRequireUpdateProfile() {
-        return FirebaseAccountManager.getIsRequireProfileUpdate();
+    public MutableLiveData<AccountStatus> getCurrentAccountStatus() {
+        return FirebaseAccountManager.getCurrentAccountStatus();
     }
 
 

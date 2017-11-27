@@ -3,6 +3,7 @@ package com.ghteam.eventgo.ui.activity.profilesettings;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,13 +13,20 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
 import com.ghteam.eventgo.R;
 import com.ghteam.eventgo.data.Repository;
 import com.ghteam.eventgo.data.entity.Category;
 import com.ghteam.eventgo.databinding.ActivityProfileSettingsBinding;
+import com.ghteam.eventgo.ui.activity.eventslist.EventsListActivity;
 import com.ghteam.eventgo.ui.dialog.selectcategories.SelectCategoriesDialog;
+import com.ghteam.eventgo.util.FacebookUserJsonConverter;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Set;
 
 import butterknife.ButterKnife;
@@ -68,62 +76,110 @@ public class ProfileSettingsActivity extends AppCompatActivity {
         registerViewModelObservers();
     }
 
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        registerViewModelObservers();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        removeViewModelObservers();
+    }
+
+//    private void loadFacebookUserInfo(AccessToken token) {
+//        viewModel.getIsLoading().setValue(true);
+//        Bundle params = new Bundle();
+//        params.putString("fields", "first_name,last_name,picture");
+//        new GraphRequest(
+//                token,
+//                "/" + token.getUserId(),
+//                params,
+//                HttpMethod.GET,
+//                new GraphRequest.Callback() {
+//                    public void onCompleted(GraphResponse response) {
+//                        viewModel.getIsLoading().setValue(false);
+//                        bindFacebookUserToViewModel(FacebookUserJsonConverter.getUser(response));
+//                    }
+//                }
+//        ).executeAsync();
+//    }
+
+    private Observer<String> firstNameObserver = new Observer<String>() {
+        @Override
+        public void onChanged(@Nullable String s) {
+            activityBinding.tvFirstName.setText(s);
+            activityBinding.etFirstName.setText(s);
+        }
+    };
+
+    private Observer<String> lastNameObserver = new Observer<String>() {
+        @Override
+        public void onChanged(@Nullable String s) {
+            activityBinding.tvLastName.setText(s);
+            activityBinding.etLastName.setText(s);
+        }
+    };
+
+    private Observer<Set<Category>> categoriesObserver = new Observer<Set<Category>>() {
+        @Override
+        public void onChanged(@Nullable Set<Category> categoryEntries) {
+            grindCategoryAdapter.setItems(new ArrayList<Category>(categoryEntries));
+        }
+    };
+
+    Observer<ProfileSettingsViewModel.SaveUserResult> saveUserResultObserver = new Observer<ProfileSettingsViewModel.SaveUserResult>() {
+        @Override
+        public void onChanged(@Nullable ProfileSettingsViewModel.SaveUserResult saveUserResult) {
+            if (saveUserResult == ProfileSettingsViewModel.SaveUserResult.RESULT_OK) {
+                shortToast("Success");
+                Intent intent = new Intent(ProfileSettingsActivity.this, EventsListActivity.class);
+                startActivity(intent);
+
+            } else if (saveUserResult == ProfileSettingsViewModel.SaveUserResult.RESULT_FAIL) {
+                shortToast("Fail");
+                viewModel.getSaveUserResult().setValue(ProfileSettingsViewModel.SaveUserResult.RESULT_NONE);
+            }
+        }
+    };
+
+    private Observer<Boolean> isLoadingObserver = new Observer<Boolean>() {
+        @Override
+        public void onChanged(@Nullable Boolean aBoolean) {
+            if (aBoolean) {
+                showProgressBar();
+            } else {
+                hideProgressBar();
+            }
+        }
+    };
+
+    private Observer<String> userDescriptionObserver = new Observer<String>() {
+        @Override
+        public void onChanged(@Nullable String s) {
+            activityBinding.etDescribeYourself.setText(s);
+            activityBinding.tvDescription.setText(s);
+        }
+    };
+
     private void registerViewModelObservers() {
-        viewModel.getFirstName().observeForever(new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                activityBinding.tvFirstName.setText(s);
-                activityBinding.etFirstName.setText(s);
-            }
-        });
+        viewModel.getFirstName().observeForever(firstNameObserver);
+        viewModel.getLastName().observeForever(lastNameObserver);
+        viewModel.getCategories().observeForever(categoriesObserver);
+        viewModel.getSaveUserResult().observeForever(saveUserResultObserver);
+        viewModel.getIsLoading().observeForever(isLoadingObserver);
+        viewModel.getUserDescription().observeForever(userDescriptionObserver);
 
-        viewModel.getLastName().observeForever(new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                activityBinding.tvLastName.setText(s);
-                activityBinding.etLastName.setText(s);
-            }
-        });
+    }
 
-        viewModel.getCategories().observeForever(new Observer<Set<Category>>() {
-            @Override
-            public void onChanged(@Nullable Set<Category> categoryEntries) {
-                grindCategoryAdapter.setItems(new ArrayList<Category>(categoryEntries));
-            }
-        });
-
-        viewModel.getSaveUserResult().observeForever(new Observer<ProfileSettingsViewModel.SaveUserResult>() {
-            @Override
-            public void onChanged(@Nullable ProfileSettingsViewModel.SaveUserResult saveUserResult) {
-                if (saveUserResult == ProfileSettingsViewModel.SaveUserResult.RESULT_OK) {
-                    shortToast("Success");
-                    viewModel.getSaveUserResult().setValue(ProfileSettingsViewModel.SaveUserResult.RESULT_NONE);
-
-                } else if (saveUserResult == ProfileSettingsViewModel.SaveUserResult.RESULT_FAIL) {
-                    shortToast("Fail");
-                    viewModel.getSaveUserResult().setValue(ProfileSettingsViewModel.SaveUserResult.RESULT_NONE);
-                }
-            }
-        });
-
-        viewModel.getIsLoading().observeForever(new Observer<Boolean>() {
-            @Override
-            public void onChanged(@Nullable Boolean aBoolean) {
-                if (aBoolean) {
-                    showProgressBar();
-                } else {
-                    hideProgressBar();
-                }
-            }
-        });
-
-        viewModel.getUserDescription().observeForever(new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                activityBinding.etDescribeYourself.setText(s);
-                activityBinding.tvDescription.setText(s);
-            }
-        });
+    private void removeViewModelObservers() {
+        viewModel.getFirstName().removeObserver(firstNameObserver);
+        viewModel.getLastName().removeObserver(lastNameObserver);
+        viewModel.getCategories().removeObserver(categoriesObserver);
+        viewModel.getSaveUserResult().removeObserver(saveUserResultObserver);
+        viewModel.getIsLoading().removeObserver(isLoadingObserver);
+        viewModel.getUserDescription().removeObserver(userDescriptionObserver);
 
     }
 
