@@ -18,4 +18,19 @@
 
     <style name="PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="ClickableTextView">
+        <item name="android:textColor">#FF1C77FF</item>
+        <item name="android:textStyle">italic</item>
+    </style>
+
+    <style name="EditTextProfileSettings">
+        <item name="android:background">@drawable/edit_text_background</item>
+        <item name="android:paddingEnd">15dp</item>
+        <item name="android:paddingStart">15dp</item>
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingBottom">5dp</item>
+        <item name="android:textColor">#fff</item>
+        <item name="android:textColorHint">#bbb</item>
+        <item name="android:textSize">20sp</item>
+    </style>
 </resources>

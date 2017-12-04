@@ -48,7 +48,6 @@ public class CategoriesRecyclerAdapter extends RecyclerView.Adapter<CategoriesRe
     public void onBindViewHolder(CategoryViewHolder holder, int position) {
         holder.bindView(position);
     }
-
     @Override
     public int getItemCount() {
         return mItems.size();
@@ -145,7 +144,7 @@ public class CategoriesRecyclerAdapter extends RecyclerView.Adapter<CategoriesRe
         return isEnabledToSelectItems;
     }
 
-    public void setEnablToSelectItems(boolean enabledToSelectItems) {
+    public void setEnabledToSelectItems(boolean enabledToSelectItems) {
         isEnabledToSelectItems = enabledToSelectItems;
     }
 }

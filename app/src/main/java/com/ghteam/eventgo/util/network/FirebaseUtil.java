@@ -32,24 +32,23 @@ public class FirebaseUtil {
             ref = storageReference;
         }
 
-        ref.putBytes(baos.toByteArray())
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        if (listener != null) {
+        if (listener != null) {
+            ref.putBytes(baos.toByteArray())
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             listener.onSuccess(taskSnapshot.getDownloadUrl().toString());
                         }
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        if (listener != null) {
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
                             listener.onFailed(e);
                         }
-                    }
-                });
-
+                    });
+        } else {
+            ref.putBytes(baos.toByteArray());
+        }
     }
 
     public interface OnUploadResultListener {

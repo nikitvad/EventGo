@@ -1,193 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+
     xmlns:tools="http://schemas.android.com/tools"
-
-
     tools:context="com.ghteam.eventgo.ui.activity.profilesettings.ProfileSettingsActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="10dp">
+        android:layout_height="match_parent">
 
         <ScrollView
             android:id="@+id/main_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:padding="10dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="10dp"
+                android:layout_height="wrap_content"
                 android:orientation="vertical">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <include
+                    <FrameLayout
                         android:id="@+id/profile_photo"
-                        layout="@layout/layout_change_profile_photo"
-                        android:layout_width="90dp"
-                        android:layout_height="90dp" />
+                        android:layout_width="100dp"
+                        android:layout_height="100dp">
 
-                    <LinearLayout
-                        android:id="@+id/first_name_editor"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_toRightOf="@id/profile_photo"
-                        android:orientation="vertical">
-
-                        <FrameLayout
-                            android:id="@+id/layout_first_name"
+                        <ImageView
+                            android:id="@+id/iv_profile_photo"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
+                            android:layout_height="match_parent"
+                            android:src="@mipmap/ic_launcher" />
 
-                            <TextView
-                                android:id="@+id/tv_first_name"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="10dp"
-                                android:textColor="#000"
-                                android:textSize="24dp" />
-
-                            <ImageView
-                                android:id="@+id/iv_edit_first_name"
-                                android:layout_width="30dp"
-                                android:layout_height="30dp"
-                                android:layout_gravity="end|bottom"
-                                android:src="@drawable/pencil" />
-                        </FrameLayout>
-
-                        <FrameLayout
-                            android:id="@+id/layout_edit_first_name"
+                        <TextView
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:visibility="gone">
-
-                            <EditText
-                                android:id="@+id/et_first_name"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="10dp"
-                                android:textSize="24dp" />
-
-                            <ImageView
-                                android:id="@+id/iv_save_first_name"
-                                android:layout_width="30dp"
-                                android:layout_height="30dp"
-                                android:layout_gravity="end|bottom"
-                                android:src="@drawable/ok" />
-                        </FrameLayout>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/last_name_editor"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/first_name_editor"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_toRightOf="@id/profile_photo"
-                        android:orientation="vertical">
-
-                        <FrameLayout
-                            android:id="@+id/layout_last_name"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
-
-                            <TextView
-                                android:id="@+id/tv_last_name"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:textColor="#000"
-                                android:textSize="24dp" />
-
-                            <ImageView
-                                android:id="@+id/iv_edit_last_name"
-                                android:layout_width="30dp"
-                                android:layout_height="30dp"
-                                android:layout_gravity="end|bottom"
-                                android:src="@drawable/pencil" />
-                        </FrameLayout>
-
-                        <FrameLayout
-
-                            android:id="@+id/layout_edit_last_name"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:visibility="gone">
-
-                            <EditText
-                                android:id="@+id/et_last_name"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:textSize="24dp" />
-
-                            <ImageView
-                                android:id="@+id/iv_save_last_name"
-                                android:layout_width="30dp"
-                                android:layout_height="30dp"
-                                android:layout_gravity="end|bottom"
-                                android:src="@drawable/ok" />
-                        </FrameLayout>
-                    </LinearLayout>
-
-                    <TextView
-                        android:id="@+id/tv_birthday"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginTop="15dp"
-                        android:layout_toRightOf="@+id/profile_photo"
-                        android:textColor="#000"
-                        android:textSize="24dp" />
-
-                </RelativeLayout>
-
-                <FrameLayout
-                    android:id="@+id/layout_edit_description"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone">
+                            android:layout_height="30dp"
+                            android:layout_gravity="bottom"
+                            android:background="#88000000"
+                            android:gravity="center"
+                            android:text="Add photo"
+                            android:textColor="#FFF" />
+                    </FrameLayout>
 
                     <EditText
-                        android:id="@+id/et_describe_yourself"
+                        android:id="@+id/et_first_name"
+                        style="@style/EditTextProfileSettings"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingRight="30dp" />
+                        android:layout_margin="3dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_toEndOf="@+id/profile_photo"
+                        android:hint="First name"
+                        android:textAlignment="viewEnd" />
 
-                    <ImageView
-                        android:id="@+id/iv_save_description"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_gravity="right|bottom"
-                        android:src="@drawable/ok" />
+                    <EditText
+                        android:id="@+id/et_last_name"
+                        style="@style/EditTextProfileSettings"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/et_first_name"
+                        android:layout_margin="3dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_toEndOf="@id/profile_photo"
+                        android:hint="Last name"
+                        android:textAlignment="viewEnd" />
+                </RelativeLayout>
 
-                </FrameLayout>
-
-                <FrameLayout
-                    android:id="@+id/layout_description"
+                <EditText
+                    android:id="@+id/et_describe_yourself"
+                    style="@style/EditTextProfileSettings"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_margin="3dp"
+                    android:hint="describe yourself"
+                    android:paddingRight="30dp" />
 
-                    <TextView
-                        android:id="@+id/tv_description"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="describe yourself"
-                        android:paddingRight="30dp"
-                        android:textColor="#000"
-                        android:textSize="18dp" />
-
-                    <ImageView
-                        android:id="@+id/iv_edit_description"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_gravity="right|bottom"
-                        android:src="@drawable/pencil" />
-
-                </FrameLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"

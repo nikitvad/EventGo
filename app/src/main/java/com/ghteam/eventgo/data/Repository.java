@@ -6,11 +6,15 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 
 import com.ghteam.eventgo.data.entity.Category;
+import com.ghteam.eventgo.data.entity.Event;
 import com.ghteam.eventgo.data.entity.User;
 import com.ghteam.eventgo.data.network.CategoriesDataSource;
 import com.ghteam.eventgo.data.network.FirebaseAccountManager;
 import com.ghteam.eventgo.data.network.FirebaseDatabaseManager;
 import com.ghteam.eventgo.util.network.AccountStatus;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
 
 import java.util.List;
 
@@ -50,10 +54,10 @@ public class Repository {
         return eventsCategories;
     }
 
-    public void pullUser(String uid, User user, @Nullable FirebaseDatabaseManager.OnPullUserResultListener listener) {
+    public void pushUser(String uid, User user, @Nullable FirebaseDatabaseManager.OnPullUserResultListener listener) {
 
 
-        FirebaseDatabaseManager.pullUserInfo(uid, user, listener);
+        FirebaseDatabaseManager.pushUserInfo(uid, user, listener);
     }
 
     private void initializeCategories() {
@@ -70,6 +74,11 @@ public class Repository {
         return FirebaseAccountManager.getCurrentAccountStatus();
     }
 
+
+    public void pushNewEvent(Event event, OnSuccessListener<DocumentReference> onSuccessListener,
+                             OnFailureListener onFailureListener) {
+        FirebaseDatabaseManager.pushNewEvent(event, onSuccessListener, onFailureListener);
+    }
 
     private boolean isActualCategoriesList() {
         //TODO: implement this method

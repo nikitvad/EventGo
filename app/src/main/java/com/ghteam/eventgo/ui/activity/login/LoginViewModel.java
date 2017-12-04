@@ -53,7 +53,7 @@ public class LoginViewModel extends ViewModel {
                     public void onCompleted(GraphResponse response) {
 
                         User user = FacebookUserJsonConverter.getUser(response);
-                        mRepository.pullUser(uid, user, listener);
+                        mRepository.pushUser(uid, user, listener);
                     }
                 }
         ).executeAsync();

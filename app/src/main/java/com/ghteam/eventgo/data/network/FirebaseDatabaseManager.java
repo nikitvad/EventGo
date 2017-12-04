@@ -3,13 +3,12 @@ package com.ghteam.eventgo.data.network;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.ghteam.eventgo.data.entity.Event;
 import com.ghteam.eventgo.data.entity.User;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 
 /**
  * Created by nikit on 19.11.2017.
@@ -19,10 +18,12 @@ public class FirebaseDatabaseManager {
 
     public static final String REF_USERS = "users";
 
+    public static final String REF_EVENTS = "events";
+
 
     private static FirebaseFirestore firestore = FirebaseFirestore.getInstance();
 
-    public static void pullUserInfo(String uid, User user, @Nullable final OnPullUserResultListener listener) {
+    public static void pushUserInfo(String uid, User user, @Nullable final OnPullUserResultListener listener) {
 
         firestore.collection(REF_USERS).document(uid).set(user)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -43,16 +44,23 @@ public class FirebaseDatabaseManager {
                 });
     }
 
+//    public static void fetchUserById(String uid) {
+//        firestore.document(uid).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+//            @Override
+//            public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
+//                if (documentSnapshot != null) {
+//
+//                }
+//            }
+//        });
+//    }
+//
 
-    public static void fetchUserById(String uid) {
-        firestore.document(uid).addSnapshotListener(new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
-                if (documentSnapshot != null) {
-
-                }
-            }
-        });
+    public static void pushNewEvent(Event event, OnSuccessListener<DocumentReference> onSuccessListener,
+                             OnFailureListener onFailureListener) {
+        firestore.collection(REF_EVENTS).add(event)
+                .addOnSuccessListener(onSuccessListener)
+                .addOnFailureListener(onFailureListener);
     }
 
 
@@ -67,6 +75,4 @@ public class FirebaseDatabaseManager {
 
         void onFail(Exception e);
     }
-
-
 }

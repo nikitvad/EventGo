@@ -14,7 +14,7 @@ public class User {
     private String lastName = "";
     private Date birthday = new Date(0);
     private String description = "";
-    private String profileImageUri = "";
+    private String profileImageUrl = "";
     private List<Category> interests = new ArrayList<>();
 
     public User() {
@@ -24,14 +24,6 @@ public class User {
         this.firstName = firstName;
         this.lastName = lastName;
     }
-
-//    public String getFirebaseId() {
-//        return firebaseId;
-//    }
-//
-//    public void setFirebaseId(String firebaseId) {
-//        this.firebaseId = firebaseId;
-//    }
 
     public String getFirstName() {
         return firstName;
@@ -65,12 +57,12 @@ public class User {
         this.birthday = birthday;
     }
 
-    public String getProfileImageUri() {
-        return profileImageUri;
+    public String getProfileImageUrl() {
+        return profileImageUrl;
     }
 
-    public void setProfileImageUri(String profileImageUri) {
-        this.profileImageUri = profileImageUri;
+    public void setProfileImageUrl(String profileImageUrl) {
+        this.profileImageUrl = profileImageUrl;
     }
 
     public List<Category> getInterests() {
@@ -88,7 +80,7 @@ public class User {
                 ", lastName='" + lastName + '\'' +
                 ", birthday=" + birthday +
                 ", description='" + description + '\'' +
-                ", profileImageUri='" + profileImageUri + '\'' +
+                ", profileImageUrl='" + profileImageUrl + '\'' +
                 ", interests=" + interests +
                 '}';
     }

@@ -8,9 +8,6 @@ import com.ghteam.eventgo.data.entity.User;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * Created by nikit on 27.11.2017.
  */
@@ -34,7 +31,7 @@ public class FacebookUserJsonConverter {
 
                 result.setFirstName(firstName);
                 result.setLastName(lastName);
-                result.setProfileImageUri(pictureUrl);
+                result.setProfileImageUrl(pictureUrl);
 
                 return result;
             } catch (JSONException e) {

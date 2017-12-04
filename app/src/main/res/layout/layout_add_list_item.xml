@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ImageButton xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ib_add_new_item"
+    android:layout_width="150dp"
+    android:layout_height="150dp"
+    android:background="#00ffffff"
+    android:padding="50dp"
+    android:scaleType="fitCenter"
+    android:src="@drawable/ic_add"
+    android:tint="@color/colorPrimaryDark" />

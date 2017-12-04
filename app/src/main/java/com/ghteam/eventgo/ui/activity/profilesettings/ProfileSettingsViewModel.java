@@ -27,6 +27,7 @@ public class ProfileSettingsViewModel extends ViewModel {
 
     private MutableLiveData<String> mFirstName;
     private MutableLiveData<String> mLastName;
+    private MutableLiveData<String> mImageUrl;
     private MutableLiveData<Set<Category>> mCategoriesList;
     private MutableLiveData<User> mUser;
     private MutableLiveData<String> mUserDescription;
@@ -44,6 +45,7 @@ public class ProfileSettingsViewModel extends ViewModel {
 
         mLastName = new MutableLiveData<>();
         mFirstName = new MutableLiveData<>();
+        mImageUrl = new MutableLiveData<>();
 
         mCategoriesList = new MutableLiveData<>();
         mUserDescription = new MutableLiveData<>();
@@ -54,10 +56,12 @@ public class ProfileSettingsViewModel extends ViewModel {
             @Override
             public void onChanged(@Nullable User user) {
                 if (user != null) {
+                    Log.d(TAG, "onChanged: " + user.toString());
                     mFirstName.setValue(user.getFirstName());
                     mLastName.setValue(user.getLastName());
                     mCategoriesList.setValue(new HashSet<>(user.getInterests()));
                     mUserDescription.setValue(user.getDescription());
+                    mImageUrl.setValue(user.getProfileImageUrl());
                 }
             }
         });
@@ -68,7 +72,7 @@ public class ProfileSettingsViewModel extends ViewModel {
     }
 
     void setCategories(Set<Category> categories) {
-        mUser.getValue().setInterests(new ArrayList<Category>(categories));
+        mUser.getValue().setInterests(new ArrayList<>(categories));
         mCategoriesList.setValue(categories);
     }
 
@@ -78,7 +82,7 @@ public class ProfileSettingsViewModel extends ViewModel {
 
     void setFirstName(String firstName) {
         if (firstName != null && firstName.length() > 0) {
-            mFirstName.setValue(firstName);
+            this.mFirstName.setValue(firstName);
             mUser.getValue().setFirstName(firstName);
         }
     }
@@ -92,6 +96,14 @@ public class ProfileSettingsViewModel extends ViewModel {
             mLastName.setValue(lastName);
             mUser.getValue().setLastName(lastName);
         }
+    }
+
+    MutableLiveData<String> getImageUrl() {
+        return mImageUrl;
+    }
+
+    void setImageUrl(String url) {
+        mImageUrl.setValue(url);
     }
 
     MutableLiveData<String> getUserDescription() {
@@ -109,7 +121,7 @@ public class ProfileSettingsViewModel extends ViewModel {
 
         Log.d(TAG, "saveUserData: " + mUser.getValue().toString());
 
-        mRepository.pullUser(FirebaseAuth.getInstance().getUid(),
+        mRepository.pushUser(FirebaseAuth.getInstance().getUid(),
                 mUser.getValue(),
                 new FirebaseDatabaseManager.OnPullUserResultListener() {
                     @Override

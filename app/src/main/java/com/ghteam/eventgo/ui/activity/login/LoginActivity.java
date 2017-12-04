@@ -16,9 +16,6 @@ import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
-import com.facebook.HttpMethod;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.ghteam.eventgo.R;
@@ -28,7 +25,6 @@ import com.ghteam.eventgo.databinding.ActivityLoginBinding;
 import com.ghteam.eventgo.ui.activity.eventslist.EventsListActivity;
 import com.ghteam.eventgo.ui.activity.profilesettings.ProfileSettingsActivity;
 import com.ghteam.eventgo.ui.activity.singup.SignUpActivity;
-import com.ghteam.eventgo.util.FacebookUserJsonConverter;
 import com.ghteam.eventgo.util.LoginInResult;
 import com.ghteam.eventgo.util.PrefsUtil;
 import com.ghteam.eventgo.util.ProgressBarUtil;
@@ -66,6 +62,8 @@ public class LoginActivity extends LifecycleActivity {
 
         if (firebaseAuth.getCurrentUser() != null) {
             firebaseAuth.signOut();
+            PrefsUtil.setLoggedType(PrefsUtil.LOGGED_TYPE_NONE);
+
         }
         Log.d(TAG, "onCreate: userInfo " + firebaseAuth.getCurrentUser());
 
@@ -153,7 +151,7 @@ public class LoginActivity extends LifecycleActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            
+
                             PrefsUtil.setLoggedType(PrefsUtil.LOGGED_TYPE_FACEBOOK);
                             viewModel.getLoginInResult().setValue(LoginInResult.SUCCESS);
                         } else {

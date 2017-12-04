@@ -65,7 +65,7 @@ public class SelectCategoriesDialog extends DialogFragment {
                 .get(CategoriesViewModel.class);
 
         recyclerAdapter = new CategoriesRecyclerAdapter();
-        recyclerAdapter.setEnablToSelectItems(true);
+        recyclerAdapter.setEnabledToSelectItems(true);
 
         recyclerAdapter.setSelectItemListener(new CategoriesRecyclerAdapter.OnSelectItemListener() {
             @Override

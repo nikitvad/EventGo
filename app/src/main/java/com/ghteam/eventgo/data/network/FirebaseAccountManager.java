@@ -56,7 +56,7 @@ public class FirebaseAccountManager {
                 .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                     @Override
                     public void onSuccess(AuthResult authResult) {
-                        FirebaseDatabaseManager.pullUserInfo(authResult.getUser().getUid(), user,
+                        FirebaseDatabaseManager.pushUserInfo(authResult.getUser().getUid(), user,
                                 new FirebaseDatabaseManager.OnPullUserResultListener() {
                                     @Override
                                     public void onSuccess() {
@@ -86,8 +86,9 @@ public class FirebaseAccountManager {
                 @Override
                 public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
                     if (documentSnapshot.exists()) {
-                        Log.d(TAG, "onEvent: " + documentSnapshot.toString());
                         appUser.setValue(documentSnapshot.toObject(User.class));
+                        Log.d(TAG, "onEvent: " + documentSnapshot.toObject(User.class).toString());
+
                     } else {
                         //There is no user in DB whit that id so we initialize new Instance of user to add it to db
                         appUser.setValue(new User());

@@ -22,6 +22,10 @@ public class CategoryGridAdapter extends BaseAdapter {
 
     private List<Category> categories;
 
+    public static final int VIEW_TYPE_CATEGORY_ITEM = 0;
+    public static final int VIEW_TYPE_ADD_LIST_ITEM = 1;
+
+
     public CategoryGridAdapter(List<Category> categories) {
         this.categories = categories;
     }
@@ -38,7 +42,23 @@ public class CategoryGridAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return categories.size();
+        //for one more constant view
+        return categories.size() + 1;
+
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (position < categories.size()) {
+            return VIEW_TYPE_CATEGORY_ITEM;
+        } else {
+            return VIEW_TYPE_ADD_LIST_ITEM;
+        }
+    }
+
+    @Override
+    public int getViewTypeCount() {
+        return 2;
     }
 
     @Override
@@ -54,19 +74,23 @@ public class CategoryGridAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View v;
-        Category category = categories.get(position);
 
-        if (convertView == null) {
-            LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+
+
+        if (getItemViewType(position) == VIEW_TYPE_CATEGORY_ITEM) {
+            Category category = categories.get(position);
+
             v = inflater.inflate(R.layout.layout_category_item, parent, false);
-        } else {
-            v = convertView;
-        }
 
-        ImageView image = v.findViewById(R.id.iv_category_icon);
-        Picasso.with(parent.getContext()).load(category.getIcon()).into(image);
-        TextView title = v.findViewById(R.id.tv_category_name);
-        title.setText(category.getName());
+            ImageView image = v.findViewById(R.id.iv_category_icon);
+            Picasso.with(parent.getContext()).load(category.getIcon()).into(image);
+            TextView title = v.findViewById(R.id.tv_category_name);
+            title.setText(category.getName());
+
+        } else {
+            v = inflater.inflate(R.layout.layout_add_list_item, parent, false);
+        }
 
         return v;
     }
