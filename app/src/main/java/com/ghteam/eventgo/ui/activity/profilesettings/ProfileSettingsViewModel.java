@@ -12,10 +12,12 @@ import com.ghteam.eventgo.data.Repository;
 import com.ghteam.eventgo.data.entity.Category;
 import com.ghteam.eventgo.data.entity.User;
 import com.ghteam.eventgo.data.network.FirebaseDatabaseManager;
+import com.ghteam.eventgo.ui.activity.createevent.ListLiveData;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -28,7 +30,7 @@ public class ProfileSettingsViewModel extends ViewModel {
     private MutableLiveData<String> mFirstName;
     private MutableLiveData<String> mLastName;
     private MutableLiveData<String> mImageUrl;
-    private MutableLiveData<Set<Category>> mCategoriesList;
+    private ListLiveData<Category> mCategoriesList;
     private MutableLiveData<User> mUser;
     private MutableLiveData<String> mUserDescription;
 
@@ -47,7 +49,7 @@ public class ProfileSettingsViewModel extends ViewModel {
         mFirstName = new MutableLiveData<>();
         mImageUrl = new MutableLiveData<>();
 
-        mCategoriesList = new MutableLiveData<>();
+        mCategoriesList = new ListLiveData<>();
         mUserDescription = new MutableLiveData<>();
 
         mUser = repository.getCurrentUser();
@@ -59,7 +61,7 @@ public class ProfileSettingsViewModel extends ViewModel {
                     Log.d(TAG, "onChanged: " + user.toString());
                     mFirstName.setValue(user.getFirstName());
                     mLastName.setValue(user.getLastName());
-                    mCategoriesList.setValue(new HashSet<>(user.getInterests()));
+                    mCategoriesList.setValue(user.getInterests());
                     mUserDescription.setValue(user.getDescription());
                     mImageUrl.setValue(user.getProfileImageUrl());
                 }
@@ -67,11 +69,11 @@ public class ProfileSettingsViewModel extends ViewModel {
         });
     }
 
-    MutableLiveData<Set<Category>> getCategories() {
+    ListLiveData<Category> getCategories() {
         return mCategoriesList;
     }
 
-    void setCategories(Set<Category> categories) {
+    void setCategories(List<Category> categories) {
         mUser.getValue().setInterests(new ArrayList<>(categories));
         mCategoriesList.setValue(categories);
     }

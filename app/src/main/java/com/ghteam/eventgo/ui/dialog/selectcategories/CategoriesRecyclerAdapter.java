@@ -48,6 +48,7 @@ public class CategoriesRecyclerAdapter extends RecyclerView.Adapter<CategoriesRe
     public void onBindViewHolder(CategoryViewHolder holder, int position) {
         holder.bindView(position);
     }
+
     @Override
     public int getItemCount() {
         return mItems.size();
@@ -64,7 +65,7 @@ public class CategoriesRecyclerAdapter extends RecyclerView.Adapter<CategoriesRe
 
         public void bindView(final int pos) {
 
-            itemBinding.setVariable(BR.category, mItems.get(pos));
+            itemBinding.setVariable(BR.categories, mItems.get(pos));
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -89,13 +90,20 @@ public class CategoriesRecyclerAdapter extends RecyclerView.Adapter<CategoriesRe
                 }
             });
 
-
             if (mSelectedItems.contains(pos)) {
                 itemView.setBackgroundColor(0x22000000);
             } else {
                 itemView.setBackgroundColor(0x222);
             }
 
+        }
+    }
+
+
+    public void addItemToSelected(Category category) {
+        int pos = mItems.indexOf(category);
+        if (pos >= 0) {
+            addItemToSelected(pos);
         }
     }
 
@@ -108,6 +116,14 @@ public class CategoriesRecyclerAdapter extends RecyclerView.Adapter<CategoriesRe
         mSelectedItems.remove(pos);
         notifyItemChanged(pos);
     }
+
+    public void removeItemFromSelected(Category category) {
+        int pos = mItems.indexOf(category);
+        if (pos >= 0) {
+            removeItemFromSelected(pos);
+        }
+    }
+
 
     public void removeAllFromSelected() {
         mSelectedItems.clear();

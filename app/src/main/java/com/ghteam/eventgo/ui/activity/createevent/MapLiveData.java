@@ -1,6 +1,6 @@
 package com.ghteam.eventgo.ui.activity.createevent;
 
-import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
 
 import java.util.ArrayList;
@@ -11,22 +11,21 @@ import java.util.Map;
  * Created by nikit on 03.12.2017.
  */
 
-public class MapLiveData<K, V> extends LiveData<Map<K, V>> {
-    private Map<K, V> mMap;
+public class MapLiveData<K, V> extends MutableLiveData<Map<K, V>> {
 
     private List<Observer<K>> putObservers;
     private List<Observer<K>> removeObservers;
 
 
     public MapLiveData(Map<K, V> map) {
-        this.mMap = map;
-
+        super();
+        setValue(map);
         putObservers = new ArrayList<>();
         removeObservers = new ArrayList<>();
     }
 
     public void put(K key, V value) {
-        mMap.put(key, value);
+        getValue().put(key, value);
 
         if (putObservers.size() > 0) {
             for (Observer<K> observer : putObservers) {
@@ -35,12 +34,12 @@ public class MapLiveData<K, V> extends LiveData<Map<K, V>> {
         }
     }
 
-    public V get(K key){
-        return mMap.get(key);
+    public V get(K key) {
+        return getValue().get(key);
     }
 
     public void remove(K key) {
-        mMap.remove(key);
+        getValue().remove(key);
 
         if (removeObservers.size() > 0) {
             for (Observer<K> observer : removeObservers) {

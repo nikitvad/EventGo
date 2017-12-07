@@ -9,9 +9,9 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.ghteam.eventgo.data.Repository;
+import com.ghteam.eventgo.data.entity.Category;
 import com.ghteam.eventgo.data.entity.Event;
 import com.ghteam.eventgo.data.entity.Location;
 import com.ghteam.eventgo.util.network.FirebaseUtil;
@@ -40,8 +40,11 @@ public class CreateEventViewModel extends ViewModel {
     private MutableLiveData<String> mEventAddress;
     private MutableLiveData<LatLng> mEventLocation;
     private ListLiveData<String> mImageSources;
+    private ListLiveData<Category> mCategories;
 
     private List<String> imageUrlsOnCloudStorage;
+
+    private MutableLiveData<Boolean> mIsLoading;
 
     private MapLiveData<String, Boolean> mUploadingImages;
 
@@ -59,6 +62,9 @@ public class CreateEventViewModel extends ViewModel {
         mEventAddress = new MutableLiveData<>();
         mEventLocation = new MutableLiveData<>();
         mImageSources = new ListLiveData<>(new ArrayList<String>());
+        mCategories = new ListLiveData<>();
+
+        mIsLoading = new MutableLiveData<>();
 
         mUploadingImages = new MapLiveData<>(new HashMap<String, Boolean>());
 
@@ -72,47 +78,38 @@ public class CreateEventViewModel extends ViewModel {
         });
     }
 
-    public MutableLiveData<String> getEventName() {
+    MutableLiveData<String> getEventName() {
         return mEventName;
     }
 
-    public MutableLiveData<String> getEventDescription() {
+    MutableLiveData<String> getEventDescription() {
         return mEventDescription;
     }
 
-    public MutableLiveData<String> getEventAddress() {
+    MutableLiveData<String> getEventAddress() {
         return mEventAddress;
     }
 
-    public void addImageSource(String uri) {
+    ListLiveData<Category> getCategories() {
+        return mCategories;
     }
 
-    public MutableLiveData<LatLng> getEventLocation() {
+    MutableLiveData<LatLng> getEventLocation() {
         return mEventLocation;
     }
 
-    public ListLiveData<String> getImageSources() {
+    ListLiveData<String> getImageSources() {
         return mImageSources;
     }
 
-    public MapLiveData<String, Boolean> getUploadingImages() {
+    MapLiveData<String, Boolean> getUploadingImages() {
         return mUploadingImages;
     }
 
-    public void createEvent() {
-        mRepository.pushNewEvent(getEventEntry(), new OnSuccessListener<DocumentReference>() {
-            @Override
-            public void onSuccess(DocumentReference documentReference) {
-                Log.d(TAG, "onSuccess: ");
-            }
-        }, new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.d(TAG, "onFailure: ");
-            }
-        });
-
-
+    void createEvent(OnSuccessListener<DocumentReference> successListener,
+                     OnFailureListener failureListener) {
+        mRepository.pushNewEvent(getEventEntry(), successListener
+                , failureListener);
     }
 
     private Event getEventEntry() {
@@ -120,10 +117,15 @@ public class CreateEventViewModel extends ViewModel {
         event.setName(mEventName.getValue());
         event.setDescription(mEventDescription.getValue());
         event.setAddress(mEventAddress.getValue());
-        event.setLocation(new Location(mEventLocation.getValue().latitude,
-                mEventLocation.getValue().longitude));
+        event.setCategories(getCategories().getValue());
         event.setImages(imageUrlsOnCloudStorage);
         event.setOwnerId(mFirebaseUser.getUid());
+
+        if (mEventLocation.getValue() != null) {
+            event.setLocation(new Location(mEventLocation.getValue().latitude,
+                    mEventLocation.getValue().longitude));
+        }
+
         return event;
     }
 
@@ -149,6 +151,10 @@ public class CreateEventViewModel extends ViewModel {
                 mUploadingImages.put(imageUri.toString(), false);
             }
         });
+    }
+
+    public MutableLiveData<Boolean> getIsLoading() {
+        return mIsLoading;
     }
 
     static class CreateEventViewModelFactory extends ViewModelProvider.NewInstanceFactory {

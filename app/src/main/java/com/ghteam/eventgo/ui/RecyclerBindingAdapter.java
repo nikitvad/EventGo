@@ -3,11 +3,11 @@ package com.ghteam.eventgo.ui;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,10 +18,12 @@ import java.util.List;
 public class RecyclerBindingAdapter<T>
         extends RecyclerView.Adapter<RecyclerBindingAdapter.BindingHolder> {
     private int holderLayout, variableId;
-    private AbstractList<T> items = new ArrayList<>();
+    private List<T> items = new ArrayList<>();
     private OnItemClickListener<T> onItemClickListener;
 
-    public RecyclerBindingAdapter(int holderLayout, int variableId, AbstractList<T> items) {
+    private static final String TAG = RecyclerBindingAdapter.class.getSimpleName();
+
+    public RecyclerBindingAdapter(int holderLayout, int variableId, List<T> items) {
         this.holderLayout = holderLayout;
         this.variableId = variableId;
         this.items = items;
@@ -37,24 +39,24 @@ public class RecyclerBindingAdapter<T>
     public void changeItems(List<T> items) {
         if (items != null) {
             this.items.clear();
-            this.items.addAll(0, items);
+            this.items.addAll(items);
             notifyDataSetChanged();
         }
     }
 
+    public void addItem(T item) {
+        items.add(item);
+        notifyItemInserted(items.size() - 1);
+    }
+
+    public void removeItem(T item) {
+        items.remove(item);
+        notifyDataSetChanged();
+    }
+
     @Override
-    public void onBindViewHolder(RecyclerBindingAdapter.BindingHolder holder, final int position) {
-        final T item = items.get(position);
-
-
-        holder.getBinding().getRoot().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (onItemClickListener != null) {
-                    onItemClickListener.onItemClick(position, item);
-                }
-            }
-        });
+    public void onBindViewHolder(RecyclerBindingAdapter.BindingHolder holder, int position) {
+        T item = items.get(position);
         holder.getBinding().setVariable(variableId, item);
     }
 
@@ -71,11 +73,20 @@ public class RecyclerBindingAdapter<T>
         void onItemClick(int position, T item);
     }
 
-    public static class BindingHolder extends RecyclerView.ViewHolder {
+    public class BindingHolder extends RecyclerView.ViewHolder {
         private ViewDataBinding binding;
 
         public BindingHolder(View v) {
             super(v);
+            if (onItemClickListener != null) {
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Log.d(TAG, "onClick: " + getAdapterPosition() + " " + items.toString());
+                        onItemClickListener.onItemClick(getAdapterPosition(), items.get(getAdapterPosition()));
+                    }
+                });
+            }
             binding = DataBindingUtil.bind(v);
         }
 

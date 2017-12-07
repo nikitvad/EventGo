@@ -1,7 +1,5 @@
 package com.ghteam.eventgo.data.entity;
 
-import com.google.android.gms.maps.model.LatLng;
-
 import java.util.List;
 
 /**
@@ -13,7 +11,7 @@ public class Event {
     private String name;
     private String description;
     private String address;
-    private Category category;
+    private List<Category> categories;
     private List<String> images;
     private Location location;
 
@@ -21,11 +19,11 @@ public class Event {
     public Event() {
     }
 
-    public Event(String name, String description, String address, Category category, List<String> images) {
+    public Event(String name, String description, String address, List<Category> categories, List<String> images) {
         this.name = name;
         this.description = description;
         this.address = address;
-        this.category = category;
+        this.categories = categories;
         this.images = images;
     }
 
@@ -61,8 +59,8 @@ public class Event {
         this.address = address;
     }
 
-    public Category getCategory() {
-        return category;
+    public List<Category> getCategories() {
+        return categories;
     }
 
     public String getOwnerId() {
@@ -73,8 +71,8 @@ public class Event {
         this.ownerId = ownerId;
     }
 
-    public void setCategory(Category category) {
-        this.category = category;
+    public void setCategories(List<Category> categories) {
+        this.categories = categories;
     }
 
     public List<String> getImages() {

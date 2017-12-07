@@ -8,7 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +19,7 @@ import com.ghteam.eventgo.data.Repository;
 import com.ghteam.eventgo.data.entity.Category;
 import com.ghteam.eventgo.databinding.DialogSelectCategoriesBinding;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -34,7 +35,7 @@ public class SelectCategoriesDialog extends DialogFragment {
     private CategoriesRecyclerAdapter recyclerAdapter;
     private OnConfirmChoiceListener mOnConfirmListener;
 
-    private HashSet<Category> selectedCategories = new HashSet<>();
+    private List<Category> selectedCategories = new ArrayList<>();
 
     public static final String TAG = SelectCategoriesDialog.class.getSimpleName();
 
@@ -71,18 +72,16 @@ public class SelectCategoriesDialog extends DialogFragment {
             @Override
             public void onSelected(Category category) {
                 selectedCategories.add(category);
-                Log.d(TAG, "onSelected: " + selectedCategories.toString());
             }
 
             @Override
             public void onUnselected(Category category) {
                 selectedCategories.remove(category);
-                Log.d(TAG, "onUnselected: " + selectedCategories.toString());
             }
         });
 
         dialogBinding.rvCategoryList.setAdapter(recyclerAdapter);
-        dialogBinding.rvCategoryList.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        dialogBinding.rvCategoryList.setLayoutManager(new LinearLayoutManager(getContext()));
 
         dialogBinding.btApply.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -138,7 +137,7 @@ public class SelectCategoriesDialog extends DialogFragment {
     }
 
     public interface OnConfirmChoiceListener {
-        void onConfirm(Set<Category> categories);
+        void onConfirm(List<Category> categories);
     }
 
 
