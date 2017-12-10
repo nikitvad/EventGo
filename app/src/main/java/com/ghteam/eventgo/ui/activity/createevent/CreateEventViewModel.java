@@ -11,9 +11,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.ghteam.eventgo.data.Repository;
-import com.ghteam.eventgo.data.entity.Category;
-import com.ghteam.eventgo.data.entity.Event;
-import com.ghteam.eventgo.data.entity.Location;
+import com.ghteam.eventgo.data.model.Category;
+import com.ghteam.eventgo.data.model.Event;
+import com.ghteam.eventgo.data.model.Location;
+import com.ghteam.eventgo.util.LiveDataList;
+import com.ghteam.eventgo.util.MapLiveData;
 import com.ghteam.eventgo.util.network.FirebaseUtil;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -39,8 +41,8 @@ public class CreateEventViewModel extends ViewModel {
     private MutableLiveData<String> mEventDescription;
     private MutableLiveData<String> mEventAddress;
     private MutableLiveData<LatLng> mEventLocation;
-    private ListLiveData<String> mImageSources;
-    private ListLiveData<Category> mCategories;
+    private LiveDataList<String> mImageSources;
+    private LiveDataList<Category> mCategories;
 
     private List<String> imageUrlsOnCloudStorage;
 
@@ -61,8 +63,8 @@ public class CreateEventViewModel extends ViewModel {
         mEventDescription = new MutableLiveData<>();
         mEventAddress = new MutableLiveData<>();
         mEventLocation = new MutableLiveData<>();
-        mImageSources = new ListLiveData<>(new ArrayList<String>());
-        mCategories = new ListLiveData<>();
+        mImageSources = new LiveDataList<>(new ArrayList<String>());
+        mCategories = new LiveDataList<>();
 
         mIsLoading = new MutableLiveData<>();
 
@@ -90,7 +92,7 @@ public class CreateEventViewModel extends ViewModel {
         return mEventAddress;
     }
 
-    ListLiveData<Category> getCategories() {
+    LiveDataList<Category> getCategories() {
         return mCategories;
     }
 
@@ -98,7 +100,7 @@ public class CreateEventViewModel extends ViewModel {
         return mEventLocation;
     }
 
-    ListLiveData<String> getImageSources() {
+    LiveDataList<String> getImageSources() {
         return mImageSources;
     }
 
@@ -117,7 +119,7 @@ public class CreateEventViewModel extends ViewModel {
         event.setName(mEventName.getValue());
         event.setDescription(mEventDescription.getValue());
         event.setAddress(mEventAddress.getValue());
-        event.setCategories(getCategories().getValue());
+        event.setCategory(getCategories().getValue().get(0));
         event.setImages(imageUrlsOnCloudStorage);
         event.setOwnerId(mFirebaseUser.getUid());
 

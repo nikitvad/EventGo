@@ -9,16 +9,14 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.ghteam.eventgo.data.Repository;
-import com.ghteam.eventgo.data.entity.Category;
-import com.ghteam.eventgo.data.entity.User;
+import com.ghteam.eventgo.data.model.Category;
+import com.ghteam.eventgo.data.model.User;
 import com.ghteam.eventgo.data.network.FirebaseDatabaseManager;
-import com.ghteam.eventgo.ui.activity.createevent.ListLiveData;
+import com.ghteam.eventgo.util.LiveDataList;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by nikit on 20.11.2017.
@@ -30,7 +28,7 @@ public class ProfileSettingsViewModel extends ViewModel {
     private MutableLiveData<String> mFirstName;
     private MutableLiveData<String> mLastName;
     private MutableLiveData<String> mImageUrl;
-    private ListLiveData<Category> mCategoriesList;
+    private LiveDataList<Category> mCategoriesList;
     private MutableLiveData<User> mUser;
     private MutableLiveData<String> mUserDescription;
 
@@ -49,7 +47,7 @@ public class ProfileSettingsViewModel extends ViewModel {
         mFirstName = new MutableLiveData<>();
         mImageUrl = new MutableLiveData<>();
 
-        mCategoriesList = new ListLiveData<>();
+        mCategoriesList = new LiveDataList<>();
         mUserDescription = new MutableLiveData<>();
 
         mUser = repository.getCurrentUser();
@@ -69,7 +67,7 @@ public class ProfileSettingsViewModel extends ViewModel {
         });
     }
 
-    ListLiveData<Category> getCategories() {
+    LiveDataList<Category> getCategories() {
         return mCategoriesList;
     }
 

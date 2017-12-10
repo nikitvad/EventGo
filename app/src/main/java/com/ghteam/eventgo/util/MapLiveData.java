@@ -1,4 +1,4 @@
-package com.ghteam.eventgo.ui.activity.createevent;
+package com.ghteam.eventgo.util;
 
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;

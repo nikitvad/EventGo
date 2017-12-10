@@ -31,5 +31,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="create event" />
+
+        <Button
+            android:id="@+id/bt_people"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="People" />
+
+        <Button
+            android:id="@+id/bt_push_demo_events"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="push demo events" />
+
+        <include layout="@layout/layout_event_list_item" />
+
     </LinearLayout>
 </layout>

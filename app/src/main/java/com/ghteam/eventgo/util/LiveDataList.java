@@ -1,4 +1,4 @@
-package com.ghteam.eventgo.ui.activity.createevent;
+package com.ghteam.eventgo.util;
 
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
@@ -10,21 +10,20 @@ import java.util.List;
  * Created by nikit on 03.12.2017.
  */
 
-public class ListLiveData<T> extends MutableLiveData<List<T>> {
-//    private List<T> mList;
+public class LiveDataList<T> extends MutableLiveData<List<T>> {
 
     private List<Observer<T>> insertObservers;
     private List<Observer<T>> removeObservers;
 
 
-    public ListLiveData() {
+    public LiveDataList() {
         super();
         setValue(new ArrayList<T>());
         insertObservers = new ArrayList<>();
         removeObservers = new ArrayList<>();
     }
 
-    public ListLiveData(List<T> list) {
+    public LiveDataList(List<T> list) {
         super();
         setValue(list);
         insertObservers = new ArrayList<>();

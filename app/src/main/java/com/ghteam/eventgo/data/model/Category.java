@@ -1,4 +1,4 @@
-package com.ghteam.eventgo.data.entity;
+package com.ghteam.eventgo.data.model;
 
 /**
  * Created by nikit on 20.11.2017.

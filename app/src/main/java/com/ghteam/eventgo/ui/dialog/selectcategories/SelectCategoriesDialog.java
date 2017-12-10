@@ -9,20 +9,17 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.ghteam.eventgo.R;
 import com.ghteam.eventgo.data.Repository;
-import com.ghteam.eventgo.data.entity.Category;
+import com.ghteam.eventgo.data.model.Category;
 import com.ghteam.eventgo.databinding.DialogSelectCategoriesBinding;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * A simple {@link Fragment} subclass.

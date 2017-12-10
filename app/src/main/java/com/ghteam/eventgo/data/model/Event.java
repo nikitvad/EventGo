@@ -1,4 +1,4 @@
-package com.ghteam.eventgo.data.entity;
+package com.ghteam.eventgo.data.model;
 
 import java.util.List;
 
@@ -11,19 +11,18 @@ public class Event {
     private String name;
     private String description;
     private String address;
-    private List<Category> categories;
+    private Category category;
     private List<String> images;
     private Location location;
-
 
     public Event() {
     }
 
-    public Event(String name, String description, String address, List<Category> categories, List<String> images) {
+    public Event(String name, String description, String address, Category category, List<String> images) {
         this.name = name;
         this.description = description;
         this.address = address;
-        this.categories = categories;
+        this.category = category;
         this.images = images;
     }
 
@@ -59,8 +58,8 @@ public class Event {
         this.address = address;
     }
 
-    public List<Category> getCategories() {
-        return categories;
+    public Category getCategory() {
+        return category;
     }
 
     public String getOwnerId() {
@@ -71,8 +70,8 @@ public class Event {
         this.ownerId = ownerId;
     }
 
-    public void setCategories(List<Category> categories) {
-        this.categories = categories;
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
     public List<String> getImages() {

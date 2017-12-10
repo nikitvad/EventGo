@@ -12,7 +12,7 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
 import com.ghteam.eventgo.data.Repository;
-import com.ghteam.eventgo.data.entity.User;
+import com.ghteam.eventgo.data.model.User;
 import com.ghteam.eventgo.data.network.FirebaseDatabaseManager;
 import com.ghteam.eventgo.util.FacebookUserJsonConverter;
 import com.ghteam.eventgo.util.LoginInResult;

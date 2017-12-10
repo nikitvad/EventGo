@@ -20,7 +20,7 @@ import android.widget.Toast;
 
 import com.ghteam.eventgo.R;
 import com.ghteam.eventgo.data.Repository;
-import com.ghteam.eventgo.data.entity.Category;
+import com.ghteam.eventgo.data.model.Category;
 import com.ghteam.eventgo.databinding.ActivityCreateEventV2Binding;
 import com.ghteam.eventgo.ui.adapter.SelectedCategoriesRecyclerAdapter;
 import com.ghteam.eventgo.ui.dialog.selectcategories.SelectCategoriesDialog;

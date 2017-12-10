@@ -5,7 +5,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 
 import com.ghteam.eventgo.data.Repository;
-import com.ghteam.eventgo.data.entity.Category;
+import com.ghteam.eventgo.data.model.Category;
 
 import java.util.List;
 

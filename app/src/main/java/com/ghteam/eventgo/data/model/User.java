@@ -1,4 +1,4 @@
-package com.ghteam.eventgo.data.entity;
+package com.ghteam.eventgo.data.model;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -81,7 +81,7 @@ public class User {
                 ", birthday=" + birthday +
                 ", description='" + description + '\'' +
                 ", profileImageUrl='" + profileImageUrl + '\'' +
-                ", interests=" + interests +
+                ", interests=" + interests.toString() +
                 '}';
     }
 }

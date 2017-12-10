@@ -17,7 +17,7 @@ import android.widget.Toast;
 
 import com.ghteam.eventgo.R;
 import com.ghteam.eventgo.data.Repository;
-import com.ghteam.eventgo.data.entity.Category;
+import com.ghteam.eventgo.data.model.Category;
 import com.ghteam.eventgo.databinding.ActivityProfileSettingsBinding;
 import com.ghteam.eventgo.ui.activity.eventslist.EventsListActivity;
 import com.ghteam.eventgo.ui.adapter.SelectedCategoriesRecyclerAdapter;

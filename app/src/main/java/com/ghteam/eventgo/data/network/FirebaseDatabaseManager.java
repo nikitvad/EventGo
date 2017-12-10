@@ -3,12 +3,17 @@ package com.ghteam.eventgo.data.network;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.ghteam.eventgo.data.entity.Event;
-import com.ghteam.eventgo.data.entity.User;
+import com.ghteam.eventgo.data.model.Event;
+import com.ghteam.eventgo.data.model.User;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.List;
 
 /**
  * Created by nikit on 19.11.2017.
@@ -44,25 +49,30 @@ public class FirebaseDatabaseManager {
                 });
     }
 
-//    public static void fetchUserById(String uid) {
-//        firestore.document(uid).addSnapshotListener(new EventListener<DocumentSnapshot>() {
-//            @Override
-//            public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
-//                if (documentSnapshot != null) {
-//
-//                }
-//            }
-//        });
-//    }
-//
+    public static void loadUsers(final OnLoadUsersCompleteListener listener) {
+
+        firestore.collection(REF_USERS).limit(30).addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
+                if (documentSnapshots.size() > 0) {
+                    listener.onComplete(documentSnapshots.toObjects(User.class));
+                } else {
+                    listener.onComplete(null);
+                }
+            }
+        });
+    }
 
     public static void pushNewEvent(Event event, OnSuccessListener<DocumentReference> onSuccessListener,
-                             OnFailureListener onFailureListener) {
+                                    OnFailureListener onFailureListener) {
         firestore.collection(REF_EVENTS).add(event)
                 .addOnSuccessListener(onSuccessListener)
                 .addOnFailureListener(onFailureListener);
     }
 
+    public interface OnLoadUsersCompleteListener {
+        void onComplete(@Nullable List<User> users);
+    }
 
     public interface OnFetchUserResultListener {
         void onSuccess(User user);

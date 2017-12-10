@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
@@ -40,8 +41,6 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Arrays;
 
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class LoginActivity extends LifecycleActivity {
 
@@ -58,14 +57,12 @@ public class LoginActivity extends LifecycleActivity {
         super.onCreate(savedInstanceState);
         activityBinding = DataBindingUtil.setContentView(this, R.layout.activity_login);
 
-        ButterKnife.bind(this);
+        bindClickListeners();
 
         if (firebaseAuth.getCurrentUser() != null) {
             firebaseAuth.signOut();
             PrefsUtil.setLoggedType(PrefsUtil.LOGGED_TYPE_NONE);
-
         }
-        Log.d(TAG, "onCreate: userInfo " + firebaseAuth.getCurrentUser());
 
         viewModel = ViewModelProviders.of(this,
                 new LoginViewModel.LoginViewModelFactory(Repository.getInstance(this)))
@@ -247,22 +244,29 @@ public class LoginActivity extends LifecycleActivity {
         viewModel.getLoginInResult().removeObserver(loginInResultObserver);
     }
 
-    @OnClick(R.id.tv_create_account)
-    void showCreateSingUpActivity() {
-        Intent intent = new Intent(this, SignUpActivity.class);
-        startActivity(intent);
+
+    private void bindClickListeners() {
+        activityBinding.tvCreateAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        activityBinding.btSignIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loginWithEmail(activityBinding.etEmail.getText().toString(), activityBinding.etPassword.getText().toString());
+            }
+        });
+
+        activityBinding.btFacebookLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LoginManager.getInstance().logInWithReadPermissions(LoginActivity.this,
+                        Arrays.asList("public_profile", "email", "user_birthday"));
+            }
+        });
     }
-
-
-    @OnClick(R.id.bt_sign_in)
-    void login() {
-        loginWithEmail(activityBinding.etEmail.getText().toString(), activityBinding.etPassword.getText().toString());
-    }
-
-    @OnClick(R.id.bt_facebook_login)
-    void facebookLogin() {
-        LoginManager.getInstance().logInWithReadPermissions(this,
-                Arrays.asList("public_profile", "email", "user_birthday"));
-    }
-
 }
