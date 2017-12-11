@@ -1,32 +1,74 @@
 package com.ghteam.eventgo.ui.activity.eventslist;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.ProgressBar;
 
+import com.ghteam.eventgo.BR;
 import com.ghteam.eventgo.R;
+import com.ghteam.eventgo.data.Repository;
+import com.ghteam.eventgo.data.model.Event;
+import com.ghteam.eventgo.databinding.ActivityEventsListBinding;
+import com.ghteam.eventgo.ui.RecyclerBindingAdapter;
 import com.ghteam.eventgo.ui.activity.createevent.CreateEventActivity;
+import com.ghteam.eventgo.util.network.OnTaskStatusChangeListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class EventsListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private ActivityEventsListBinding activityBinding;
+    private EventsListViewModel viewModel;
+    private RecyclerBindingAdapter<Event> recyclerAdapter;
+
+    private RecyclerView rvEventsList;
+
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_events_list);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        activityBinding = DataBindingUtil.setContentView(this, R.layout.activity_events_list);
+
+        viewModel = ViewModelProviders.of(this, new EventsListViewModel
+                .EventsListViewModelFactory(Repository.getInstance(this)))
+                .get(EventsListViewModel.class);
+
+        recyclerAdapter = new RecyclerBindingAdapter<>(R.layout.layout_event_list_item,
+                BR.event, new ArrayList<Event>());
+
+        rvEventsList = activityBinding.content.content.rvEventsList;
+        rvEventsList.setAdapter(recyclerAdapter);
+        rvEventsList.setLayoutManager(new GridLayoutManager(this, 2));
+
+        progressBar = activityBinding.content.content.progressBar;
+
+        Toolbar toolbar = activityBinding.content.toolbar;
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = activityBinding.content.fab;
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -43,6 +85,9 @@ public class EventsListActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        registerViewModelObservers();
+        viewModel.loadEvents();
     }
 
     @Override
@@ -101,4 +146,42 @@ public class EventsListActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    private void registerViewModelObservers() {
+        viewModel.getEventsList().observeForever(new Observer<List<Event>>() {
+            @Override
+            public void onChanged(@Nullable List<Event> events) {
+                recyclerAdapter.setItems(events);
+            }
+        });
+
+        viewModel.getTaskStatus().observeForever(new Observer<OnTaskStatusChangeListener.TaskStatus>() {
+            @Override
+            public void onChanged(@Nullable OnTaskStatusChangeListener.TaskStatus taskStatus) {
+                switch (taskStatus) {
+                    case IN_PROGRESS:
+                        showProgressBar();
+                        return;
+                    default:
+                        hideProgressBar();
+                        return;
+                }
+            }
+        });
+    }
+
+    private void showProgressBar() {
+
+        progressBar.setVisibility(View.VISIBLE);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        rvEventsList.setAlpha(0.5f);
+    }
+
+
+    private void hideProgressBar() {
+        progressBar.setVisibility(View.GONE);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        rvEventsList.setAlpha(1f);
+    }
 }
+

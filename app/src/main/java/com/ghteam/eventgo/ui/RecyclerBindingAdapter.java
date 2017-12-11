@@ -36,7 +36,7 @@ public class RecyclerBindingAdapter<T>
         return new BindingHolder(v);
     }
 
-    public void changeItems(List<T> items) {
+    public void setItems(List<T> items) {
         if (items != null) {
             this.items.clear();
             this.items.addAll(items);

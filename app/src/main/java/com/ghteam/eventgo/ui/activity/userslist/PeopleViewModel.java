@@ -22,7 +22,7 @@ public class PeopleViewModel extends ViewModel {
     private PeopleViewModel(Repository repository) {
         mRepository = repository;
 
-        mUsers = mRepository.getCurrentUsers();
+        mUsers = mRepository.getUsers();
     }
 
     public LiveDataList<User> getUsers() {

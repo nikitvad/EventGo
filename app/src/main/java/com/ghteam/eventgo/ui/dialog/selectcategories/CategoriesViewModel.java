@@ -22,7 +22,7 @@ public class CategoriesViewModel extends ViewModel {
         mRepository = repository;
 
         //TODO: get list of categories
-        mCategoriesList = repository.getEventCategories();
+        mCategoriesList = repository.initializeCategories();
 
     }
 

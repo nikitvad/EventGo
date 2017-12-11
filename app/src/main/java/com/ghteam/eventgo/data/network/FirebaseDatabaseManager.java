@@ -51,6 +51,8 @@ public class FirebaseDatabaseManager {
 
     public static void loadUsers(final OnLoadUsersCompleteListener listener) {
 
+
+        
         firestore.collection(REF_USERS).limit(30).addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {

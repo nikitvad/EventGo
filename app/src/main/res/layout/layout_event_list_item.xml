@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+            name="event"
+            type="com.ghteam.eventgo.data.model.Event" />
+    </data>
 
     <android.support.v7.widget.CardView
         android:layout_width="wrap_content"
@@ -16,55 +22,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:text="Event name"
+                android:text="@{event.name}"
                 android:textSize="18sp" />
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:orientation="horizontal">
-
-                <android.support.v7.widget.CardView
-                    android:id="@+id/view2"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="center_horizontal"
-                    android:elevation="12dp"
-                    android:innerRadius="0dp"
-                    android:shape="ring"
-                    android:thicknessRatio="1.9"
-                    app:cardCornerRadius="25dp">
-
-                    <ImageView
-                        android:id="@+id/iv_profile_photo"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center" />
-                </android.support.v7.widget.CardView>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="30dp"
-                    android:text="Jon Snow"
-                    android:textSize="14sp" />
-            </LinearLayout>
 
             <TextView
                 android:id="@+id/tv_date"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="23 october at 12:43 pm" />
+                android:layout_height="wrap_content" />
 
             <ImageView
                 android:id="@+id/iv_event_photo"
                 android:layout_width="wrap_content"
                 android:layout_height="100dp"
                 android:layout_gravity="center_horizontal"
-                android:src="@drawable/img_evetn" />
+                android:src="@{event.images[0]}" />
 
             <TextView
                 android:id="@+id/category_item"
@@ -72,7 +43,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:layout_marginRight="20dp"
-                android:text="Sport" />
+                android:text="@{event.category.name}" />
         </LinearLayout>
     </android.support.v7.widget.CardView>
 </layout>

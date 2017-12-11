@@ -14,6 +14,7 @@ import com.ghteam.eventgo.data.network.FirebaseAccountManager;
 import com.ghteam.eventgo.data.network.FirebaseDatabaseManager;
 import com.ghteam.eventgo.util.LiveDataList;
 import com.ghteam.eventgo.util.network.AccountStatus;
+import com.ghteam.eventgo.util.network.OnTaskStatusChangeListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
@@ -25,9 +26,10 @@ import java.util.List;
  */
 
 public class Repository {
+
     private static Repository sInstance;
     private static CategoriesDataSource categoriesDataSource;
-    private EventsDataSource eventsDataSource;
+    private static EventsDataSource eventsDataSource;
 
     private static LiveData<List<Category>> eventsCategories;
 
@@ -51,16 +53,9 @@ public class Repository {
     private Repository(Context context) {
         mContext = context;
         categoriesDataSource = CategoriesDataSource.getInstance(context);
-        eventsCategories = categoriesDataSource.getCurrentCategories();
+
         eventsDataSource = EventsDataSource.getInstance();
         mUsers = new LiveDataList<>();
-    }
-
-    public LiveData<List<Category>> getEventCategories() {
-
-        //TODO: return data from db
-        initializeCategories();
-        return eventsCategories;
     }
 
     private void loadUsers() {
@@ -75,9 +70,9 @@ public class Repository {
 
     }
 
-    public LiveDataList<User> getCurrentUsers() {
-        loadUsers();
 
+    public LiveDataList<User> getUsers() {
+        loadUsers();
         return mUsers;
     }
 
@@ -85,19 +80,18 @@ public class Repository {
         FirebaseDatabaseManager.pushUserInfo(uid, user, listener);
     }
 
-    private void initializeCategories() {
-        if (!isActualCategoriesList()) {
-            categoriesDataSource.fetchCategories();
+    public LiveData<List<Category>> initializeCategories() {
+        if (eventsCategories == null) {
+            eventsCategories = categoriesDataSource.getCurrentCategories();
+            categoriesDataSource.loadCategories();
         }
+        return eventsCategories;
     }
 
     public MutableLiveData<User> getCurrentUser() {
         return FirebaseAccountManager.getCurrentUser();
     }
 
-    public LiveDataList<Event> getCurrentEvents() {
-        return events;
-    }
 
     public MutableLiveData<AccountStatus> getCurrentAccountStatus() {
         return FirebaseAccountManager.getCurrentAccountStatus();
@@ -108,14 +102,16 @@ public class Repository {
         FirebaseDatabaseManager.pushNewEvent(event, onSuccessListener, onFailureListener);
     }
 
-    private boolean isActualCategoriesList() {
-        //TODO: implement this method
-        return false;
+    public void loadEvents(OnTaskStatusChangeListener listener) {
+        eventsDataSource.loadEvents(listener);
     }
 
-    private void initializeEvents() {
+    public LiveDataList<Event> initializeEvents() {
         if (events == null) {
-            events = eventsDataSource.loadEvents();
+            events = eventsDataSource.getCurrentEvents();
         }
+        return events;
     }
+
+
 }

@@ -27,7 +27,6 @@ import com.ghteam.eventgo.data.network.FirebaseAccountManager;
 import com.ghteam.eventgo.databinding.ActivitySignUpBinding;
 import com.ghteam.eventgo.ui.activity.profilesettings.ProfileSettingsActivity;
 import com.ghteam.eventgo.util.network.FirebaseUtil;
-import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,16 +36,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import br.com.ilhasoft.support.validation.Validator;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class SignUpActivity extends AppCompatActivity {
 
-
-    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private static final String TAG = SignUpActivity.class.getSimpleName();
-    private Validator mValidator;
     private ActivitySignUpBinding mDataBinding;
     Calendar dateAndTime = Calendar.getInstance();
 
@@ -64,40 +59,34 @@ public class SignUpActivity extends AppCompatActivity {
 
         setSupportActionBar(mDataBinding.toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        mValidator = new Validator(mDataBinding);
-        mValidator.enableFormValidationMode();
-        mValidator.validate();
+
 
     }
 
     @OnClick(R.id.bt_submit)
     void onSubmitClick() {
-        if (mValidator.validate()) {
-            Log.d(TAG, "onSubmitClick: " + mViewModel.toString());
+        Log.d(TAG, "onSubmitClick: " + mViewModel.toString());
 
-            showProgressBar();
+        showProgressBar();
 
-            FirebaseAccountManager.createNewAccount(mViewModel.getEmail(),
-                    mViewModel.getPassword(), mViewModel.getUserData(),
-                    new FirebaseAccountManager.OnResultListener() {
-                        @Override
-                        public void onSuccess() {
-                            hideProgressBar();
-                            //TODO: go to ProfileSettingsActivity if user not set up profile setting yet
-                            startActivity(ProfileSettingsActivity.class);
-                        }
+        FirebaseAccountManager.createNewAccount(mViewModel.getEmail(),
+                mViewModel.getPassword(), mViewModel.getUserData(),
+                new FirebaseAccountManager.OnResultListener() {
+                    @Override
+                    public void onSuccess() {
+                        hideProgressBar();
+                        startActivity(ProfileSettingsActivity.class);
+                    }
 
-                        @Override
-                        public void onFailed() {
-                            mDataBinding.mainContainer.setAlpha(1.0f);
-                            mDataBinding.mainContainer.setClickable(true);
+                    @Override
+                    public void onFailed() {
+                        mDataBinding.mainContainer.setAlpha(1.0f);
+                        mDataBinding.mainContainer.setClickable(true);
 
-                            Toast.makeText(SignUpActivity.this, "Fail",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    });
-        }
-
+                        Toast.makeText(SignUpActivity.this, "Fail",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private void showProgressBar() {

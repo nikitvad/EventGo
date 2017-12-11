@@ -10,6 +10,7 @@ import android.view.View;
 import com.ghteam.eventgo.R;
 import com.ghteam.eventgo.databinding.ActivityLaunchBinding;
 import com.ghteam.eventgo.ui.activity.createevent.CreateEventActivity;
+import com.ghteam.eventgo.ui.activity.eventslist.EventsListActivity;
 import com.ghteam.eventgo.ui.activity.login.LoginActivity;
 import com.ghteam.eventgo.ui.activity.profilesettings.ProfileSettingsActivity;
 import com.ghteam.eventgo.ui.activity.userslist.PeopleActivity;
@@ -67,37 +68,14 @@ public class LaunchActivity extends AppCompatActivity {
         });
 
 
-        activityBinding.btPushDemoEvents.setOnClickListener(new View.OnClickListener() {
+        activityBinding.btEventsList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Human h = new Human();
-                h.setName("vadym");
+                startActivity(EventsListActivity.class);
             }
         });
 
 
-    }
-
-
-    private class Human {
-        private String name;
-        private FieldPath ref;
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public FieldPath getRef() {
-            return ref;
-        }
-
-        public void setRef(FieldPath ref) {
-            this.ref = ref;
-        }
     }
 
     private void startActivity(Class<? extends Activity> activity) {

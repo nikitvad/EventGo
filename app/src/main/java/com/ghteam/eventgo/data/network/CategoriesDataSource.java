@@ -25,13 +25,9 @@ public class CategoriesDataSource {
 
     private static MutableLiveData<List<Category>> mDownloadedCategories;
 
-    private final Context mContext;
-
     private static CategoriesDataSource sInstance;
 
-    private CategoriesDataSource(Context context) {
-        mContext = context;
-
+    private CategoriesDataSource() {
         mDownloadedCategories = new MutableLiveData<List<Category>>();
     }
 
@@ -43,14 +39,14 @@ public class CategoriesDataSource {
         if (sInstance == null) {
             synchronized (CategoriesDataSource.class) {
                 if (sInstance == null) {
-                    sInstance = new CategoriesDataSource(context.getApplicationContext());
+                    sInstance = new CategoriesDataSource();
                 }
             }
         }
         return sInstance;
     }
 
-    public static void fetchCategories() {
+    public static void loadCategories() {
         firestore.collection(FIRESTORE_EVENT_CATEGORIES).addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
