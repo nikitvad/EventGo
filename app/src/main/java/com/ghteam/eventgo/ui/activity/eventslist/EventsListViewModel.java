@@ -31,7 +31,7 @@ public class EventsListViewModel extends ViewModel {
     public void loadEvents() {
         mRepository.loadEvents(new OnTaskStatusChangeListener() {
             @Override
-            public void onChanged(TaskStatus status) {
+            public void onStatusChanged(TaskStatus status) {
                 mTaskStatus.setValue(status);
             }
         });

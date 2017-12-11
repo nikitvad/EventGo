@@ -199,7 +199,7 @@ public class LoginActivity extends LifecycleActivity {
                     return;
 
                 case REQUIRE_UPDATE_PROFILE:
-                    Log.d(TAG, "onChanged: " + PrefsUtil.getLoggedType());
+                    Log.d(TAG, "onStatusChanged: " + PrefsUtil.getLoggedType());
                     if (PrefsUtil.getLoggedType().equals(PrefsUtil.LOGGED_TYPE_FACEBOOK)) {
                         addNewFacebookUser();
                     } else {

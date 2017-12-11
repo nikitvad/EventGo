@@ -225,7 +225,7 @@ public class CreateEventActivity extends AppCompatActivity {
         viewModel.getImageSources().addInsertObserver(new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
-                Log.d(TAG, "onChanged: " + s);
+                Log.d(TAG, "onStatusChanged: " + s);
                 if (s != null) {
                     imageAdapter.addItem(s);
                 }
@@ -247,7 +247,7 @@ public class CreateEventActivity extends AppCompatActivity {
         viewModel.getUploadingImages().addPutObserver(new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
-                Log.d(TAG, "onChanged: " + s + " " + viewModel.getUploadingImages().get(s));
+                Log.d(TAG, "onStatusChanged: " + s + " " + viewModel.getUploadingImages().get(s));
                 imageAdapter.setIsLoadingForItem(viewModel.getUploadingImages().get(s), s);
             }
         });

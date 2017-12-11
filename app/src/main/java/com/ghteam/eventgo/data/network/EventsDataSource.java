@@ -46,7 +46,7 @@ public class EventsDataSource {
 
     public void loadEvents(final OnTaskStatusChangeListener listener) {
 
-        listener.onChanged(OnTaskStatusChangeListener.TaskStatus.IN_PROGRESS);
+        listener.onStatusChanged(OnTaskStatusChangeListener.TaskStatus.IN_PROGRESS);
 
         firestore.collection("events").limit(30).addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
@@ -54,12 +54,12 @@ public class EventsDataSource {
 
                 if (documentSnapshots != null && documentSnapshots.size() > 0) {
                     downloadedEventsList.setValue(documentSnapshots.toObjects(Event.class));
-                    listener.onChanged(OnTaskStatusChangeListener.TaskStatus.SUCCESS);
+                    listener.onStatusChanged(OnTaskStatusChangeListener.TaskStatus.SUCCESS);
                 } else if (e != null) {
                     Log.w(TAG, "onEvent: " + e.getMessage());
-                    listener.onChanged(OnTaskStatusChangeListener.TaskStatus.FAILED);
+                    listener.onStatusChanged(OnTaskStatusChangeListener.TaskStatus.FAILED);
                 } else {
-                    listener.onChanged(OnTaskStatusChangeListener.TaskStatus.SUCCESS);
+                    listener.onStatusChanged(OnTaskStatusChangeListener.TaskStatus.SUCCESS);
                 }
             }
         });

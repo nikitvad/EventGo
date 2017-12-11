@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import com.ghteam.eventgo.data.Repository;
 import com.ghteam.eventgo.data.model.User;
 import com.ghteam.eventgo.util.LiveDataList;
+import com.ghteam.eventgo.util.network.OnTaskStatusChangeListener;
 
 /**
  * Created by nikit on 08.12.2017.
@@ -22,7 +23,22 @@ public class PeopleViewModel extends ViewModel {
     private PeopleViewModel(Repository repository) {
         mRepository = repository;
 
-        mUsers = mRepository.getUsers();
+        mUsers = mRepository.initializeUsers();
+
+        mIsLoading = new MutableLiveData<>();
+        mRepository.loadUsers(new OnTaskStatusChangeListener() {
+            @Override
+            public void onStatusChanged(TaskStatus status) {
+                switch (status) {
+                    case IN_PROGRESS:
+                        mIsLoading.setValue(true);
+                        return;
+                    default:
+                        mIsLoading.setValue(false);
+                        return;
+                }
+            }
+        });
     }
 
     public LiveDataList<User> getUsers() {

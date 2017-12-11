@@ -50,13 +50,13 @@ public class ProfileSettingsViewModel extends ViewModel {
         mCategoriesList = new LiveDataList<>();
         mUserDescription = new MutableLiveData<>();
 
-        mUser = repository.getCurrentUser();
+        mUser = repository.getCurrentAccount();
 
         mUser.observeForever(new Observer<User>() {
             @Override
             public void onChanged(@Nullable User user) {
                 if (user != null) {
-                    Log.d(TAG, "onChanged: " + user.toString());
+                    Log.d(TAG, "onStatusChanged: " + user.toString());
                     mFirstName.setValue(user.getFirstName());
                     mLastName.setValue(user.getLastName());
                     mCategoriesList.setValue(user.getInterests());

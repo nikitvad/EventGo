@@ -12,6 +12,7 @@ import com.ghteam.eventgo.data.network.CategoriesDataSource;
 import com.ghteam.eventgo.data.network.EventsDataSource;
 import com.ghteam.eventgo.data.network.FirebaseAccountManager;
 import com.ghteam.eventgo.data.network.FirebaseDatabaseManager;
+import com.ghteam.eventgo.data.network.UsersDataSource;
 import com.ghteam.eventgo.util.LiveDataList;
 import com.ghteam.eventgo.util.network.AccountStatus;
 import com.ghteam.eventgo.util.network.OnTaskStatusChangeListener;
@@ -28,8 +29,10 @@ import java.util.List;
 public class Repository {
 
     private static Repository sInstance;
+
     private static CategoriesDataSource categoriesDataSource;
     private static EventsDataSource eventsDataSource;
+    private static UsersDataSource usersDataSource;
 
     private static LiveData<List<Category>> eventsCategories;
 
@@ -37,42 +40,31 @@ public class Repository {
 
     private static LiveDataList<Event> events;
 
-    private static Context mContext;
-
     public static Repository getInstance(Context context) {
         if (sInstance == null) {
             synchronized (Repository.class) {
                 if (sInstance == null) {
-                    sInstance = new Repository(context);
+                    sInstance = new Repository();
                 }
             }
         }
         return sInstance;
     }
 
-    private Repository(Context context) {
-        mContext = context;
-        categoriesDataSource = CategoriesDataSource.getInstance(context);
-
+    private Repository() {
+        categoriesDataSource = CategoriesDataSource.getInstance();
         eventsDataSource = EventsDataSource.getInstance();
-        mUsers = new LiveDataList<>();
+        usersDataSource = UsersDataSource.getInstance();
     }
 
-    private void loadUsers() {
-        FirebaseDatabaseManager.loadUsers(new FirebaseDatabaseManager.OnLoadUsersCompleteListener() {
-            @Override
-            public void onComplete(@Nullable List<User> users) {
-                if (users != null && users.size() > 0) {
-                    mUsers.postValue(users);
-                }
-            }
-        });
-
+    public void loadUsers(OnTaskStatusChangeListener listener) {
+        usersDataSource.loadUsers(listener);
     }
 
-
-    public LiveDataList<User> getUsers() {
-        loadUsers();
+    public LiveDataList<User> initializeUsers() {
+        if (mUsers == null) {
+            mUsers = usersDataSource.getCurrentUsers();
+        }
         return mUsers;
     }
 
@@ -87,11 +79,10 @@ public class Repository {
         }
         return eventsCategories;
     }
-
-    public MutableLiveData<User> getCurrentUser() {
+    
+    public MutableLiveData<User> getCurrentAccount() {
         return FirebaseAccountManager.getCurrentUser();
     }
-
 
     public MutableLiveData<AccountStatus> getCurrentAccountStatus() {
         return FirebaseAccountManager.getCurrentAccountStatus();
@@ -112,6 +103,4 @@ public class Repository {
         }
         return events;
     }
-
-
 }

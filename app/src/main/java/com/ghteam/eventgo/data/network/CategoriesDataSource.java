@@ -35,7 +35,7 @@ public class CategoriesDataSource {
         return mDownloadedCategories;
     }
 
-    public static CategoriesDataSource getInstance(Context context) {
+    public static CategoriesDataSource getInstance() {
         if (sInstance == null) {
             synchronized (CategoriesDataSource.class) {
                 if (sInstance == null) {

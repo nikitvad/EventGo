@@ -6,7 +6,7 @@ package com.ghteam.eventgo.util.network;
 
 public interface OnTaskStatusChangeListener {
 
-    void onChanged(TaskStatus status);
+    void onStatusChanged(TaskStatus status);
 
     enum TaskStatus {
         SUCCESS,

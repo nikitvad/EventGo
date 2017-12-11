@@ -118,7 +118,7 @@ public class ProfileSettingsActivity extends AppCompatActivity {
     private Observer<String> profileImageObserver = new Observer<String>() {
         @Override
         public void onChanged(@Nullable String s) {
-            Log.d(TAG, "onChanged: " + s);
+            Log.d(TAG, "onStatusChanged: " + s);
             if (s != null && !s.isEmpty()) {
                 Picasso.with(ProfileSettingsActivity.this).load(s)
                         .into(activityBinding.ivProfilePhoto);

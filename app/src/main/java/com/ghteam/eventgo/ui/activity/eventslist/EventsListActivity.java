@@ -171,7 +171,6 @@ public class EventsListActivity extends AppCompatActivity
     }
 
     private void showProgressBar() {
-
         progressBar.setVisibility(View.VISIBLE);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         rvEventsList.setAlpha(0.5f);
