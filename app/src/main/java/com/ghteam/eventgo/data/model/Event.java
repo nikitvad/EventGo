@@ -81,4 +81,17 @@ public class Event {
     public void setImages(List<String> images) {
         this.images = images;
     }
+
+    @Override
+    public String toString() {
+        return "Event{" +
+                "ownerId='" + ownerId + '\'' +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", address='" + address + '\'' +
+                ", category=" + category +
+                ", images=" + images +
+                ", location=" + location +
+                '}';
+    }
 }

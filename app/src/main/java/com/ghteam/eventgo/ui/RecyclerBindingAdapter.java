@@ -18,7 +18,7 @@ import java.util.List;
 public class RecyclerBindingAdapter<T>
         extends RecyclerView.Adapter<RecyclerBindingAdapter.BindingHolder> {
     private int holderLayout, variableId;
-    private List<T> items = new ArrayList<>();
+    private List<T> mItems = new ArrayList<>();
     private OnItemClickListener<T> onItemClickListener;
 
     private static final String TAG = RecyclerBindingAdapter.class.getSimpleName();
@@ -26,7 +26,7 @@ public class RecyclerBindingAdapter<T>
     public RecyclerBindingAdapter(int holderLayout, int variableId, List<T> items) {
         this.holderLayout = holderLayout;
         this.variableId = variableId;
-        this.items = items;
+        this.mItems = items;
     }
 
     @Override
@@ -38,31 +38,37 @@ public class RecyclerBindingAdapter<T>
 
     public void setItems(List<T> items) {
         if (items != null) {
-            this.items.clear();
-            this.items.addAll(items);
+            this.mItems.clear();
+            this.mItems.addAll(items);
             notifyDataSetChanged();
         }
     }
 
+    public void addItems(List<T> items) {
+        int notifyFrom = mItems.size();
+        mItems.addAll(items);
+        notifyItemRangeInserted(notifyFrom, items.size());
+    }
+
     public void addItem(T item) {
-        items.add(item);
-        notifyItemInserted(items.size() - 1);
+        mItems.add(item);
+        notifyItemInserted(mItems.size() - 1);
     }
 
     public void removeItem(T item) {
-        items.remove(item);
+        mItems.remove(item);
         notifyDataSetChanged();
     }
 
     @Override
     public void onBindViewHolder(RecyclerBindingAdapter.BindingHolder holder, int position) {
-        T item = items.get(position);
+        T item = mItems.get(position);
         holder.getBinding().setVariable(variableId, item);
     }
 
     @Override
     public int getItemCount() {
-        return items.size();
+        return mItems.size();
     }
 
     public void setOnItemClickListener(OnItemClickListener<T> onItemClickListener) {
@@ -82,8 +88,8 @@ public class RecyclerBindingAdapter<T>
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Log.d(TAG, "onClick: " + getAdapterPosition() + " " + items.toString());
-                        onItemClickListener.onItemClick(getAdapterPosition(), items.get(getAdapterPosition()));
+                        Log.d(TAG, "onClick: " + getAdapterPosition() + " " + mItems.toString());
+                        onItemClickListener.onItemClick(getAdapterPosition(), mItems.get(getAdapterPosition()));
                     }
                 });
             }

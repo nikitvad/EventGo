@@ -79,7 +79,7 @@ public class Repository {
         }
         return eventsCategories;
     }
-    
+
     public MutableLiveData<User> getCurrentAccount() {
         return FirebaseAccountManager.getCurrentUser();
     }
@@ -95,6 +95,10 @@ public class Repository {
 
     public void loadEvents(OnTaskStatusChangeListener listener) {
         eventsDataSource.loadEvents(listener);
+    }
+
+    public void loadNextEvents(int count, OnTaskStatusChangeListener listener) {
+        eventsDataSource.loadNextEvents(count, listener);
     }
 
     public LiveDataList<Event> initializeEvents() {

@@ -84,7 +84,7 @@ public class PushDemoEvents {
     }
 
 
-    private List<Event> generateDemoEvents() {
+    public List<Event> generateDemoEvents() {
         List<Event> events = new ArrayList<>();
         for (int i = 0; i < names.length - 1; i++) {
 

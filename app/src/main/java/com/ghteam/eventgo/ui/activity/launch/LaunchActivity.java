@@ -10,17 +10,13 @@ import android.view.View;
 import com.ghteam.eventgo.R;
 import com.ghteam.eventgo.databinding.ActivityLaunchBinding;
 import com.ghteam.eventgo.ui.activity.createevent.CreateEventActivity;
+import com.ghteam.eventgo.ui.activity.eventdetails.EventDetailsActivity;
 import com.ghteam.eventgo.ui.activity.eventslist.EventsListActivity;
 import com.ghteam.eventgo.ui.activity.login.LoginActivity;
 import com.ghteam.eventgo.ui.activity.profilesettings.ProfileSettingsActivity;
 import com.ghteam.eventgo.ui.activity.userslist.PeopleActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FieldPath;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 
 public class LaunchActivity extends AppCompatActivity {
 
@@ -72,6 +68,13 @@ public class LaunchActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(EventsListActivity.class);
+            }
+        });
+
+        activityBinding.btEventDetails.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(EventDetailsActivity.class);
             }
         });
 

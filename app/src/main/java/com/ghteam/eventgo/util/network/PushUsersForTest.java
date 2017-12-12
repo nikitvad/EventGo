@@ -69,7 +69,7 @@ public class PushUsersForTest {
 
     }
 
-    private List<User> generateUsers() {
+    public List<User> generateUsers() {
         List<User> users = new ArrayList<>();
         for (String firstName : firstNames) {
 

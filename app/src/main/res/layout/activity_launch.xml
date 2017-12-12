@@ -42,7 +42,13 @@
             android:id="@+id/bt_events_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="push demo events" />
+            android:text="events list" />
+
+        <Button
+            android:id="@+id/bt_event_details"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Event details" />
 
     </LinearLayout>
 </layout>

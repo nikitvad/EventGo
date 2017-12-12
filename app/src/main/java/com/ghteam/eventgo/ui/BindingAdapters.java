@@ -16,4 +16,5 @@ public class BindingAdapters {
         Picasso.with(view.getContext())
                 .load(url).into(view);
     }
+
 }

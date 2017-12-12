@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+            name="imageUrl"
+            type="String" />
+
+        <variable
+            name="isSelected"
+            type="Boolean" />
+    </data>
+
+    <ImageView
+        android:id="@+id/iv_image"
+        android:layout_width="90dp"
+        android:layout_height="70dp"
+        android:layout_gravity="center"
+        android:alpha="@{isSelected==true ? 1.0f : 0.5f}"
+        android:scaleType="centerCrop"
+        android:src="@{imageUrl}" />
+
+</layout>

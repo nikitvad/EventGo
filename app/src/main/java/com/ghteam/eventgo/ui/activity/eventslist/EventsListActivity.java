@@ -44,6 +44,8 @@ public class EventsListActivity extends AppCompatActivity
 
     private ProgressBar progressBar;
 
+    public static final String TAG = EventsListActivity.class.getSimpleName();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +63,15 @@ public class EventsListActivity extends AppCompatActivity
         rvEventsList = activityBinding.content.content.rvEventsList;
         rvEventsList.setAdapter(recyclerAdapter);
         rvEventsList.setLayoutManager(new GridLayoutManager(this, 2));
+
+        rvEventsList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                if (!recyclerView.canScrollVertically(1)) {
+                    viewModel.loadEvents();
+                }
+            }
+        });
 
         progressBar = activityBinding.content.content.progressBar;
 
@@ -151,7 +162,7 @@ public class EventsListActivity extends AppCompatActivity
         viewModel.getEventsList().observeForever(new Observer<List<Event>>() {
             @Override
             public void onChanged(@Nullable List<Event> events) {
-                recyclerAdapter.setItems(events);
+                recyclerAdapter.addItems(events);
             }
         });
 

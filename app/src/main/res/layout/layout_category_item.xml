@@ -31,7 +31,6 @@
 
         <TextView
             android:id="@+id/tv_category_name"
-
             android:layout_margin="10dp"
             android:textSize="18sp"
             android:layout_width="match_parent"
