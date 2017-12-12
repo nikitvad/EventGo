@@ -67,9 +67,9 @@ public class PushDemoEvents {
 
         categories = new ArrayList<>();
 
-        categories.add(new Category(null, "trips", "https://cdn2.iconfinder.com/data/icons/maps-navigation-glyph-black/614/3722_-_Route_I-512.png"));
-        categories.add(new Category(null, "walking", "https://d30y9cdsu7xlg0.cloudfront.net/png/19727-200.png"));
-        categories.add(new Category(null, "coffee", "http://cdn.mysitemyway.com/etc-mysitemyway/icons/legacy-previews/icons/glossy-black-icons-food-beverage/056880-glossy-black-icon-food-beverage-coffee-tea.png"));
+        categories.add(new Category("trips", "https://cdn2.iconfinder.com/data/icons/maps-navigation-glyph-black/614/3722_-_Route_I-512.png"));
+        categories.add(new Category("walking", "https://d30y9cdsu7xlg0.cloudfront.net/png/19727-200.png"));
+        categories.add(new Category("coffee", "http://cdn.mysitemyway.com/etc-mysitemyway/icons/legacy-previews/icons/glossy-black-icons-food-beverage/056880-glossy-black-icon-food-beverage-coffee-tea.png"));
 
     }
 

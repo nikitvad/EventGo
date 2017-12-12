@@ -1,5 +1,9 @@
 package com.ghteam.eventgo.data.model;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.PrimaryKey;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -7,9 +11,18 @@ import java.util.List;
 /**
  * Created by nikit on 19.11.2017.
  */
-
+@Entity(tableName = "users", foreignKeys = @ForeignKey(
+        entity = Event.class,
+        parentColumns = "id",
+        childColumns = "ownerId"
+))
 public class User {
     //    private String firebaseId;
+    @PrimaryKey(autoGenerate = true)
+    public int databaseId;
+
+    public int ownerId;
+
     private String firstName = "";
     private String lastName = "";
     private Date birthday = new Date(0);

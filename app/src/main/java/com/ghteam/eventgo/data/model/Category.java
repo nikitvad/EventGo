@@ -1,29 +1,33 @@
 package com.ghteam.eventgo.data.model;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.PrimaryKey;
+
 /**
  * Created by nikit on 20.11.2017.
  */
-
+@Entity(tableName = "categories", foreignKeys = @ForeignKey(
+        entity = Event.class,
+        parentColumns = "id",
+        childColumns = "ownerId"
+))
 public class Category {
-    private String id;
+
+    @PrimaryKey(autoGenerate = true)
+    public int id;
+
+    public int ownerId;
+
     private String name;
     private String icon;
 
     public Category() {
     }
 
-    public Category(String id, String name, String iconUrl) {
-        this.id = id;
+    public Category(String name, String iconUrl) {
         this.name = name;
         this.icon = iconUrl;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -56,16 +60,18 @@ public class Category {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Category that = (Category) o;
+        Category category = (Category) o;
 
-        if (id != null ? !id.equals(that.id) : that.id != null) return false;
-        if (name != null ? !name.equals(that.name) : that.name != null) return false;
-        return icon != null ? icon.equals(that.icon) : that.icon == null;
+        if (id != category.id) return false;
+        if (ownerId != category.ownerId) return false;
+        if (name != null ? !name.equals(category.name) : category.name != null) return false;
+        return icon != null ? icon.equals(category.icon) : category.icon == null;
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
+        int result = id;
+        result = 31 * result + ownerId;
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (icon != null ? icon.hashCode() : 0);
         return result;

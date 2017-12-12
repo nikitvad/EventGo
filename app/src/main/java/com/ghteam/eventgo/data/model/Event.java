@@ -1,18 +1,35 @@
 package com.ghteam.eventgo.data.model;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
+
 import java.util.List;
 
 /**
  * Created by nikit on 30.11.2017.
  */
-
+@Entity(tableName = "events")
 public class Event {
+
+    @PrimaryKey(autoGenerate = true)
+    public int id;
+
     private String ownerId;
+
     private String name;
+
     private String description;
+
     private String address;
+
+    @Ignore
     private Category category;
+
+    @Ignore
     private List<String> images;
+
+    @Ignore
     private Location location;
 
     public Event() {
