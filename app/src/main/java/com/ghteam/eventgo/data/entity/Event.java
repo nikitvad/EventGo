@@ -1,8 +1,9 @@
-package com.ghteam.eventgo.data.model;
+package com.ghteam.eventgo.data.entity;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
 
 import java.util.List;
 
@@ -12,8 +13,9 @@ import java.util.List;
 @Entity(tableName = "events")
 public class Event {
 
-    @PrimaryKey(autoGenerate = true)
-    public int id;
+    @NonNull
+    @PrimaryKey
+    private String id;
 
     private String ownerId;
 
@@ -41,6 +43,14 @@ public class Event {
         this.address = address;
         this.category = category;
         this.images = images;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public Location getLocation() {

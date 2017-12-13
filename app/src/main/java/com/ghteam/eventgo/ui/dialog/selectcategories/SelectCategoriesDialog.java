@@ -15,8 +15,9 @@ import android.view.ViewGroup;
 
 import com.ghteam.eventgo.R;
 import com.ghteam.eventgo.data.Repository;
-import com.ghteam.eventgo.data.model.Category;
+import com.ghteam.eventgo.data.entity.Category;
 import com.ghteam.eventgo.databinding.DialogSelectCategoriesBinding;
+import com.ghteam.eventgo.util.InjectorUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +59,7 @@ public class SelectCategoriesDialog extends DialogFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 
-        mRepository = Repository.getInstance(this.getContext());
+        mRepository = InjectorUtil.provideRepository(getContext());
         viewModel = ViewModelProviders.of(this, new CategoriesViewModelFactory(mRepository))
                 .get(CategoriesViewModel.class);
 

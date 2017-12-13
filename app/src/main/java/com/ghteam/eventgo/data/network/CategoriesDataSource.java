@@ -2,10 +2,9 @@ package com.ghteam.eventgo.data.network;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
-import android.content.Context;
 import android.util.Log;
 
-import com.ghteam.eventgo.data.model.Category;
+import com.ghteam.eventgo.data.entity.Category;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;

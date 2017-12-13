@@ -16,12 +16,12 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.ghteam.eventgo.R;
-import com.ghteam.eventgo.data.Repository;
-import com.ghteam.eventgo.data.model.Category;
+import com.ghteam.eventgo.data.entity.Category;
 import com.ghteam.eventgo.databinding.ActivityProfileSettingsBinding;
 import com.ghteam.eventgo.ui.activity.eventslist.EventsListActivity;
 import com.ghteam.eventgo.ui.adapter.SelectedCategoriesRecyclerAdapter;
 import com.ghteam.eventgo.ui.dialog.selectcategories.SelectCategoriesDialog;
+import com.ghteam.eventgo.util.InjectorUtil;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -52,7 +52,7 @@ public class ProfileSettingsActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         viewModel = ViewModelProviders.of(this,
-                new ProfileSettingsViewModel.ProfileSettingViewModelFactory(Repository.getInstance(this)))
+                new ProfileSettingsViewModel.ProfileSettingViewModelFactory(InjectorUtil.provideRepository(this)))
                 .get(ProfileSettingsViewModel.class);
 
         categoriesRecyclerAdapter = new SelectedCategoriesRecyclerAdapter();

@@ -1,8 +1,12 @@
 package com.ghteam.eventgo.util.network;
 
-import com.ghteam.eventgo.data.model.Category;
-import com.ghteam.eventgo.data.model.Event;
-import com.google.firebase.firestore.FirebaseFirestore;
+import android.support.annotation.NonNull;
+
+import com.ghteam.eventgo.data.entity.Category;
+import com.ghteam.eventgo.data.entity.Event;
+import com.ghteam.eventgo.data.network.FirebaseDatabaseManager;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,10 +80,20 @@ public class PushDemoEvents {
     public void push() {
         List<Event> events = generateDemoEvents();
 
-        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+
 
         for (Event item : events) {
-            firestore.collection("events").add(item);
+            FirebaseDatabaseManager.pushNewEvent(item, new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+
+                }
+            }, new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+
+                }
+            });
         }
     }
 

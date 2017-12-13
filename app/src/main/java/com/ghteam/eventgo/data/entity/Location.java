@@ -1,4 +1,4 @@
-package com.ghteam.eventgo.data.model;
+package com.ghteam.eventgo.data.entity;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;

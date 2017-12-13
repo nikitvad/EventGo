@@ -2,9 +2,10 @@ package com.ghteam.eventgo.data.network;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
-import com.ghteam.eventgo.data.model.Event;
-import com.ghteam.eventgo.data.model.User;
+import com.ghteam.eventgo.data.entity.Event;
+import com.ghteam.eventgo.data.entity.User;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
@@ -25,11 +26,13 @@ public class FirebaseDatabaseManager {
 
     public static final String REF_EVENTS = "events";
 
+    public static final String TAG = FirebaseDatabaseManager.class.getSimpleName();
 
     private static FirebaseFirestore firestore = FirebaseFirestore.getInstance();
 
     public static void pushUserInfo(String uid, User user, @Nullable final OnPullUserResultListener listener) {
 
+        user.setId(uid);
         firestore.collection(REF_USERS).document(uid).set(user)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -63,11 +66,20 @@ public class FirebaseDatabaseManager {
         });
     }
 
-    public static void pushNewEvent(Event event, OnSuccessListener<DocumentReference> onSuccessListener,
+    public static void pushNewEvent(Event event, OnSuccessListener<Void> onSuccessListener,
                                     OnFailureListener onFailureListener) {
-        firestore.collection(REF_EVENTS).add(event)
-                .addOnSuccessListener(onSuccessListener)
+
+        DocumentReference documentReference = firestore.collection(REF_EVENTS).document();
+
+        String eventId = documentReference.getId();
+
+        Log.d(TAG, "pushNewEvent: " + eventId);
+
+        event.setId(eventId);
+        event.getCategory().setOwnerId(eventId);
+        documentReference.set(event).addOnSuccessListener(onSuccessListener)
                 .addOnFailureListener(onFailureListener);
+
     }
 
     public interface OnLoadUsersCompleteListener {

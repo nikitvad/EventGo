@@ -50,5 +50,11 @@
             android:layout_height="wrap_content"
             android:text="Event details" />
 
+        <Button
+            android:id="@+id/bt_push_demo_events"
+            android:text="push demo events"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
     </LinearLayout>
 </layout>

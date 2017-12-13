@@ -8,7 +8,7 @@
     <data>
         <variable
             name="categories"
-            type="com.ghteam.eventgo.data.model.Category"/>
+            type="com.ghteam.eventgo.data.entity.Category"/>
     </data>
 
     <LinearLayout

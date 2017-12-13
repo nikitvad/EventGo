@@ -4,14 +4,14 @@ import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
-import com.ghteam.eventgo.data.model.Category;
-import com.ghteam.eventgo.data.model.Event;
-import com.ghteam.eventgo.data.model.Location;
+import com.ghteam.eventgo.data.entity.Category;
+import com.ghteam.eventgo.data.entity.Event;
+import com.ghteam.eventgo.data.entity.Location;
 /**
  * Created by nikit on 12.12.2017.
  */
 @android.arch.persistence.room.Database(entities = {Event.class, ImageEntry.class,
-        Category.class, Location.class}, version = 1)
+        Category.class, Location.class}, version = 4)
 public abstract class Database extends RoomDatabase {
 
     private static final String DATABASE_NAME = "event_go_database";

@@ -15,6 +15,7 @@ import com.ghteam.eventgo.ui.activity.eventslist.EventsListActivity;
 import com.ghteam.eventgo.ui.activity.login.LoginActivity;
 import com.ghteam.eventgo.ui.activity.profilesettings.ProfileSettingsActivity;
 import com.ghteam.eventgo.ui.activity.userslist.PeopleActivity;
+import com.ghteam.eventgo.util.network.PushDemoEvents;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 
@@ -78,6 +79,12 @@ public class LaunchActivity extends AppCompatActivity {
             }
         });
 
+        activityBinding.btPushDemoEvents.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new PushDemoEvents().push();
+            }
+        });
 
     }
 

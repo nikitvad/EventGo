@@ -11,9 +11,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.ghteam.eventgo.data.Repository;
-import com.ghteam.eventgo.data.model.Category;
-import com.ghteam.eventgo.data.model.Event;
-import com.ghteam.eventgo.data.model.Location;
+import com.ghteam.eventgo.data.entity.Category;
+import com.ghteam.eventgo.data.entity.Event;
+import com.ghteam.eventgo.data.entity.Location;
 import com.ghteam.eventgo.util.LiveDataList;
 import com.ghteam.eventgo.util.MapLiveData;
 import com.ghteam.eventgo.util.network.FirebaseUtil;
@@ -21,7 +21,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -108,7 +107,7 @@ public class CreateEventViewModel extends ViewModel {
         return mUploadingImages;
     }
 
-    void createEvent(OnSuccessListener<DocumentReference> successListener,
+    void createEvent(OnSuccessListener<Void> successListener,
                      OnFailureListener failureListener) {
         mRepository.pushNewEvent(getEventEntry(), successListener
                 , failureListener);

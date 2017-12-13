@@ -23,11 +23,12 @@ import android.widget.ProgressBar;
 
 import com.ghteam.eventgo.BR;
 import com.ghteam.eventgo.R;
-import com.ghteam.eventgo.data.Repository;
-import com.ghteam.eventgo.data.model.Event;
+import com.ghteam.eventgo.data.entity.Event;
 import com.ghteam.eventgo.databinding.ActivityEventsListBinding;
 import com.ghteam.eventgo.ui.RecyclerBindingAdapter;
 import com.ghteam.eventgo.ui.activity.createevent.CreateEventActivity;
+import com.ghteam.eventgo.ui.activity.eventdetails.EventDetailsActivity;
+import com.ghteam.eventgo.util.InjectorUtil;
 import com.ghteam.eventgo.util.network.OnTaskStatusChangeListener;
 
 import java.util.ArrayList;
@@ -54,7 +55,7 @@ public class EventsListActivity extends AppCompatActivity
         activityBinding = DataBindingUtil.setContentView(this, R.layout.activity_events_list);
 
         viewModel = ViewModelProviders.of(this, new EventsListViewModel
-                .EventsListViewModelFactory(Repository.getInstance(this)))
+                .EventsListViewModelFactory(InjectorUtil.provideRepository(this)))
                 .get(EventsListViewModel.class);
 
         recyclerAdapter = new RecyclerBindingAdapter<>(R.layout.layout_event_list_item,
@@ -62,6 +63,16 @@ public class EventsListActivity extends AppCompatActivity
 
         rvEventsList = activityBinding.content.content.rvEventsList;
         rvEventsList.setAdapter(recyclerAdapter);
+
+        recyclerAdapter.setOnItemClickListener(new RecyclerBindingAdapter.OnItemClickListener<Event>() {
+            @Override
+            public void onItemClick(int position, Event item) {
+                Intent intentEventDetails = new Intent(EventsListActivity.this, EventDetailsActivity.class);
+                intentEventDetails.putExtra("eventId", item.getId());
+                startActivity(intentEventDetails);
+            }
+        });
+
         rvEventsList.setLayoutManager(new GridLayoutManager(this, 2));
 
         rvEventsList.addOnScrollListener(new RecyclerView.OnScrollListener() {

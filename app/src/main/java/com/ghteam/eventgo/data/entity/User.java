@@ -1,8 +1,9 @@
-package com.ghteam.eventgo.data.model;
+package com.ghteam.eventgo.data.entity;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -18,8 +19,9 @@ import java.util.List;
 ))
 public class User {
     //    private String firebaseId;
-    @PrimaryKey(autoGenerate = true)
-    public int databaseId;
+    @NonNull
+    @PrimaryKey()
+    private String id;
 
     public int ownerId;
 
@@ -36,6 +38,15 @@ public class User {
     public User(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
+    }
+
+    @NonNull
+    public String getId() {
+        return id;
+    }
+
+    public void setId(@NonNull String id) {
+        this.id = id;
     }
 
     public String getFirstName() {

@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.ghteam.eventgo.data.model.User;
+import com.ghteam.eventgo.data.entity.User;
 import com.ghteam.eventgo.util.network.AccountStatus;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;

@@ -19,13 +19,13 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.ghteam.eventgo.R;
-import com.ghteam.eventgo.data.Repository;
-import com.ghteam.eventgo.data.model.Category;
+import com.ghteam.eventgo.data.entity.Category;
 import com.ghteam.eventgo.databinding.ActivityCreateEventV2Binding;
 import com.ghteam.eventgo.ui.adapter.SelectedCategoriesRecyclerAdapter;
 import com.ghteam.eventgo.ui.dialog.selectcategories.SelectCategoriesDialog;
 import com.ghteam.eventgo.util.CameraUtil;
 import com.ghteam.eventgo.util.CustomTextWatcher;
+import com.ghteam.eventgo.util.InjectorUtil;
 import com.ghteam.eventgo.util.PermissionUtil;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -34,7 +34,6 @@ import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
 
 import java.io.File;
 import java.util.List;
@@ -68,7 +67,7 @@ public class CreateEventActivity extends AppCompatActivity {
         activityBinding = DataBindingUtil.setContentView(this, R.layout.activity_create_event_v2);
 
         viewModel = ViewModelProviders.of(this, new CreateEventViewModel
-                .CreateEventViewModelFactory(Repository.getInstance(this), mAuth.getCurrentUser()))
+                .CreateEventViewModelFactory(InjectorUtil.provideRepository(this), mAuth.getCurrentUser()))
                 .get(CreateEventViewModel.class);
 
         mAuth = FirebaseAuth.getInstance();
@@ -185,9 +184,9 @@ public class CreateEventActivity extends AppCompatActivity {
             public void onClick(View v) {
                 viewModel.getIsLoading().setValue(true);
 
-                viewModel.createEvent(new OnSuccessListener<DocumentReference>() {
+                viewModel.createEvent(new OnSuccessListener<Void>() {
                     @Override
-                    public void onSuccess(DocumentReference documentReference) {
+                    public void onSuccess(Void aVoid) {
                         activityBinding.btCreateEvent.setEnabled(false);
                         viewModel.getIsLoading().setValue(false);
                     }

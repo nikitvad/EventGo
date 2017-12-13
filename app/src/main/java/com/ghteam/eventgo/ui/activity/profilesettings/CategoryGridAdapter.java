@@ -8,7 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ghteam.eventgo.R;
-import com.ghteam.eventgo.data.model.Category;
+import com.ghteam.eventgo.data.entity.Category;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;

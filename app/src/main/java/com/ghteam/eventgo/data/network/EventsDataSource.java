@@ -2,7 +2,7 @@ package com.ghteam.eventgo.data.network;
 
 import android.util.Log;
 
-import com.ghteam.eventgo.data.model.Event;
+import com.ghteam.eventgo.data.entity.Event;
 import com.ghteam.eventgo.util.LiveDataList;
 import com.ghteam.eventgo.util.network.OnTaskStatusChangeListener;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -11,6 +11,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  * Created by nikit on 10.12.2017.
@@ -72,8 +75,9 @@ public class EventsDataSource {
                     lastLoadedDocument = documentSnapshots.getDocuments().get(documentSnapshots.size() - 1);
                     Log.d(TAG, "onEvent: " + documentSnapshots.getDocuments().get(documentSnapshots.size() - 1).getId());
                     downloadedEventsList.setValue(documentSnapshots.toObjects(Event.class));
+                    Log.d(TAG, "onEvent: " + documentSnapshots.getDocuments().get(0).toString());
+                    Log.d(TAG, "onEvent: " + documentSnapshots.getDocuments().get(0).toObject(Event.class));
 
-                    Log.d(TAG, "onEvent: " + documentSnapshots.size());
 
                 } else {
                     listener.onStatusChanged(OnTaskStatusChangeListener.TaskStatus.FAILED);
@@ -96,6 +100,8 @@ public class EventsDataSource {
                 if (e == null) {
                     if (documentSnapshots != null && documentSnapshots.size() > 0) {
                         downloadedEventsList.setValue(documentSnapshots.toObjects(Event.class));
+//                        Log.d(TAG, "onEvent: " + documentSnapshots.toObjects(Event.class).toString());
+
                     }
                     listener.onStatusChanged(OnTaskStatusChangeListener.TaskStatus.SUCCESS);
 

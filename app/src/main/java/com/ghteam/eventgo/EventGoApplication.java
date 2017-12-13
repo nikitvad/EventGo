@@ -2,6 +2,7 @@ package com.ghteam.eventgo;
 
 import android.app.Application;
 
+import com.facebook.stetho.Stetho;
 import com.ghteam.eventgo.util.PrefsUtil;
 
 /**
@@ -14,5 +15,10 @@ public class EventGoApplication extends Application {
         super.onCreate();
 
         PrefsUtil.init(getApplicationContext());
+
+        Stetho.initialize(Stetho.newInitializerBuilder(this)
+                .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
+                .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(this))
+                .build());
     }
 }

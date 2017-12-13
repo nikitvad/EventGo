@@ -26,6 +26,7 @@ import com.ghteam.eventgo.databinding.ActivityLoginBinding;
 import com.ghteam.eventgo.ui.activity.eventslist.EventsListActivity;
 import com.ghteam.eventgo.ui.activity.profilesettings.ProfileSettingsActivity;
 import com.ghteam.eventgo.ui.activity.singup.SignUpActivity;
+import com.ghteam.eventgo.util.InjectorUtil;
 import com.ghteam.eventgo.util.LoginInResult;
 import com.ghteam.eventgo.util.PrefsUtil;
 import com.ghteam.eventgo.util.ProgressBarUtil;
@@ -65,7 +66,7 @@ public class LoginActivity extends LifecycleActivity {
         }
 
         viewModel = ViewModelProviders.of(this,
-                new LoginViewModel.LoginViewModelFactory(Repository.getInstance(this)))
+                new LoginViewModel.LoginViewModelFactory(InjectorUtil.provideRepository(this)))
                 .get(LoginViewModel.class);
 
         mCallbackManager = CallbackManager.Factory.create();

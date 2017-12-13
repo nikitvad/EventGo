@@ -1,7 +1,8 @@
 package com.ghteam.eventgo.util.network;
 
-import com.ghteam.eventgo.data.model.Category;
-import com.ghteam.eventgo.data.model.User;
+import com.ghteam.eventgo.data.entity.Category;
+import com.ghteam.eventgo.data.entity.User;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -64,7 +65,10 @@ public class PushUsersForTest {
 
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
         for (User item : users) {
-            firestore.collection("users").add(item);
+            DocumentReference documentReference = firestore.collection("users").document();
+
+            item.setId(documentReference.getId());
+            documentReference.set(item);
         }
 
     }

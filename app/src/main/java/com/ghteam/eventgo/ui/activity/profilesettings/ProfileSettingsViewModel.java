@@ -9,8 +9,8 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.ghteam.eventgo.data.Repository;
-import com.ghteam.eventgo.data.model.Category;
-import com.ghteam.eventgo.data.model.User;
+import com.ghteam.eventgo.data.entity.Category;
+import com.ghteam.eventgo.data.entity.User;
 import com.ghteam.eventgo.data.network.FirebaseDatabaseManager;
 import com.ghteam.eventgo.util.LiveDataList;
 import com.google.firebase.auth.FirebaseAuth;

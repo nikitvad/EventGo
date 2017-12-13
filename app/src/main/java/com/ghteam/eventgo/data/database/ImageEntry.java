@@ -3,9 +3,8 @@ package com.ghteam.eventgo.data.database;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
-import android.support.annotation.NonNull;
 
-import com.ghteam.eventgo.data.model.Event;
+import com.ghteam.eventgo.data.entity.Event;
 
 /**
  * Created by nikit on 12.12.2017.
@@ -19,9 +18,21 @@ import com.ghteam.eventgo.data.model.Event;
 
 public class ImageEntry {
 
-    public int ownerId;
+    public String ownerId;
 
-    @NonNull
-    @PrimaryKey
+
+    @PrimaryKey(autoGenerate = true)
+    public int id;
+
     public String url;
+
+    public ImageEntry() {
+    }
+
+    public ImageEntry(String eventId, String url) {
+        this.ownerId = eventId;
+        this.url = url;
+    }
+
+
 }

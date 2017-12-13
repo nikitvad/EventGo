@@ -13,9 +13,9 @@ import android.view.WindowManager;
 import android.widget.ProgressBar;
 
 import com.ghteam.eventgo.R;
-import com.ghteam.eventgo.data.Repository;
-import com.ghteam.eventgo.data.model.User;
+import com.ghteam.eventgo.data.entity.User;
 import com.ghteam.eventgo.databinding.ActivityPeopleBinding;
+import com.ghteam.eventgo.util.InjectorUtil;
 
 import java.util.List;
 
@@ -37,7 +37,7 @@ public class PeopleActivity extends AppCompatActivity {
         activityBinding = DataBindingUtil.setContentView(this, R.layout.activity_people);
 
         viewModel = ViewModelProviders.of(this, new PeopleViewModel
-                .UsersViewModelFactory(Repository.getInstance(this))).get(PeopleViewModel.class);
+                .UsersViewModelFactory(InjectorUtil.provideRepository(this))).get(PeopleViewModel.class);
 
         usersAdapter = new PeopleRecyclerAdapter(this);
 

@@ -2,7 +2,7 @@ package com.ghteam.eventgo.data.network;
 
 import android.util.Log;
 
-import com.ghteam.eventgo.data.model.User;
+import com.ghteam.eventgo.data.entity.User;
 import com.ghteam.eventgo.util.LiveDataList;
 import com.ghteam.eventgo.util.network.OnTaskStatusChangeListener;
 import com.google.firebase.firestore.EventListener;
@@ -65,4 +65,6 @@ public class UsersDataSource {
             }
         });
     }
+
+
 }

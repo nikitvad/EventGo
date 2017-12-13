@@ -5,11 +5,19 @@
 
         <variable
             name="event"
-            type="com.ghteam.eventgo.data.model.Event" />
+            type="com.ghteam.eventgo.data.entity.Event" />
 
         <variable
             name="user"
-            type="com.ghteam.eventgo.data.model.User" />
+            type="com.ghteam.eventgo.data.entity.User" />
+
+        <variable
+            name="category"
+            type="com.ghteam.eventgo.data.entity.Category" />
+
+        <variable
+            name="location"
+            type="com.ghteam.eventgo.data.entity.Location" />
     </data>
 
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -56,7 +64,7 @@
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="10dp"
                         android:gravity="center_vertical"
-                        android:text="@{event.category.name}" />
+                        android:text="@{category.name}" />
 
                     <ImageView
                         android:id="@+id/iv_category_icon"
@@ -64,7 +72,7 @@
                         android:layout_height="30dp"
                         android:layout_gravity="start|center_horizontal"
                         android:layout_marginStart="5dp"
-                        android:src="@{event.category.icon}" />
+                        android:src="@{category.icon}" />
                 </LinearLayout>
 
                 <RelativeLayout
