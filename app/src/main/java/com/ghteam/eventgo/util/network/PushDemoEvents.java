@@ -37,16 +37,16 @@ public class PushDemoEvents {
             names[i] = "event " + i;
         }
 
-        owners = new String[]{"0BRsjAm8McMbKARpX52k",
-                "0OW4TtOY5bmScXRTlQ6K",
-                "0wklW9DJDXnCzbUrpy2P",
-                "1KomcxjBv2RhPmSoFauR",
-                "2NNMVTbSRHdq1IfxAPxZ",
-                "2fx6yUtOyBTttpTIlht9",
-                "3hsSqIMbaCAwLH28hpx1",
-                "3wpNv9uv1pLaZBzjPLDe",
-                "4LJ13xGIrHkjO5VaoB88",
-                "5KqdIxeshsJURp1jxlMc"};
+        owners = new String[]{"9gRjAi4qZWyvdbfHfhdz",
+                "RfxH4SaLdsD2ypioDGPD",
+                "17CemTruoJug232GDdfk",
+                "AaMAP5L1Lqq6PhJQgm8V" ,
+                "QiylaKqGm5f5d30AEW9X" ,
+                "7n6emnmakYpfW2KUZWXu" ,
+                "HFh4ijNJDrps9hHJqo2A" ,
+                "zokUj9F4XZewwEpHHROk" ,
+                "b0rDR8Oqf2sGQjGx7XGb" ,
+                "dh5ZOZOnOlZuZMk8GA9s"};
 
         images = new String[]{"https://www.google.com.ua/imgres?imgurl=http%3A%2F%2Fwww.qygjxz.com%2Fdata%2Fout%2F190%2F6179593-profile-pics.jpg&imgrefurl=http%3A%2F%2Fwww.qygjxz.com%2Fprofile-pics.html&docid=YAsczUmHASI1YM&tbnid=TYfJzUB_6JYtoM%3A&vet=10ahUKEwit_pDIn_rXAhXLChoKHYfpDsQQMwg9KAIwAg..i&w=500&h=500&hl=ru&bih=584&biw=619&q=profile%20picture&ved=0ahUKEwit_pDIn_rXAhXLChoKHYfpDsQQMwg9KAIwAg&iact=mrc&uact=8",
                 "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6ttq8jXcIvxmp2luow2Aa0eQYG8vO3CMKf1zX2Y6JQChsH-oh",
@@ -79,8 +79,6 @@ public class PushDemoEvents {
 
     public void push() {
         List<Event> events = generateDemoEvents();
-
-
 
         for (Event item : events) {
             FirebaseDatabaseManager.pushNewEvent(item, new OnSuccessListener<Void>() {

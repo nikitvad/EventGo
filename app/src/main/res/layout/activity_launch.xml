@@ -52,9 +52,15 @@
 
         <Button
             android:id="@+id/bt_push_demo_events"
-            android:text="push demo events"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="push demo events" />
+
+        <Button
+            android:id="@+id/bt_push_demo_users"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="push demo users" />
 
     </LinearLayout>
 </layout>

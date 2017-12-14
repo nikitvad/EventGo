@@ -1,15 +1,20 @@
 package com.ghteam.eventgo.ui.activity.eventdetails;
 
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.ghteam.eventgo.data.Repository;
 import com.ghteam.eventgo.data.database.ImageEntry;
 import com.ghteam.eventgo.data.entity.Category;
 import com.ghteam.eventgo.data.entity.Event;
 import com.ghteam.eventgo.data.entity.Location;
+import com.ghteam.eventgo.data.entity.User;
+import com.ghteam.eventgo.util.network.OnTaskStatusChangeListener;
 
 import java.util.List;
 
@@ -24,16 +29,36 @@ public class EventDetailsViewModel extends ViewModel {
     public LiveData<Category> category;
     public LiveData<List<ImageEntry>> images;
     public LiveData<Location> location;
+    public LiveData<User> user;
 
 
-    private EventDetailsViewModel(Repository repository, String eventId) {
+    private EventDetailsViewModel(Repository repository, final String eventId) {
         mRepository = repository;
 
         event = mRepository.getEventById(eventId);
         category = mRepository.getCategoryByOwner(eventId);
         images = mRepository.getImagesByOwner(eventId);
         location = mRepository.getLocationByOwner(eventId);
+        user = mRepository.initializeUser();
 
+        event.observeForever(new Observer<Event>() {
+            @Override
+            public void onChanged(@Nullable Event event) {
+
+                Log.d("fsddfsfd", "onChanged: " + event.getOwnerId());
+                mRepository.loadUserById(event.getOwnerId(), new OnTaskStatusChangeListener() {
+                    @Override
+                    public void onStatusChanged(TaskStatus status) {
+//                        TODO: display progress bar
+                    }
+                });
+            }
+        });
+
+    }
+
+    public LiveData<User> getUser() {
+        return user;
     }
 
     public LiveData<Event> getEvent() {

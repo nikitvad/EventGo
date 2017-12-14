@@ -115,6 +115,14 @@ public class Repository {
         FirebaseDatabaseManager.pushUserInfo(uid, user, listener);
     }
 
+    public MutableLiveData<User> initializeUser(){
+        return usersDataSource.getCurrentUser();
+    }
+
+    public void loadUserById(String id, OnTaskStatusChangeListener listener) {
+        usersDataSource.loadUserById(id, listener);
+    }
+
     public LiveData<List<Category>> initializeCategories() {
         if (eventsCategories == null) {
             eventsCategories = categoriesDataSource.getCurrentCategories();
@@ -182,4 +190,5 @@ public class Repository {
     public LiveData<Location> getLocationByOwner(String id) {
         return locationDao.findLocationByOwnerId(id);
     }
+
 }

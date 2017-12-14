@@ -14,6 +14,7 @@ import com.ghteam.eventgo.R;
 import com.ghteam.eventgo.data.entity.Category;
 import com.ghteam.eventgo.data.entity.Event;
 import com.ghteam.eventgo.data.entity.Location;
+import com.ghteam.eventgo.data.entity.User;
 import com.ghteam.eventgo.databinding.ActivityEventDetailsBinding;
 import com.ghteam.eventgo.ui.activity.eventdetails.EventDetailsViewModel.EventDetailsViewModelFactory;
 import com.ghteam.eventgo.util.InjectorUtil;
@@ -70,6 +71,13 @@ public class EventDetailsActivity extends AppCompatActivity {
             @Override
             public void onChanged(@Nullable Location location) {
                 activityBinding.setVariable(BR.location, location);
+            }
+        });
+
+        viewModel.getUser().observeForever(new Observer<User>() {
+            @Override
+            public void onChanged(@Nullable User user) {
+                activityBinding.setVariable(BR.user, user);
             }
         });
     }

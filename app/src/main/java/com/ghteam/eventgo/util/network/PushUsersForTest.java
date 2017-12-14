@@ -1,5 +1,7 @@
 package com.ghteam.eventgo.util.network;
 
+import android.util.Log;
+
 import com.ghteam.eventgo.data.entity.Category;
 import com.ghteam.eventgo.data.entity.User;
 import com.google.firebase.firestore.DocumentReference;
@@ -59,7 +61,6 @@ public class PushUsersForTest {
 
     }
 
-
     public void pushUsers() {
         List<User> users = generateUsers();
 
@@ -67,6 +68,7 @@ public class PushUsersForTest {
         for (User item : users) {
             DocumentReference documentReference = firestore.collection("users").document();
 
+            Log.d("ssfsf", "pushUsers: " + documentReference.getId());
             item.setId(documentReference.getId());
             documentReference.set(item);
         }
