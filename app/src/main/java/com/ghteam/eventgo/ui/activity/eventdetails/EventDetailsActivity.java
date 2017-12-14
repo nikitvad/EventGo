@@ -6,34 +6,51 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageSwitcher;
+import android.widget.ImageView;
+import android.widget.ViewSwitcher;
 
 import com.ghteam.eventgo.BR;
 import com.ghteam.eventgo.R;
+import com.ghteam.eventgo.data.database.ImageEntry;
 import com.ghteam.eventgo.data.entity.Category;
 import com.ghteam.eventgo.data.entity.Event;
 import com.ghteam.eventgo.data.entity.Location;
 import com.ghteam.eventgo.data.entity.User;
 import com.ghteam.eventgo.databinding.ActivityEventDetailsBinding;
 import com.ghteam.eventgo.ui.activity.eventdetails.EventDetailsViewModel.EventDetailsViewModelFactory;
+import com.ghteam.eventgo.util.ImageSwitcherPicasso;
 import com.ghteam.eventgo.util.InjectorUtil;
+import com.squareup.picasso.Picasso;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 public class EventDetailsActivity extends AppCompatActivity {
 
     private ActivityEventDetailsBinding activityBinding;
-    private RecyclerView rvImagePreviews;
-    private ImagePreviewsRecyclerAdapter mImagePreviewsAdapter;
 
     private EventDetailsViewModel viewModel;
 
     public static final String TAG = EventDetailsActivity.class.getSimpleName();
+
+
+    private ImageSwitcherPicasso switcherPicasso;
+
+    private int currentImagePos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activityBinding = DataBindingUtil.setContentView(this, R.layout.activity_event_details);
 
+        currentImagePos = 0;
 
         String eventId = getIntent().getStringExtra("eventId");
 
@@ -44,11 +61,79 @@ public class EventDetailsActivity extends AppCompatActivity {
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(EventDetailsViewModel.class);
 
-        rvImagePreviews = activityBinding.rvImagePreviews;
-        rvImagePreviews.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        rvImagePreviews.setAdapter(mImagePreviewsAdapter);
+        setUpImageSwitcher();
+
+        switcherPicasso = new ImageSwitcherPicasso(EventDetailsActivity.this, activityBinding.isImages);
+
+        activityBinding.ivNextImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (currentImagePos + 1 < viewModel.getImages().getValue().size()) {
+                    currentImagePos++;
+                    setImageSwitcherAnimLeft();
+                    Picasso.with(EventDetailsActivity.this).load(viewModel.getImages().getValue().get(currentImagePos).url)
+                            .into(switcherPicasso);
+                }
+            }
+        });
+
+        activityBinding.ivPreviousImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (currentImagePos - 1 >= 0) {
+                    currentImagePos--;
+                    setImageSwitcherAnimRight();
+                    Picasso.with(EventDetailsActivity.this).load(viewModel.getImages().getValue().get(currentImagePos).url)
+                            .into(switcherPicasso);
+                }
+            }
+        });
 
         registerViewModelObservers();
+    }
+
+    private void setUpImageSwitcher() {
+
+        activityBinding.isImages.setFactory(new ViewSwitcher.ViewFactory() {
+            @Override
+            public View makeView() {
+                ImageView imageView = new ImageView(getApplicationContext());
+                imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                imageView.setLayoutParams(new ImageSwitcher.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                return imageView;
+            }
+        });
+    }
+
+    private void setImageSwitcherAnimRight() {
+        Animation animIn = AnimationUtils.loadAnimation(this, R.anim.view_in_right);
+        Animation animOut = AnimationUtils.loadAnimation(this, R.anim.view_out_right);
+
+        activityBinding.isImages.setInAnimation(animIn);
+        activityBinding.isImages.setOutAnimation(animOut);
+    }
+
+    private void setImageSwitcherAnimLeft() {
+        Animation animIn = AnimationUtils.loadAnimation(this, R.anim.view_in_left);
+        Animation animOut = AnimationUtils.loadAnimation(this, R.anim.view_out_left);
+
+        activityBinding.isImages.setInAnimation(animIn);
+        activityBinding.isImages.setOutAnimation(animOut);
+    }
+
+    private void bindEventTime(Date date) {
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM", Locale.ENGLISH);
+
+        activityBinding.tvMonth.setText(dateFormat.format(date));
+
+        dateFormat.applyPattern("dd");
+
+        activityBinding.tvDay.setText(dateFormat.format(date));
+
+        dateFormat.applyPattern("EEEE 'at' h:mm a");
+
+        activityBinding.tvBeginningTime.setText(dateFormat.format(date));
     }
 
 
@@ -57,6 +142,7 @@ public class EventDetailsActivity extends AppCompatActivity {
             @Override
             public void onChanged(@Nullable Event event) {
                 activityBinding.setVariable(BR.event, event);
+                bindEventTime(event.getDate());
             }
         });
 
@@ -80,6 +166,21 @@ public class EventDetailsActivity extends AppCompatActivity {
                 activityBinding.setVariable(BR.user, user);
             }
         });
-    }
 
+        viewModel.getImages().observeForever(new Observer<List<ImageEntry>>() {
+            @Override
+            public void onChanged(@Nullable List<ImageEntry> imageEntries) {
+
+                if (imageEntries.size() > 0) {
+                    activityBinding.lfImages.setVisibility(View.VISIBLE);
+                    if (currentImagePos < imageEntries.size()) {
+                        Picasso.with(EventDetailsActivity.this).load(imageEntries.get(currentImagePos).url)
+                                .into(switcherPicasso);
+                    }
+                }else{
+                    activityBinding.lfImages.setVisibility(View.GONE);
+                }
+            }
+        });
+    }
 }

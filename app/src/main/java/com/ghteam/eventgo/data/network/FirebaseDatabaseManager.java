@@ -52,20 +52,6 @@ public class FirebaseDatabaseManager {
                 });
     }
 
-    public static void loadUsers(final OnLoadUsersCompleteListener listener) {
-
-        firestore.collection(REF_USERS).limit(30).addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
-                if (documentSnapshots.size() > 0) {
-                    listener.onComplete(documentSnapshots.toObjects(User.class));
-                } else {
-                    listener.onComplete(null);
-                }
-            }
-        });
-    }
-
     public static void pushNewEvent(Event event, OnSuccessListener<Void> onSuccessListener,
                                     OnFailureListener onFailureListener) {
 
@@ -84,12 +70,6 @@ public class FirebaseDatabaseManager {
 
     public interface OnLoadUsersCompleteListener {
         void onComplete(@Nullable List<User> users);
-    }
-
-    public interface OnFetchUserResultListener {
-        void onSuccess(User user);
-
-        void onFailed();
     }
 
     public interface OnPullUserResultListener {

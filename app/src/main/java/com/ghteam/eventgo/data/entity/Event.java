@@ -5,6 +5,7 @@ import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -22,6 +23,8 @@ public class Event {
     private String name;
 
     private String description;
+
+    private Date date;
 
     private String address;
 
@@ -47,6 +50,14 @@ public class Event {
 
     public String getId() {
         return id;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     public void setId(String id) {

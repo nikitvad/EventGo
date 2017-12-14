@@ -9,6 +9,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -40,12 +41,12 @@ public class PushDemoEvents {
         owners = new String[]{"9gRjAi4qZWyvdbfHfhdz",
                 "RfxH4SaLdsD2ypioDGPD",
                 "17CemTruoJug232GDdfk",
-                "AaMAP5L1Lqq6PhJQgm8V" ,
-                "QiylaKqGm5f5d30AEW9X" ,
-                "7n6emnmakYpfW2KUZWXu" ,
-                "HFh4ijNJDrps9hHJqo2A" ,
-                "zokUj9F4XZewwEpHHROk" ,
-                "b0rDR8Oqf2sGQjGx7XGb" ,
+                "AaMAP5L1Lqq6PhJQgm8V",
+                "QiylaKqGm5f5d30AEW9X",
+                "7n6emnmakYpfW2KUZWXu",
+                "HFh4ijNJDrps9hHJqo2A",
+                "zokUj9F4XZewwEpHHROk",
+                "b0rDR8Oqf2sGQjGx7XGb",
                 "dh5ZOZOnOlZuZMk8GA9s"};
 
         images = new String[]{"https://www.google.com.ua/imgres?imgurl=http%3A%2F%2Fwww.qygjxz.com%2Fdata%2Fout%2F190%2F6179593-profile-pics.jpg&imgrefurl=http%3A%2F%2Fwww.qygjxz.com%2Fprofile-pics.html&docid=YAsczUmHASI1YM&tbnid=TYfJzUB_6JYtoM%3A&vet=10ahUKEwit_pDIn_rXAhXLChoKHYfpDsQQMwg9KAIwAg..i&w=500&h=500&hl=ru&bih=584&biw=619&q=profile%20picture&ved=0ahUKEwit_pDIn_rXAhXLChoKHYfpDsQQMwg9KAIwAg&iact=mrc&uact=8",
@@ -95,7 +96,6 @@ public class PushDemoEvents {
         }
     }
 
-
     public List<Event> generateDemoEvents() {
         List<Event> events = new ArrayList<>();
         for (int i = 0; i < names.length - 1; i++) {
@@ -112,6 +112,7 @@ public class PushDemoEvents {
                 for (int y = 0; y < r.nextInt(images.length - 1); y++) {
                     eventImages.add(images[r.nextInt(images.length - 1)]);
                 }
+                event.setDate(new Date());
                 event.setImages(eventImages);
                 event.setCategory(categories.get(r.nextInt(categories.size() - 1)));
 

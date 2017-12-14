@@ -20,7 +20,7 @@ import android.widget.Toast;
 
 import com.ghteam.eventgo.R;
 import com.ghteam.eventgo.data.entity.Category;
-import com.ghteam.eventgo.databinding.ActivityCreateEventV2Binding;
+import com.ghteam.eventgo.databinding.ActivityCreateEventBinding;
 import com.ghteam.eventgo.ui.adapter.SelectedCategoriesRecyclerAdapter;
 import com.ghteam.eventgo.ui.dialog.selectcategories.SelectCategoriesDialog;
 import com.ghteam.eventgo.util.CameraUtil;
@@ -42,7 +42,7 @@ public class CreateEventActivity extends AppCompatActivity {
 
 
     //    private ActivityCreateEventBinding activityBinding;
-    private ActivityCreateEventV2Binding activityBinding;
+    private ActivityCreateEventBinding activityBinding;
     private CameraUtil mCameraUtil;
     private ImageRecyclerAdapter imageAdapter;
     private SelectedCategoriesRecyclerAdapter categoriesRecyclerAdapter;
@@ -64,7 +64,7 @@ public class CreateEventActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        activityBinding = DataBindingUtil.setContentView(this, R.layout.activity_create_event_v2);
+        activityBinding = DataBindingUtil.setContentView(this, R.layout.activity_create_event);
 
         viewModel = ViewModelProviders.of(this, new CreateEventViewModel
                 .CreateEventViewModelFactory(InjectorUtil.provideRepository(this), mAuth.getCurrentUser()))
@@ -84,8 +84,8 @@ public class CreateEventActivity extends AppCompatActivity {
                 selectCategoriesDialog.show(getSupportFragmentManager(), "TAG");
             }
         });
-        activityBinding.rvCategories.setAdapter(categoriesRecyclerAdapter);
-        activityBinding.rvCategories.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.HORIZONTAL));
+//        activityBinding.rvCategories.setAdapter(categoriesRecyclerAdapter);
+//        activityBinding.rvCategories.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.HORIZONTAL));
 
         mCameraUtil = new CameraUtil(this);
         mCameraUtil.setRequestImageCapture(REQUEST_CAMERA);

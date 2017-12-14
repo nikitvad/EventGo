@@ -16,7 +16,7 @@ import java.util.Random;
  * Created by nikit on 08.12.2017.
  */
 
-public class PushUsersForTest {
+public class PushDemoUsersTest {
 
     private ArrayList<String> firstNames;
     private ArrayList<String> lastNames;
@@ -25,7 +25,7 @@ public class PushUsersForTest {
 
     private Random random;
 
-    public PushUsersForTest() {
+    public PushDemoUsersTest() {
 
         random = new Random(1375);
 

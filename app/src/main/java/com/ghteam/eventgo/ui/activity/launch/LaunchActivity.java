@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 
 import com.ghteam.eventgo.R;
@@ -16,9 +17,13 @@ import com.ghteam.eventgo.ui.activity.login.LoginActivity;
 import com.ghteam.eventgo.ui.activity.profilesettings.ProfileSettingsActivity;
 import com.ghteam.eventgo.ui.activity.userslist.PeopleActivity;
 import com.ghteam.eventgo.util.network.PushDemoEvents;
-import com.ghteam.eventgo.util.network.PushUsersForTest;
+import com.ghteam.eventgo.util.network.PushDemoUsersTest;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class LaunchActivity extends AppCompatActivity {
 
@@ -90,14 +95,28 @@ public class LaunchActivity extends AppCompatActivity {
         activityBinding.btPushDemoUsers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new PushUsersForTest().pushUsers();
+                new PushDemoUsersTest().pushUsers();
             }
         });
+
+        bindEventTime();
 
     }
 
     private void startActivity(Class<? extends Activity> activity) {
         Intent intent = new Intent(LaunchActivity.this, activity);
         startActivity(intent);
+    }
+
+    private void bindEventTime(){
+        SimpleDateFormat weekDay = new SimpleDateFormat("EEEE", Locale.ENGLISH);
+        SimpleDateFormat month = new SimpleDateFormat("MMM", Locale.ENGLISH);
+
+        SimpleDateFormat numb = new SimpleDateFormat("dd", Locale.ENGLISH);
+
+
+        Log.d(TAG, "bindEventTime: " + weekDay.format(new Date()));
+        Log.d(TAG, "bindEventTime: " + month.format(new Date()));
+        Log.d(TAG, "bindEventTime: " + numb.format(new Date()));
     }
 }

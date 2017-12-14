@@ -2,16 +2,22 @@ package com.ghteam.eventgo.data.database;
 
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
+import android.arch.persistence.room.TypeConverter;
+import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
 
 import com.ghteam.eventgo.data.entity.Category;
 import com.ghteam.eventgo.data.entity.Event;
 import com.ghteam.eventgo.data.entity.Location;
+
+import java.util.Date;
+
 /**
  * Created by nikit on 12.12.2017.
  */
 @android.arch.persistence.room.Database(entities = {Event.class, ImageEntry.class,
         Category.class, Location.class}, version = 4)
+@TypeConverters(Database.Converters.class)
 public abstract class Database extends RoomDatabase {
 
     private static final String DATABASE_NAME = "event_go_database";
@@ -38,4 +44,19 @@ public abstract class Database extends RoomDatabase {
         return sInstance;
     }
 
+    public static class Converters {
+        @TypeConverter
+        public Date fromTimestamp(Long value) {
+            return value == null ? null : new Date(value);
+        }
+
+        @TypeConverter
+        public Long dateToTimestamp(Date date) {
+            if (date == null) {
+                return null;
+            } else {
+                return date.getTime();
+            }
+        }
+    }
 }
