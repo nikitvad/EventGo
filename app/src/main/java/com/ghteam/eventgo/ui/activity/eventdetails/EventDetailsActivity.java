@@ -6,6 +6,7 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -136,7 +137,6 @@ public class EventDetailsActivity extends AppCompatActivity {
         activityBinding.tvBeginningTime.setText(dateFormat.format(date));
     }
 
-
     private void registerViewModelObservers() {
         viewModel.getEvent().observeForever(new Observer<Event>() {
             @Override
@@ -171,13 +171,17 @@ public class EventDetailsActivity extends AppCompatActivity {
             @Override
             public void onChanged(@Nullable List<ImageEntry> imageEntries) {
 
+                for (ImageEntry item : imageEntries) {
+                    Log.d(TAG, "onChanged: " + item.url);
+                }
+
                 if (imageEntries.size() > 0) {
                     activityBinding.lfImages.setVisibility(View.VISIBLE);
                     if (currentImagePos < imageEntries.size()) {
                         Picasso.with(EventDetailsActivity.this).load(imageEntries.get(currentImagePos).url)
                                 .into(switcherPicasso);
                     }
-                }else{
+                } else {
                     activityBinding.lfImages.setVisibility(View.GONE);
                 }
             }

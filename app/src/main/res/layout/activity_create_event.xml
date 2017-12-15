@@ -11,39 +11,41 @@
             type="com.ghteam.eventgo.ui.activity.createevent.CreateEventViewModel" />
     </data>
 
-    <FrameLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ScrollView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-            <LinearLayout
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:background="@color/colorPrimary"
+                android:minHeight="?attr/actionBarSize"
+                android:theme="?attr/actionBarTheme"
+                app:title="Create event"
+                app:titleTextColor="#fff" />
 
-                <android.support.v7.widget.Toolbar
-                    android:id="@+id/toolbar"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/colorPrimary"
-                    android:minHeight="?attr/actionBarSize"
-                    android:theme="?attr/actionBarTheme"
-                    app:title="Create event"
-                    app:titleTextColor="#fff" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
                 <android.support.v7.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    app:cardCornerRadius="8dp">
+                    android:layout_marginTop="10dp"
+                    app:cardCornerRadius="2dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
                         android:orientation="horizontal">
 
                         <android.support.design.widget.TextInputLayout
@@ -62,47 +64,24 @@
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
 
-
-                <android.support.v7.widget.CardView
-                    android:layout_width="match_parent"
-                    app:cardCornerRadius="8dp"
-                    android:minHeight="32dp"
-                    android:layout_margin="5dp"
-                    android:layout_height="wrap_content">
-
-
-
-
-
-
-                </android.support.v7.widget.CardView>
-
-
-
                 <android.support.v7.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    app:cardCornerRadius="8dp">
+                    android:layout_marginTop="10dp"
+                    app:cardCornerRadius="4dp">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            android:id="@+id/title_address"
-                            style="@style/TitleTextView"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:text="Address" />
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp">
 
                         <Button
                             android:id="@+id/bt_set_address_on_map"
+                            style="@style/Widget.AppCompat.Button.Colored"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
-                            android:layout_below="@id/title_address"
                             android:layout_centerVertical="true"
                             android:layout_gravity="center_vertical"
                             android:text="on map" />
@@ -112,21 +91,52 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_alignParentStart="true"
-                            android:layout_below="@id/title_address"
                             android:layout_centerVertical="true"
                             android:layout_toStartOf="@+id/bt_set_address_on_map"
                             android:gravity="center_vertical"
                             android:hint="Set address on map"
-                            android:lines="2"
-                            android:textSize="16sp" />
+                            android:lines="3"
+                            android:textSize="14sp" />
                     </RelativeLayout>
                 </android.support.v7.widget.CardView>
 
                 <android.support.v7.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    app:cardCornerRadius="8dp">
+                    android:layout_marginTop="10dp"
+                    app:cardCornerRadius="4dp">
+
+                    <TextView
+                        android:id="@+id/tv_event_date"
+                        style="@style/ClickableTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginTop="10dp"
+                        android:gravity="center"
+                        android:textSize="16sp" />
+
+                </android.support.v7.widget.CardView>
+
+                <Button
+                    android:id="@+id/bt_select_category"
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="10dp"
+                    android:padding="20dp"
+                    android:text="Select category" />
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    app:cardCornerRadius="4dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -152,20 +162,20 @@
                 <android.support.v7.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    app:cardCornerRadius="8dp">
+                    android:layout_marginTop="10dp"
+                    app:cardCornerRadius="4dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="4dp"
                         android:orientation="vertical">
 
                         <TextView
                             style="@style/TitleTextView"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Description" />
+                            android:text="About" />
 
                         <android.support.design.widget.TextInputLayout
                             android:layout_width="match_parent"
@@ -178,28 +188,25 @@
                                 android:gravity="start"
                                 android:hint="Describe your event"
                                 android:inputType="textMultiLine"
-                                android:maxLines="6"
+                                android:maxLines="10"
                                 android:minLines="4"
-                                android:textSize="16sp" />
+                                android:textSize="14sp" />
                         </android.support.design.widget.TextInputLayout>
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
 
                 <Button
                     android:id="@+id/bt_create_event"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:padding="20dp"
+                    style="@style/Widget.AppCompat.Button.Colored"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="create" />
             </LinearLayout>
+        </LinearLayout>
 
-
-        </ScrollView>
-
-        <ProgressBar
-            android:id="@+id/progress_bar"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:layout_gravity="center"
-            android:visibility="gone" />
-    </FrameLayout>
+    </ScrollView>
 </layout>

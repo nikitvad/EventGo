@@ -36,12 +36,14 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class CreateEventActivity extends AppCompatActivity {
 
 
-    //    private ActivityCreateEventBinding activityBinding;
     private ActivityCreateEventBinding activityBinding;
     private CameraUtil mCameraUtil;
     private ImageRecyclerAdapter imageAdapter;
@@ -84,8 +86,6 @@ public class CreateEventActivity extends AppCompatActivity {
                 selectCategoriesDialog.show(getSupportFragmentManager(), "TAG");
             }
         });
-//        activityBinding.rvCategories.setAdapter(categoriesRecyclerAdapter);
-//        activityBinding.rvCategories.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.HORIZONTAL));
 
         mCameraUtil = new CameraUtil(this);
         mCameraUtil.setRequestImageCapture(REQUEST_CAMERA);
@@ -101,6 +101,10 @@ public class CreateEventActivity extends AppCompatActivity {
         activityBinding.rvPhotos.setAdapter(imageAdapter);
         activityBinding.rvPhotos.setLayoutManager(
                 new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.HORIZONTAL));
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd EEEE 'at' hh:mm", Locale.ENGLISH);
+
+        activityBinding.tvEventDate.setText(dateFormat.format(new Date()));
 
         registerViewModelObservers();
     }
@@ -139,6 +143,7 @@ public class CreateEventActivity extends AppCompatActivity {
 
 
             } catch (Exception e) {
+                Log.w(TAG, "onActivityResult: ", e);
                 Toast.makeText(this, "Something went wrong", Toast.LENGTH_LONG)
                         .show();
             }
@@ -227,18 +232,6 @@ public class CreateEventActivity extends AppCompatActivity {
                 Log.d(TAG, "onStatusChanged: " + s);
                 if (s != null) {
                     imageAdapter.addItem(s);
-                }
-            }
-        });
-
-        viewModel.getIsLoading().observeForever(new Observer<Boolean>() {
-            @Override
-            public void onChanged(@Nullable Boolean aBoolean) {
-                if (aBoolean) {
-                    activityBinding.getRoot().clearFocus();
-                    activityBinding.progressBar.setVisibility(View.VISIBLE);
-                } else {
-                    activityBinding.progressBar.setVisibility(View.GONE);
                 }
             }
         });

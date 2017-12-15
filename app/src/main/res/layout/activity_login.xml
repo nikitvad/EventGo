@@ -76,6 +76,7 @@
             </LinearLayout>
 
             <Button
+                style="@style/Widget.AppCompat.Button.Colored"
                 android:id="@+id/bt_sign_in"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
@@ -84,6 +85,8 @@
                 android:text="sign in" />
 
             <Button
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:backgroundTint="@color/colorPrimaryDark"
                 android:id="@+id/bt_facebook_login"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
