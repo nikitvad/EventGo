@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SelectCategoriesDialog extends DialogFragment {
+public class CategoriesDialog extends DialogFragment {
     private DialogSelectCategoriesBinding dialogBinding;
 
     private Repository mRepository;
@@ -35,9 +35,15 @@ public class SelectCategoriesDialog extends DialogFragment {
 
     private List<Category> selectedCategories = new ArrayList<>();
 
-    public static final String TAG = SelectCategoriesDialog.class.getSimpleName();
+    public static final String TAG = CategoriesDialog.class.getSimpleName();
 
-    public SelectCategoriesDialog() {
+    public static final int SELECTION_TYPE_NONE = CategoriesRecyclerAdapter.SELECTION_TYPE_NONE;
+    public static final int SELECTION_TYPE_ENABLED = CategoriesRecyclerAdapter.SELECTION_TYPE_ENABLED;
+    public static final int SELECTION_TYPE_MULTI_SELECT = CategoriesRecyclerAdapter.SELECTION_TYPE_MULTI_SELECT;
+
+    private int selectionType = SELECTION_TYPE_NONE;
+
+    public CategoriesDialog() {
     }
 
     @Override
@@ -64,7 +70,7 @@ public class SelectCategoriesDialog extends DialogFragment {
                 .get(CategoriesViewModel.class);
 
         recyclerAdapter = new CategoriesRecyclerAdapter();
-        recyclerAdapter.setEnabledToSelectItems(true);
+        recyclerAdapter.setSelectionType(selectionType);
 
         recyclerAdapter.setSelectItemListener(new CategoriesRecyclerAdapter.OnSelectItemListener() {
             @Override
@@ -88,14 +94,14 @@ public class SelectCategoriesDialog extends DialogFragment {
                     mOnConfirmListener.onConfirm(selectedCategories);
                 }
 
-                SelectCategoriesDialog.this.dismiss();
+                CategoriesDialog.this.dismiss();
             }
         });
 
         dialogBinding.btCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SelectCategoriesDialog.this.dismiss();
+                CategoriesDialog.this.dismiss();
             }
         });
 
@@ -130,6 +136,10 @@ public class SelectCategoriesDialog extends DialogFragment {
         });
     }
 
+    public void setSelectionType(int selectionType) {
+        this.selectionType = selectionType;
+    }
+
     public void setOnConfirmListener(OnConfirmChoiceListener onConfirmListener) {
         this.mOnConfirmListener = onConfirmListener;
     }
@@ -137,6 +147,4 @@ public class SelectCategoriesDialog extends DialogFragment {
     public interface OnConfirmChoiceListener {
         void onConfirm(List<Category> categories);
     }
-
-
 }

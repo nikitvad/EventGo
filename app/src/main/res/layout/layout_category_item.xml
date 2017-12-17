@@ -3,7 +3,7 @@
     android:id="@+id/category_item"
     android:layout_gravity="center_horizontal"
     android:layout_margin="5dp"
-    tools:context="com.ghteam.eventgo.ui.dialog.selectcategories.SelectCategoriesDialog">
+    tools:context="com.ghteam.eventgo.ui.dialog.selectcategories.CategoriesDialog">
 
     <data>
 

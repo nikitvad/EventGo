@@ -20,7 +20,6 @@ import com.facebook.FacebookException;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.ghteam.eventgo.R;
-import com.ghteam.eventgo.data.Repository;
 import com.ghteam.eventgo.data.network.FirebaseDatabaseManager;
 import com.ghteam.eventgo.databinding.ActivityLoginBinding;
 import com.ghteam.eventgo.ui.activity.eventslist.EventsListActivity;
@@ -65,9 +64,9 @@ public class LoginActivity extends LifecycleActivity {
             PrefsUtil.setLoggedType(PrefsUtil.LOGGED_TYPE_NONE);
         }
 
-        viewModel = ViewModelProviders.of(this,
-                new LoginViewModel.LoginViewModelFactory(InjectorUtil.provideRepository(this)))
-                .get(LoginViewModel.class);
+        LoginViewModel.LoginViewModelFactory viewModelFactory = InjectorUtil.provideLoginViewModelFactory(this);
+
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(LoginViewModel.class);
 
         mCallbackManager = CallbackManager.Factory.create();
         LoginManager loginManager = LoginManager.getInstance();
@@ -92,19 +91,20 @@ public class LoginActivity extends LifecycleActivity {
             }
         });
 
+        registerViewModelObservers();
 
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        registerViewModelObservers();
+//        registerViewModelObservers();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        removeViewModelObservers();
+//        removeViewModelObservers();
     }
 
     @Override
@@ -140,7 +140,6 @@ public class LoginActivity extends LifecycleActivity {
 
     private void handleFacebookAccessToken(final AccessToken token) {
         Log.d(TAG, "handleFacebookAccessToken:" + token);
-//        String[] fields = {"first_name", "last_name", "birthday", "about", "picture"};
         viewModel.getLoginInResult().setValue(LoginInResult.IN_PROCESS);
 
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
@@ -149,7 +148,6 @@ public class LoginActivity extends LifecycleActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-
                             PrefsUtil.setLoggedType(PrefsUtil.LOGGED_TYPE_FACEBOOK);
                             viewModel.getLoginInResult().setValue(LoginInResult.SUCCESS);
                         } else {
@@ -169,6 +167,7 @@ public class LoginActivity extends LifecycleActivity {
 
     private void addNewFacebookUser() {
         Log.d(TAG, "addNewFacebookUser: ");
+
         viewModel.addNewFacebookUser(firebaseAuth.getCurrentUser().getUid(),
                 AccessToken.getCurrentAccessToken(),
                 new FirebaseDatabaseManager.OnPullUserResultListener() {

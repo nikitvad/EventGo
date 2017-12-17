@@ -20,7 +20,7 @@ import com.ghteam.eventgo.data.entity.Category;
 import com.ghteam.eventgo.databinding.ActivityProfileSettingsBinding;
 import com.ghteam.eventgo.ui.activity.eventslist.EventsListActivity;
 import com.ghteam.eventgo.ui.adapter.SelectedCategoriesRecyclerAdapter;
-import com.ghteam.eventgo.ui.dialog.selectcategories.SelectCategoriesDialog;
+import com.ghteam.eventgo.ui.dialog.selectcategories.CategoriesDialog;
 import com.ghteam.eventgo.util.InjectorUtil;
 import com.squareup.picasso.Picasso;
 
@@ -33,7 +33,7 @@ import static android.view.View.GONE;
 
 public class ProfileSettingsActivity extends AppCompatActivity {
 
-    private SelectCategoriesDialog selectCategoriesDialog;
+    private CategoriesDialog categoriesDialog;
     private ProfileSettingsViewModel viewModel;
     private ActivityProfileSettingsBinding activityBinding;
 
@@ -67,7 +67,7 @@ public class ProfileSettingsActivity extends AppCompatActivity {
         categoriesRecyclerAdapter.setAddItemClickListener(new SelectedCategoriesRecyclerAdapter.OnAddItemClickListener() {
             @Override
             public void onAddItemClick() {
-                selectCategoriesDialog.show(getSupportFragmentManager(), "TAG");
+                categoriesDialog.show(getSupportFragmentManager(), "TAG");
             }
         });
 
@@ -75,8 +75,8 @@ public class ProfileSettingsActivity extends AppCompatActivity {
         activityBinding.glSelectedCategories.setLayoutManager(new StaggeredGridLayoutManager(
                 2, StaggeredGridLayoutManager.VERTICAL));
 
-        selectCategoriesDialog = new SelectCategoriesDialog();
-        selectCategoriesDialog.setOnConfirmListener(new SelectCategoriesDialog.OnConfirmChoiceListener() {
+        categoriesDialog = new CategoriesDialog();
+        categoriesDialog.setOnConfirmListener(new CategoriesDialog.OnConfirmChoiceListener() {
             @Override
             public void onConfirm(List<Category> categories) {
                 viewModel.setCategories(categories);

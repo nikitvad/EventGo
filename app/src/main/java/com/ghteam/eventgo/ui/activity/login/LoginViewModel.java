@@ -33,7 +33,6 @@ public class LoginViewModel extends ViewModel {
     private LoginViewModel(Repository repository) {
         this.mRepository = repository;
         accountStatus = repository.getCurrentAccountStatus();
-
     }
 
     MutableLiveData<AccountStatus> getAccountStatus() {
@@ -41,7 +40,7 @@ public class LoginViewModel extends ViewModel {
     }
 
     void addNewFacebookUser(final String uid, AccessToken token,
-                                    @Nullable final FirebaseDatabaseManager.OnPullUserResultListener listener) {
+                            @Nullable final FirebaseDatabaseManager.OnPullUserResultListener listener) {
         Bundle params = new Bundle();
         params.putString("fields", "first_name,last_name,picture");
         new GraphRequest(

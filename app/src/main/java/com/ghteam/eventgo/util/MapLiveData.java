@@ -48,7 +48,7 @@ public class MapLiveData<K, V> extends MutableLiveData<Map<K, V>> {
         }
     }
 
-    public void addPutObserver(Observer<K> observer) {
+    public void addInsertObserver(Observer<K> observer) {
         putObservers.add(observer);
     }
 

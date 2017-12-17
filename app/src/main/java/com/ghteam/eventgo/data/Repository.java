@@ -115,7 +115,7 @@ public class Repository {
         FirebaseDatabaseManager.pushUserInfo(uid, user, listener);
     }
 
-    public MutableLiveData<User> initializeUser(){
+    public MutableLiveData<User> initializeUser() {
         return usersDataSource.getCurrentUser();
     }
 

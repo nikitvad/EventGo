@@ -16,13 +16,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.ghteam.eventgo.R;
 import com.ghteam.eventgo.data.entity.Category;
 import com.ghteam.eventgo.databinding.ActivityCreateEventBinding;
-import com.ghteam.eventgo.ui.adapter.SelectedCategoriesRecyclerAdapter;
-import com.ghteam.eventgo.ui.dialog.selectcategories.SelectCategoriesDialog;
+import com.ghteam.eventgo.ui.dialog.datetimepicker.DateAndTimePicker;
+import com.ghteam.eventgo.ui.dialog.selectcategories.CategoriesDialog;
 import com.ghteam.eventgo.util.CameraUtil;
 import com.ghteam.eventgo.util.CustomTextWatcher;
 import com.ghteam.eventgo.util.InjectorUtil;
@@ -47,8 +48,9 @@ public class CreateEventActivity extends AppCompatActivity {
     private ActivityCreateEventBinding activityBinding;
     private CameraUtil mCameraUtil;
     private ImageRecyclerAdapter imageAdapter;
-    private SelectedCategoriesRecyclerAdapter categoriesRecyclerAdapter;
-    private SelectCategoriesDialog selectCategoriesDialog;
+    private CategoriesDialog categoriesDialog;
+
+    private DateAndTimePicker dateAndTimePicker;
 
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
@@ -77,15 +79,8 @@ public class CreateEventActivity extends AppCompatActivity {
         bindOnClickListeners();
         bindTextChangedListeners();
 
-        selectCategoriesDialog = getSelectCategoriesDialog();
-
-        categoriesRecyclerAdapter = new SelectedCategoriesRecyclerAdapter();
-        categoriesRecyclerAdapter.setAddItemClickListener(new SelectedCategoriesRecyclerAdapter.OnAddItemClickListener() {
-            @Override
-            public void onAddItemClick() {
-                selectCategoriesDialog.show(getSupportFragmentManager(), "TAG");
-            }
-        });
+        categoriesDialog = getCategoriesDialog();
+        dateAndTimePicker = getDateAndTimePicker();
 
         mCameraUtil = new CameraUtil(this);
         mCameraUtil.setRequestImageCapture(REQUEST_CAMERA);
@@ -98,13 +93,16 @@ public class CreateEventActivity extends AppCompatActivity {
             }
         });
 
+        activityBinding.btSelectCategory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                categoriesDialog.show(getSupportFragmentManager(), TAG);
+            }
+        });
+
         activityBinding.rvPhotos.setAdapter(imageAdapter);
         activityBinding.rvPhotos.setLayoutManager(
                 new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.HORIZONTAL));
-
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd EEEE 'at' hh:mm", Locale.ENGLISH);
-
-        activityBinding.tvEventDate.setText(dateFormat.format(new Date()));
 
         registerViewModelObservers();
     }
@@ -156,14 +154,14 @@ public class CreateEventActivity extends AppCompatActivity {
         activityBinding.etEventName.addTextChangedListener(new CustomTextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                viewModel.getEventName().setValue(s.toString());
+                viewModel.setEventName(s.toString());
             }
         });
 
         activityBinding.etEventDescription.addTextChangedListener(new CustomTextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                viewModel.getEventDescription().setValue(s.toString());
+                viewModel.setEventDescription(s.toString());
             }
         });
     }
@@ -181,6 +179,13 @@ public class CreateEventActivity extends AppCompatActivity {
                 } catch (GooglePlayServicesNotAvailableException e) {
                     e.printStackTrace();
                 }
+            }
+        });
+
+        activityBinding.tvEventDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dateAndTimePicker.show(getFragmentManager(), TAG);
             }
         });
 
@@ -205,10 +210,29 @@ public class CreateEventActivity extends AppCompatActivity {
         });
     }
 
-    private SelectCategoriesDialog getSelectCategoriesDialog() {
-        SelectCategoriesDialog dialog = new SelectCategoriesDialog();
+    private DateAndTimePicker getDateAndTimePicker() {
 
-        dialog.setOnConfirmListener(new SelectCategoriesDialog.OnConfirmChoiceListener() {
+        DateAndTimePicker dateAndTimePicker = new DateAndTimePicker();
+        dateAndTimePicker.setOnOkClickListener(new DateAndTimePicker.OnOkClickListener() {
+            @Override
+            public void onOkClick(Date date) {
+
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM dd EEEE hh:mm", Locale.ENGLISH);
+                Log.d(TAG, "onOkClick: " + simpleDateFormat.format(date));
+                activityBinding.tvEventDate.setText(simpleDateFormat.format(date));
+                viewModel.setDate(date);
+
+            }
+        });
+
+        return dateAndTimePicker;
+    }
+
+    private CategoriesDialog getCategoriesDialog() {
+        CategoriesDialog dialog = new CategoriesDialog();
+        dialog.setSelectionType(CategoriesDialog.SELECTION_TYPE_ENABLED);
+
+        dialog.setOnConfirmListener(new CategoriesDialog.OnConfirmChoiceListener() {
             @Override
             public void onConfirm(List<Category> categories) {
                 viewModel.getCategories().setValue(categories);
@@ -222,7 +246,9 @@ public class CreateEventActivity extends AppCompatActivity {
         viewModel.getCategories().observeForever(new Observer<List<Category>>() {
             @Override
             public void onChanged(@Nullable List<Category> categories) {
-                categoriesRecyclerAdapter.setItems(categories);
+                if (categories.size() > 0) {
+                    activityBinding.btSelectCategory.setText(categories.get(0).getName());
+                }
             }
         });
 
@@ -236,7 +262,7 @@ public class CreateEventActivity extends AppCompatActivity {
             }
         });
 
-        viewModel.getUploadingImages().addPutObserver(new Observer<String>() {
+        viewModel.getUploadingImages().addInsertObserver(new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
                 Log.d(TAG, "onStatusChanged: " + s + " " + viewModel.getUploadingImages().get(s));
@@ -250,11 +276,17 @@ public class CreateEventActivity extends AppCompatActivity {
                 activityBinding.tvEventAddress.setText(s);
             }
         });
-    }
 
-    public void removeViewModelObservers() {
-        viewModel.getImageSources().deleteInsertObservers();
-        viewModel.getUploadingImages().deletePutObservers();
+        viewModel.getIsLoading().observeForever(new Observer<Boolean>() {
+            @Override
+            public void onChanged(@Nullable Boolean aBoolean) {
+                if (aBoolean) {
+                    showProgressBar();
+                } else {
+                    hideProgressBar();
+                }
+            }
+        });
     }
 
     private void selectImage() {
@@ -286,6 +318,20 @@ public class CreateEventActivity extends AppCompatActivity {
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 
         startActivityForResult(galleryIntent, REQUEST_GALLERY);
+    }
+
+
+    private void showProgressBar() {
+        activityBinding.progressBar.setVisibility(View.VISIBLE);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        activityBinding.mainContainer.setAlpha(0.5f);
+    }
+
+
+    private void hideProgressBar() {
+        activityBinding.progressBar.setVisibility(View.GONE);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        activityBinding.mainContainer.setAlpha(1f);
     }
 
 }

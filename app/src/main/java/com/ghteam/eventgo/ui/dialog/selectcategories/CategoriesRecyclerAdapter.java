@@ -24,8 +24,14 @@ public class CategoriesRecyclerAdapter extends RecyclerView.Adapter<CategoriesRe
 
     private List<Category> mItems;
     private OnClickListener mOnClickListener;
-    private boolean isEnabledToSelectItems;
+    //private boolean isEnabledToSelectItems;
     private OnSelectItemListener mSelectItemListener;
+
+    private int selectionType = 0;
+
+    public static final int SELECTION_TYPE_NONE = 0;
+    public static final int SELECTION_TYPE_ENABLED = 1;
+    public static final int SELECTION_TYPE_MULTI_SELECT = 2;
 
     private HashSet<Integer> mSelectedItems;
     public static final String TAG = CategoriesRecyclerAdapter.class.getSimpleName();
@@ -43,6 +49,7 @@ public class CategoriesRecyclerAdapter extends RecyclerView.Adapter<CategoriesRe
 
         return new CategoryViewHolder(v);
     }
+
 
     @Override
     public void onBindViewHolder(CategoryViewHolder holder, int position) {
@@ -71,7 +78,7 @@ public class CategoriesRecyclerAdapter extends RecyclerView.Adapter<CategoriesRe
                 @Override
                 public void onClick(View view) {
 
-                    if (isEnabledToSelectItems && mSelectItemListener != null) {
+                    if (selectionType != SELECTION_TYPE_NONE && mSelectItemListener != null) {
 
                         if (mSelectedItems.contains(pos)) {
                             removeItemFromSelected(pos);
@@ -99,6 +106,13 @@ public class CategoriesRecyclerAdapter extends RecyclerView.Adapter<CategoriesRe
         }
     }
 
+    public int getSelectionType() {
+        return selectionType;
+    }
+
+    public void setSelectionType(int selectionType) {
+        this.selectionType = selectionType;
+    }
 
     public void addItemToSelected(Category category) {
         int pos = mItems.indexOf(category);
@@ -108,8 +122,20 @@ public class CategoriesRecyclerAdapter extends RecyclerView.Adapter<CategoriesRe
     }
 
     public void addItemToSelected(int pos) {
-        mSelectedItems.add(pos);
-        notifyItemChanged(pos);
+
+        switch (selectionType) {
+            case SELECTION_TYPE_MULTI_SELECT:
+                mSelectedItems.add(pos);
+                notifyItemChanged(pos);
+                break;
+            case SELECTION_TYPE_ENABLED:
+                mSelectedItems.clear();
+                mSelectedItems.add(pos);
+                notifyDataSetChanged();
+                break;
+            default:
+                break;
+        }
     }
 
     public void removeItemFromSelected(int pos) {
@@ -154,13 +180,5 @@ public class CategoriesRecyclerAdapter extends RecyclerView.Adapter<CategoriesRe
 
     public interface OnClickListener {
         void onClick(Category category);
-    }
-
-    public boolean isEnabledToSelectItems() {
-        return isEnabledToSelectItems;
-    }
-
-    public void setEnabledToSelectItems(boolean enabledToSelectItems) {
-        isEnabledToSelectItems = enabledToSelectItems;
     }
 }

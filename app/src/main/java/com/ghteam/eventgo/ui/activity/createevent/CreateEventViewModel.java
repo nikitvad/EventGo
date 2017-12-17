@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.ghteam.eventgo.data.Repository;
 import com.ghteam.eventgo.data.entity.Category;
@@ -26,6 +27,7 @@ import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -36,12 +38,13 @@ import java.util.List;
 public class CreateEventViewModel extends ViewModel {
     private Repository mRepository;
 
-    private MutableLiveData<String> mEventName;
-    private MutableLiveData<String> mEventDescription;
+    private String mEventName;
+    private String mEventDescription;
     private MutableLiveData<String> mEventAddress;
     private MutableLiveData<LatLng> mEventLocation;
     private LiveDataList<String> mImageSources;
     private LiveDataList<Category> mCategories;
+    private Date mDate;
 
     private List<String> imageUrlsOnCloudStorage;
 
@@ -58,8 +61,6 @@ public class CreateEventViewModel extends ViewModel {
         mRepository = repository;
         mFirebaseUser = user;
 
-        mEventName = new MutableLiveData<>();
-        mEventDescription = new MutableLiveData<>();
         mEventAddress = new MutableLiveData<>();
         mEventLocation = new MutableLiveData<>();
         mImageSources = new LiveDataList<>(new ArrayList<String>());
@@ -79,12 +80,25 @@ public class CreateEventViewModel extends ViewModel {
         });
     }
 
-    MutableLiveData<String> getEventName() {
+
+    String getEventName() {
         return mEventName;
     }
 
-    MutableLiveData<String> getEventDescription() {
+    void setEventName(String name) {
+        mEventName = name;
+    }
+
+    void setDate(Date date) {
+        mDate = date;
+    }
+
+    String getEventDescription() {
         return mEventDescription;
+    }
+
+    void setEventDescription(String description) {
+        mEventDescription = description;
     }
 
     MutableLiveData<String> getEventAddress() {
@@ -109,23 +123,27 @@ public class CreateEventViewModel extends ViewModel {
 
     void createEvent(OnSuccessListener<Void> successListener,
                      OnFailureListener failureListener) {
+        getEventEntry();
         mRepository.pushNewEvent(getEventEntry(), successListener
                 , failureListener);
     }
 
     private Event getEventEntry() {
         Event event = new Event();
-        event.setName(mEventName.getValue());
-        event.setDescription(mEventDescription.getValue());
+        event.setName(mEventName);
+        event.setDescription(mEventDescription);
         event.setAddress(mEventAddress.getValue());
         event.setCategory(getCategories().getValue().get(0));
         event.setImages(imageUrlsOnCloudStorage);
         event.setOwnerId(mFirebaseUser.getUid());
+        event.setDate(mDate);
 
         if (mEventLocation.getValue() != null) {
             event.setLocation(new Location(mEventLocation.getValue().latitude,
                     mEventLocation.getValue().longitude));
         }
+
+        Log.d(TAG, "getEventEntry: " + event.getDate().toString());
 
         return event;
     }
