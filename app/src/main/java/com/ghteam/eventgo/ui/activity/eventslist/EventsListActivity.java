@@ -12,9 +12,10 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,6 +31,11 @@ import com.ghteam.eventgo.ui.activity.createevent.CreateEventActivity;
 import com.ghteam.eventgo.ui.activity.eventdetails.EventDetailsActivity;
 import com.ghteam.eventgo.util.InjectorUtil;
 import com.ghteam.eventgo.util.network.OnTaskStatusChangeListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,10 +64,22 @@ public class EventsListActivity extends AppCompatActivity
                 .EventsListViewModelFactory(InjectorUtil.provideRepository(this)))
                 .get(EventsListViewModel.class);
 
-        recyclerAdapter = new RecyclerBindingAdapter<>(R.layout.layout_event_list_item,
+        recyclerAdapter = new RecyclerBindingAdapter<>(R.layout.layout_event_list_item_v2,
                 BR.event, new ArrayList<Event>());
 
+
         rvEventsList = activityBinding.content.content.rvEventsList;
+
+        rvEventsList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                if (!rvEventsList.canScrollVertically(1)) {
+                    //TODO: load more items
+                    viewModel.loadNext();
+                }
+            }
+        });
+
         rvEventsList.setAdapter(recyclerAdapter);
 
         recyclerAdapter.setOnItemClickListener(new RecyclerBindingAdapter.OnItemClickListener<Event>() {
@@ -73,16 +91,7 @@ public class EventsListActivity extends AppCompatActivity
             }
         });
 
-        rvEventsList.setLayoutManager(new GridLayoutManager(this, 2));
-
-        rvEventsList.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                if (!recyclerView.canScrollVertically(1)) {
-                    viewModel.loadEvents();
-                }
-            }
-        });
+        rvEventsList.setLayoutManager(new LinearLayoutManager(this));
 
         progressBar = activityBinding.content.content.progressBar;
 
@@ -109,7 +118,7 @@ public class EventsListActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         registerViewModelObservers();
-        viewModel.loadEvents();
+        viewModel.loadNext();
     }
 
     @Override
@@ -204,5 +213,8 @@ public class EventsListActivity extends AppCompatActivity
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         rvEventsList.setAlpha(1f);
     }
+
+    FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+
 }
 

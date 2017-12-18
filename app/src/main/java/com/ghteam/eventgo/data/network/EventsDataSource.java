@@ -1,19 +1,18 @@
 package com.ghteam.eventgo.data.network;
 
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.ghteam.eventgo.data.entity.Event;
 import com.ghteam.eventgo.util.LiveDataList;
 import com.ghteam.eventgo.util.network.OnTaskStatusChangeListener;
-import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
-
-import java.util.HashMap;
-import java.util.HashSet;
 
 /**
  * Created by nikit on 10.12.2017.
@@ -22,19 +21,17 @@ import java.util.HashSet;
 public class EventsDataSource {
     private FirebaseFirestore firestore;
 
-    private DocumentSnapshot lastLoadedDocument;
-    private boolean isCollectionFullyLoaded = false;
-
     private LiveDataList<Event> downloadedEventsList;
 
     public static final String TAG = EventsDataSource.class.getSimpleName();
 
     private static EventsDataSource sInstance;
 
+    private Event lastLoadedEvent;
+
     private EventsDataSource() {
         firestore = FirebaseFirestore.getInstance();
         downloadedEventsList = new LiveDataList<>();
-        lastLoadedDocument = null;
     }
 
     public static EventsDataSource getInstance() {
@@ -52,40 +49,33 @@ public class EventsDataSource {
         return downloadedEventsList;
     }
 
+
     public void loadNextEvents(int count, final OnTaskStatusChangeListener listener) {
         listener.onStatusChanged(OnTaskStatusChangeListener.TaskStatus.IN_PROGRESS);
 
+        Query query = firestore.collection("events").orderBy("id", Query.Direction.DESCENDING);
 
-        Query query = firestore.collection("events");
-
-        query.orderBy("name");
-
-        if (lastLoadedDocument != null) {
-            Log.d(TAG, "loadEvents: " + lastLoadedDocument.getId());
-            query.startAfter(lastLoadedDocument);
-
+        if (lastLoadedEvent != null) {
+            query.startAfter(lastLoadedEvent.getId());
+            Log.d(TAG, "loadNextEvents: " + lastLoadedEvent.getId());
         }
 
-        query.limit(10).addSnapshotListener(new EventListener<QuerySnapshot>() {
+        query.limit(count).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
-            public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
-                if (e == null) {
+            public void onSuccess(QuerySnapshot documentSnapshots) {
+                if (documentSnapshots != null && documentSnapshots.size() > 0) {
                     listener.onStatusChanged(OnTaskStatusChangeListener.TaskStatus.SUCCESS);
-
-                    lastLoadedDocument = documentSnapshots.getDocuments().get(documentSnapshots.size() - 1);
-                    Log.d(TAG, "onEvent: " + documentSnapshots.getDocuments().get(documentSnapshots.size() - 1).getId());
+                    lastLoadedEvent = documentSnapshots.getDocuments().get(documentSnapshots.size() - 1).toObject(Event.class);
                     downloadedEventsList.setValue(documentSnapshots.toObjects(Event.class));
-                    Log.d(TAG, "onEvent: " + documentSnapshots.getDocuments().get(0).toString());
-                    Log.d(TAG, "onEvent: " + documentSnapshots.getDocuments().get(0).toObject(Event.class));
-
-
-                } else {
-                    listener.onStatusChanged(OnTaskStatusChangeListener.TaskStatus.FAILED);
-                    Log.w(TAG, "onEvent: ", e);
                 }
             }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                listener.onStatusChanged(OnTaskStatusChangeListener.TaskStatus.FAILED);
+                Log.w(TAG, "onFailure: ", e);
+            }
         });
-
 
     }
 

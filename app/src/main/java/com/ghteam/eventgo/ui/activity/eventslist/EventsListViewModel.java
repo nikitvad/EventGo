@@ -18,13 +18,13 @@ public class EventsListViewModel extends ViewModel {
     private Repository mRepository;
 
     private LiveDataList<Event> mEventsList;
-    private MutableLiveData<OnTaskStatusChangeListener.TaskStatus> mTaskStatus;
+    private MutableLiveData<OnTaskStatusChangeListener.TaskStatus> mLoadingEventsTaskStatus;
 
 
     private EventsListViewModel(Repository repository) {
         mRepository = repository;
         mEventsList = mRepository.initializeEvents();
-        mTaskStatus = new MutableLiveData<>();
+        mLoadingEventsTaskStatus = new MutableLiveData<>();
     }
 
 
@@ -32,7 +32,16 @@ public class EventsListViewModel extends ViewModel {
         mRepository.loadEvents(new OnTaskStatusChangeListener() {
             @Override
             public void onStatusChanged(TaskStatus status) {
-                mTaskStatus.setValue(status);
+                mLoadingEventsTaskStatus.setValue(status);
+            }
+        });
+    }
+
+    public void loadNext() {
+        mRepository.loadNextEvents(10, new OnTaskStatusChangeListener() {
+            @Override
+            public void onStatusChanged(TaskStatus status) {
+                mLoadingEventsTaskStatus.setValue(status);
             }
         });
     }
@@ -42,7 +51,7 @@ public class EventsListViewModel extends ViewModel {
     }
 
     public MutableLiveData<OnTaskStatusChangeListener.TaskStatus> getTaskStatus() {
-        return mTaskStatus;
+        return mLoadingEventsTaskStatus;
     }
 
     public static class EventsListViewModelFactory extends ViewModelProvider.NewInstanceFactory {
