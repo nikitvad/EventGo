@@ -230,7 +230,7 @@ public class CreateEventActivity extends AppCompatActivity {
 
     private CategoriesDialog getCategoriesDialog() {
         CategoriesDialog dialog = new CategoriesDialog();
-        dialog.setSelectionType(CategoriesDialog.SELECTION_TYPE_ENABLED);
+        dialog.setSelectionType(CategoriesDialog.SINGLE_SELECT);
 
         dialog.setOnConfirmListener(new CategoriesDialog.OnConfirmChoiceListener() {
             @Override

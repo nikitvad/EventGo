@@ -37,11 +37,11 @@ public class CategoriesDialog extends DialogFragment {
 
     public static final String TAG = CategoriesDialog.class.getSimpleName();
 
-    public static final int SELECTION_TYPE_NONE = CategoriesRecyclerAdapter.SELECTION_TYPE_NONE;
-    public static final int SELECTION_TYPE_ENABLED = CategoriesRecyclerAdapter.SELECTION_TYPE_ENABLED;
-    public static final int SELECTION_TYPE_MULTI_SELECT = CategoriesRecyclerAdapter.SELECTION_TYPE_MULTI_SELECT;
+    public static final int NONE = CategoriesRecyclerAdapter.SELECTION_TYPE_NONE;
+    public static final int SINGLE_SELECT = CategoriesRecyclerAdapter.SELECTION_TYPE_ENABLED;
+    public static final int MULTI_SELECT = CategoriesRecyclerAdapter.SELECTION_TYPE_MULTI_SELECT;
 
-    private int selectionType = SELECTION_TYPE_NONE;
+    private int selectionType = NONE;
 
     public CategoriesDialog() {
     }

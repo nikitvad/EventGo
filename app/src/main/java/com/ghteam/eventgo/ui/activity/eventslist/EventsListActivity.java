@@ -1,7 +1,9 @@
 package com.ghteam.eventgo.ui.activity.eventslist;
 
+import android.app.SearchManager;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -15,12 +17,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
+import android.widget.SearchView;
+import android.widget.Toast;
 
 import com.ghteam.eventgo.BR;
 import com.ghteam.eventgo.R;
@@ -31,11 +34,7 @@ import com.ghteam.eventgo.ui.activity.createevent.CreateEventActivity;
 import com.ghteam.eventgo.ui.activity.eventdetails.EventDetailsActivity;
 import com.ghteam.eventgo.util.InjectorUtil;
 import com.ghteam.eventgo.util.network.OnTaskStatusChangeListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -95,7 +94,7 @@ public class EventsListActivity extends AppCompatActivity
 
         progressBar = activityBinding.content.content.progressBar;
 
-        Toolbar toolbar = activityBinding.content.toolbar;
+        Toolbar toolbar = activityBinding.content.includeToolbar.toolbar;
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = activityBinding.content.fab;
@@ -135,6 +134,14 @@ public class EventsListActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.events_list, menu);
+
+        SearchManager searchManager =
+                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView =
+                (SearchView) menu.findItem(R.id.search).getActionView();
+        searchView.setSearchableInfo(
+                searchManager.getSearchableInfo(getComponentName()));
+
         return true;
     }
 

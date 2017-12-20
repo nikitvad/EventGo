@@ -17,17 +17,15 @@ import android.widget.Toast;
 
 import com.ghteam.eventgo.R;
 import com.ghteam.eventgo.data.entity.Category;
-import com.ghteam.eventgo.databinding.ActivityProfileSettingsBinding;
+import com.ghteam.eventgo.databinding.ActivityProfileSettingsV2Binding;
 import com.ghteam.eventgo.ui.activity.eventslist.EventsListActivity;
 import com.ghteam.eventgo.ui.adapter.SelectedCategoriesRecyclerAdapter;
 import com.ghteam.eventgo.ui.dialog.selectcategories.CategoriesDialog;
+import com.ghteam.eventgo.util.CustomTextWatcher;
 import com.ghteam.eventgo.util.InjectorUtil;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
-
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 import static android.view.View.GONE;
 
@@ -35,7 +33,7 @@ public class ProfileSettingsActivity extends AppCompatActivity {
 
     private CategoriesDialog categoriesDialog;
     private ProfileSettingsViewModel viewModel;
-    private ActivityProfileSettingsBinding activityBinding;
+    private ActivityProfileSettingsV2Binding activityBinding;
 
     private InputMethodManager mInputMethodManager;
 
@@ -47,9 +45,10 @@ public class ProfileSettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activityBinding = DataBindingUtil.setContentView(this,
-                R.layout.activity_profile_settings);
+                R.layout.activity_profile_settings_v2);
 
-        ButterKnife.bind(this);
+        bindTextChangeListeners();
+        categoriesDialog = getCategoriesDialog();
 
         viewModel = ViewModelProviders.of(this,
                 new ProfileSettingsViewModel.ProfileSettingViewModelFactory(InjectorUtil.provideRepository(this)))
@@ -71,17 +70,16 @@ public class ProfileSettingsActivity extends AppCompatActivity {
             }
         });
 
+        activityBinding.btSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewModel.saveUserData();
+            }
+        });
+
         activityBinding.glSelectedCategories.setAdapter(categoriesRecyclerAdapter);
         activityBinding.glSelectedCategories.setLayoutManager(new StaggeredGridLayoutManager(
                 2, StaggeredGridLayoutManager.VERTICAL));
-
-        categoriesDialog = new CategoriesDialog();
-        categoriesDialog.setOnConfirmListener(new CategoriesDialog.OnConfirmChoiceListener() {
-            @Override
-            public void onConfirm(List<Category> categories) {
-                viewModel.setCategories(categories);
-            }
-        });
 
 
         mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -99,6 +97,21 @@ public class ProfileSettingsActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         removeViewModelObservers();
+    }
+
+    private CategoriesDialog getCategoriesDialog() {
+        CategoriesDialog categoriesDialog = new CategoriesDialog();
+
+        categoriesDialog.setSelectionType(CategoriesDialog.MULTI_SELECT);
+
+        categoriesDialog.setOnConfirmListener(new CategoriesDialog.OnConfirmChoiceListener() {
+            @Override
+            public void onConfirm(List<Category> categories) {
+                viewModel.setCategories(categories);
+            }
+        });
+
+        return categoriesDialog;
     }
 
     private Observer<String> firstNameObserver = new Observer<String>() {
@@ -164,6 +177,29 @@ public class ProfileSettingsActivity extends AppCompatActivity {
         }
     };
 
+    private void bindTextChangeListeners() {
+        activityBinding.etFirstName.addTextChangedListener(new CustomTextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                viewModel.setFirstName(s.toString());
+            }
+        });
+
+        activityBinding.etLastName.addTextChangedListener(new CustomTextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                viewModel.setLastName(s.toString());
+            }
+        });
+
+        activityBinding.etDescribeYourself.addTextChangedListener(new CustomTextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                viewModel.setUserDescription(s.toString());
+            }
+        });
+    }
+
     private Observer<Boolean> isLoadingObserver = new Observer<Boolean>() {
         @Override
         public void onChanged(@Nullable Boolean aBoolean) {
@@ -222,11 +258,6 @@ public class ProfileSettingsActivity extends AppCompatActivity {
 
     private void shortToast(String text) {
         Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
-    }
-
-    @OnClick(R.id.bt_submit)
-    void saveChanges() {
-        viewModel.saveUserData();
     }
 
     private void showKeyboard(View view) {

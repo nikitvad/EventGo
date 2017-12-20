@@ -76,42 +76,39 @@ public class ProfileSettingsViewModel extends ViewModel {
         mCategoriesList.setValue(categories);
     }
 
-    MutableLiveData<String> getFirstName() {
+    public MutableLiveData<String> getFirstName() {
         return mFirstName;
     }
 
-    void setFirstName(String firstName) {
+    public void setFirstName(String firstName) {
         if (firstName != null && firstName.length() > 0) {
-            this.mFirstName.setValue(firstName);
             mUser.getValue().setFirstName(firstName);
         }
     }
 
-    MutableLiveData<String> getLastName() {
+    public MutableLiveData<String> getLastName() {
         return mLastName;
     }
 
-    void setLastName(String lastName) {
+    public void setLastName(String lastName) {
         if (lastName != null && lastName.length() > 0) {
-            mLastName.setValue(lastName);
             mUser.getValue().setLastName(lastName);
         }
     }
 
-    MutableLiveData<String> getImageUrl() {
+    public MutableLiveData<String> getImageUrl() {
         return mImageUrl;
     }
 
-    void setImageUrl(String url) {
+    public void setImageUrl(String url) {
         mImageUrl.setValue(url);
     }
 
-    MutableLiveData<String> getUserDescription() {
+    public MutableLiveData<String> getUserDescription() {
         return mUserDescription;
     }
 
-    void setUserDescription(String description) {
-        mUserDescription.setValue(description);
+    public void setUserDescription(String description) {
         mUser.getValue().setDescription(description);
     }
 

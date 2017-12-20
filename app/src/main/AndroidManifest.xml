@@ -32,7 +32,13 @@
         <activity
             android:name=".ui.activity.eventslist.EventsListActivity"
             android:label="@string/title_activity_events_list"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+
+        </activity>
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
