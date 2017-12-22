@@ -1,7 +1,7 @@
 package com.ghteam.eventgo.ui.fragment.eventslist;
 
 import android.Manifest;
-import android.app.PendingIntent;
+import android.annotation.SuppressLint;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
@@ -39,7 +39,7 @@ import java.util.List;
 
 import static android.content.Context.LOCATION_SERVICE;
 
-public class EventsListFragment extends Fragment {
+public class EventsListFragment extends Fragment implements LocationListener {
 
     private static final String TAG = EventsListFragment.class.getSimpleName();
 
@@ -112,28 +112,6 @@ public class EventsListFragment extends Fragment {
 
     }
 
-    private LocationListener locationListener = new LocationListener() {
-        @Override
-        public void onLocationChanged(android.location.Location location) {
-            Log.d(TAG, "onLocationChanged: " + location);
-            mCurrentLocation = location;
-        }
-
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-            Log.d(TAG, "onStatusChanged: " + provider + " " + status);
-        }
-
-        @Override
-        public void onProviderEnabled(String provider) {
-            Log.d(TAG, "onProviderEnabled: " + provider);
-        }
-
-        @Override
-        public void onProviderDisabled(String provider) {
-            Log.d(TAG, "onProviderDisabled: " + provider);
-        }
-    };
 
     private void updateLocation() {
 
@@ -144,7 +122,6 @@ public class EventsListFragment extends Fragment {
 
         if (checkCoarseLocationPermission != PackageManager.PERMISSION_GRANTED
                 && checkFineLocationPermission != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
 
             String[] permissions = {Manifest.permission.ACCESS_COARSE_LOCATION,
                     Manifest.permission.ACCESS_FINE_LOCATION,
@@ -156,10 +133,10 @@ public class EventsListFragment extends Fragment {
 
             mCurrentLocation = LocationUtil.getLastKnownLocation(mLocationManager, null);
 
-            if(mCurrentLocation!=null) {
+            if (mCurrentLocation != null) {
                 Log.d(TAG, "updateLocation: " + mCurrentLocation.toString());
             }
-//            mLocationManager.requestSingleUpdate();
+            mLocationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, this, null);
 
         }
     }
@@ -171,11 +148,34 @@ public class EventsListFragment extends Fragment {
         }
     }
 
+    @SuppressLint("MissingPermission")
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == REQUEST_CODE_REQUEST_PERMISSIONS && permissions.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
+            mLocationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, this, null);
         }
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        Log.d(TAG, "onLocationChanged: " + location.toString());
+        //TODO:
+
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
     }
 
     @Override
