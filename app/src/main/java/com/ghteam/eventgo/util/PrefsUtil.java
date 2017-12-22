@@ -2,6 +2,9 @@ package com.ghteam.eventgo.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.annotation.Nullable;
+
+import com.google.android.gms.maps.model.LatLng;
 
 /**
  * Created by nikit on 25.11.2017.
@@ -18,6 +21,10 @@ public class PrefsUtil {
     public static final String LOGGED_TYPE_EMAIL = "logged_type_emil";
     public static final String LOGGED_TYPE_FACEBOOK = "logged_type_facebook";
 
+    public static final String LAST_KNOWN_LATITUDE = "last_known_latitude";
+    public static final String LAST_KNOWN_LONGITUDE = "last_known_longitude";
+
+
     private PrefsUtil() {
     }
 
@@ -29,12 +36,33 @@ public class PrefsUtil {
         putString(PREFS_LOGGED_TYPE, loggedType);
     }
 
+    public static void setLastKnownLocation(LatLng location) {
+        mPreferences.edit().putFloat(LAST_KNOWN_LATITUDE, (float) location.latitude).apply();
+        mPreferences.edit().putFloat(LAST_KNOWN_LONGITUDE, (float) location.longitude).apply();
+    }
+
+    @Nullable
+    public static LatLng getLastKnownLocation() {
+        float latitude = getFloat(LAST_KNOWN_LATITUDE, 200);
+        float longitude = getFloat(LAST_KNOWN_LONGITUDE, 200);
+
+        if (latitude == 200 || longitude == 200) {
+            return null;
+        } else {
+            return new LatLng(latitude, longitude);
+        }
+    }
+
     public static String getLoggedType() {
         return getString(PREFS_LOGGED_TYPE);
     }
 
     private static void putString(String key, String value) {
         mPreferences.edit().putString(key, value).apply();
+    }
+
+    private static float getFloat(String key, float defValue) {
+        return mPreferences.getFloat(key, defValue);
     }
 
     private static String getString(String key) {

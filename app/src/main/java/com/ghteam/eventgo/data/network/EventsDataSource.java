@@ -1,11 +1,13 @@
 package com.ghteam.eventgo.data.network;
 
+import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.ghteam.eventgo.data.entity.Event;
 import com.ghteam.eventgo.util.LiveDataList;
 import com.ghteam.eventgo.util.network.OnTaskStatusChangeListener;
+import com.ghteam.eventgo.util.network.OnTaskStatusChangeListener.TaskStatus;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.EventListener;
@@ -13,6 +15,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.List;
 
 /**
  * Created by nikit on 10.12.2017.
@@ -23,6 +27,8 @@ public class EventsDataSource {
 
     private LiveDataList<Event> downloadedEventsList;
 
+    private MutableLiveData<List<Event>> searchResult;
+
     public static final String TAG = EventsDataSource.class.getSimpleName();
 
     private static EventsDataSource sInstance;
@@ -32,6 +38,8 @@ public class EventsDataSource {
     private EventsDataSource() {
         firestore = FirebaseFirestore.getInstance();
         downloadedEventsList = new LiveDataList<>();
+
+        searchResult = new MutableLiveData<>();
     }
 
     public static EventsDataSource getInstance() {
@@ -51,7 +59,7 @@ public class EventsDataSource {
 
 
     public void loadNextEvents(int count, final OnTaskStatusChangeListener listener) {
-        listener.onStatusChanged(OnTaskStatusChangeListener.TaskStatus.IN_PROGRESS);
+        listener.onStatusChanged(TaskStatus.IN_PROGRESS);
 
         Query query = firestore.collection("events").orderBy("id", Query.Direction.DESCENDING);
 
@@ -64,7 +72,7 @@ public class EventsDataSource {
             @Override
             public void onSuccess(QuerySnapshot documentSnapshots) {
                 if (documentSnapshots != null && documentSnapshots.size() > 0) {
-                    listener.onStatusChanged(OnTaskStatusChangeListener.TaskStatus.SUCCESS);
+                    listener.onStatusChanged(TaskStatus.SUCCESS);
                     lastLoadedEvent = documentSnapshots.getDocuments().get(documentSnapshots.size() - 1).toObject(Event.class);
                     downloadedEventsList.setValue(documentSnapshots.toObjects(Event.class));
                 }
@@ -72,16 +80,17 @@ public class EventsDataSource {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                listener.onStatusChanged(OnTaskStatusChangeListener.TaskStatus.FAILED);
+                listener.onStatusChanged(TaskStatus.FAILED);
                 Log.w(TAG, "onFailure: ", e);
             }
         });
 
     }
 
+
     public void loadEvents(final OnTaskStatusChangeListener listener) {
 
-        listener.onStatusChanged(OnTaskStatusChangeListener.TaskStatus.IN_PROGRESS);
+        listener.onStatusChanged(TaskStatus.IN_PROGRESS);
 
         firestore.collection("events").limit(30).addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
@@ -90,19 +99,16 @@ public class EventsDataSource {
                 if (e == null) {
                     if (documentSnapshots != null && documentSnapshots.size() > 0) {
                         downloadedEventsList.setValue(documentSnapshots.toObjects(Event.class));
-//                        Log.d(TAG, "onEvent: " + documentSnapshots.toObjects(Event.class).toString());
 
                     }
-                    listener.onStatusChanged(OnTaskStatusChangeListener.TaskStatus.SUCCESS);
+                    listener.onStatusChanged(TaskStatus.SUCCESS);
 
                 } else {
                     Log.w(TAG, "onEvent: " + e.getMessage());
-                    listener.onStatusChanged(OnTaskStatusChangeListener.TaskStatus.FAILED);
+                    listener.onStatusChanged(TaskStatus.FAILED);
                 }
             }
         });
-
-
     }
 
 

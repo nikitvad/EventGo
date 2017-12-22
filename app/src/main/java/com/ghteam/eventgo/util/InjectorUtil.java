@@ -7,6 +7,8 @@ import com.ghteam.eventgo.data.Repository;
 import com.ghteam.eventgo.data.database.Database;
 import com.ghteam.eventgo.ui.activity.eventdetails.EventDetailsViewModel.EventDetailsViewModelFactory;
 import com.ghteam.eventgo.ui.activity.login.LoginViewModel;
+import com.ghteam.eventgo.ui.fragment.eventslist.EventsListViewModel;
+import com.ghteam.eventgo.ui.fragment.searchevents.SearchEventsViewModel;
 
 /**
  * Created by nikit on 13.12.2017.
@@ -30,8 +32,16 @@ public class InjectorUtil {
         return new EventDetailsViewModelFactory(provideRepository(context), eventId);
     }
 
-    public static LoginViewModel.LoginViewModelFactory provideLoginViewModelFactory(Context context){
+    public static LoginViewModel.LoginViewModelFactory provideLoginViewModelFactory(Context context) {
         return new LoginViewModel.LoginViewModelFactory(provideRepository(context));
+    }
+
+    public static EventsListViewModel.EventsListViewModelFactory provideEventsListViewModelFactory(Context context) {
+        return new EventsListViewModel.EventsListViewModelFactory(provideRepository(context));
+    }
+
+    public static SearchEventsViewModel.SearchEventsViewModelFactory provideSearchEventsViewModelFactory(Context context) {
+        return new SearchEventsViewModel.SearchEventsViewModelFactory(provideRepository(context));
     }
 
 

@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.ghteam.eventgo.data.entity.Category;
 import com.ghteam.eventgo.data.entity.Event;
+import com.ghteam.eventgo.data.entity.Location;
 import com.ghteam.eventgo.data.network.FirebaseDatabaseManager;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -21,6 +22,8 @@ public class PushDemoEvents {
     private String[] names;
     private String[] descriptions;
     private String[] owners;
+
+    private Location[] locations;
 
     private ArrayList<Category> categories;
 
@@ -69,6 +72,19 @@ public class PushDemoEvents {
                 "Nullam vehicula ipsum a arcu cursus. Sagittis orci a scelerisque purus semper eget duis. Pellentesque dignissim enim sit amet venenatis urna cursus eget nunc. Vel turpis nunc eget lorem dolor sed viverra ipsum. Ut pharetra sit amet aliquam id diam maecenas ultricies mi. Lectus mauris ultrices eros in cursus turpis. Cras semper auctor neque vitae tempus quam. Mattis rhoncus urna neque viverra justo nec ultrices dui sapien. Elit ullamcorper dignissim cras tincidunt lobortis feugiat vivamus at. Lobortis mattis aliquam faucibus purus in massa tempor nec. Iaculis urna id volutpat lacus. Elit sed vulputate mi sit amet mauris commodo quis imperdiet. At consectetur lorem donec massa sapien faucibus et. In vitae turpis massa sed elementum. Quis varius quam quisque id. Enim ut sem viverra aliquet eget sit. Sed libero enim sed faucibus turpis in eu mi. Facilisi etiam dignissim diam quis enim lobortis scelerisque. Massa vitae tortor condimentum lacinia quis vel eros."
         };
 
+        locations = new Location[]{new Location(49.425550, 32.063306),
+                new Location(49.442383, 32.021542),
+                new Location(49.423209, 32.038296),
+                new Location(49.417605, 32.097181),
+                new Location(49.451083, 32.063860),
+                new Location(49.542057, 31.874852),
+                new Location(49.234138, 31.872325),
+                new Location(49.039729, 32.103004),
+                new Location(50.426008, 30.502608),
+                new Location(50.492599, 30.449120),
+                new Location(50.508476, 30.607208),
+                new Location(49.816316, 30.118760)};
+
 
         categories = new ArrayList<>();
 
@@ -114,6 +130,7 @@ public class PushDemoEvents {
                 }
                 event.setDate(new Date());
                 event.setImages(eventImages);
+                event.setLocation(locations[r.nextInt(locations.length - 1)]);
                 event.setCategory(categories.get(r.nextInt(categories.size() - 1)));
 
                 events.add(event);

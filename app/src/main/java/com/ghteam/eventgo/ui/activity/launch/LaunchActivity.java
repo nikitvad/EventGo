@@ -16,10 +16,7 @@ import com.ghteam.eventgo.ui.activity.eventslist.EventsListActivity;
 import com.ghteam.eventgo.ui.activity.login.LoginActivity;
 import com.ghteam.eventgo.ui.activity.profilesettings.ProfileSettingsActivity;
 import com.ghteam.eventgo.ui.activity.userslist.PeopleActivity;
-import com.ghteam.eventgo.util.network.PushDemoEvents;
-import com.ghteam.eventgo.util.network.PushDemoUsersTest;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -31,7 +28,7 @@ public class LaunchActivity extends AppCompatActivity {
     private ActivityLaunchBinding activityBinding;
 
     public static final String TAG = LaunchActivity.class.getSimpleName();
-    DocumentReference reference;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,27 +85,27 @@ public class LaunchActivity extends AppCompatActivity {
         activityBinding.btPushDemoEvents.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-              new PushDemoEvents().push();
+//                new PushDemoEvents().push();
             }
         });
 
         activityBinding.btPushDemoUsers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new PushDemoUsersTest().pushUsers();
+//                new PushDemoUsersTest().pushUsers();
             }
         });
 
-        bindEventTime();
 
     }
+
 
     private void startActivity(Class<? extends Activity> activity) {
         Intent intent = new Intent(LaunchActivity.this, activity);
         startActivity(intent);
     }
 
-    private void bindEventTime(){
+    private void bindEventTime() {
         SimpleDateFormat weekDay = new SimpleDateFormat("EEEE", Locale.ENGLISH);
         SimpleDateFormat month = new SimpleDateFormat("MMM", Locale.ENGLISH);
 
