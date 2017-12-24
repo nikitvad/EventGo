@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -65,12 +66,18 @@
                 android:maxLines="4"
                 android:text="@{event.description}" />
 
-            <TextView
-                android:id="@+id/tv_event_address"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="80dp"
-                android:text="@{event.address}" />
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tv_event_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="80dp"
+                    app:address="@{event.address}"
+                    app:location="@{event.location}" />
+            </RelativeLayout>
         </LinearLayout>
     </android.support.v7.widget.CardView>
 </layout>

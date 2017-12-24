@@ -133,7 +133,9 @@ public class CreateEventViewModel extends ViewModel {
         event.setName(mEventName);
         event.setDescription(mEventDescription);
         event.setAddress(mEventAddress.getValue());
-        event.setCategory(getCategories().getValue().get(0));
+        if (getCategories().getValue()!=null && getCategories().getValue().size()>0) {
+            event.setCategory(getCategories().getValue().get(0));
+        }
         event.setImages(imageUrlsOnCloudStorage);
         event.setOwnerId(mFirebaseUser.getUid());
         event.setDate(mDate);
@@ -142,8 +144,6 @@ public class CreateEventViewModel extends ViewModel {
             event.setLocation(new Location(mEventLocation.getValue().latitude,
                     mEventLocation.getValue().longitude));
         }
-
-        Log.d(TAG, "getEventEntry: " + event.getDate().toString());
 
         return event;
     }

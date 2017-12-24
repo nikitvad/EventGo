@@ -40,32 +40,6 @@ public class EventsListActivity extends AppCompatActivity
 
         activityBinding = DataBindingUtil.setContentView(this, R.layout.activity_events_list);
 
-//        viewModel = ViewModelProviders.of(this, new SearchEventsViewModel
-//                .SearchEventsViewModelFactory(InjectorUtil.provideRepository(this)))
-//                .get(SearchEventsViewModel.class);
-//
-//        recyclerAdapter = new RecyclerBindingAdapter<>(R.layout.layout_event_list_item_v2,
-//                BR.event, new ArrayList<Event>());
-//
-//
-//        rvEventsList = activityBinding.content.content.rvEventsList;
-//
-//
-//        rvEventsList.setAdapter(recyclerAdapter);
-//
-//        recyclerAdapter.setOnItemClickListener(new RecyclerBindingAdapter.OnItemClickListener<Event>() {
-//            @Override
-//            public void onItemClick(int position, Event item) {
-//                Intent intentEventDetails = new Intent(EventsListActivity.this, EventDetailsActivity.class);
-//                intentEventDetails.putExtra("eventId", item.getId());
-//                startActivity(intentEventDetails);
-//            }
-//        });
-//
-//        rvEventsList.setLayoutManager(new LinearLayoutManager(this));
-//
-//        progressBar = activityBinding.content.content.progressBar;
-
         Toolbar toolbar = activityBinding.includeToolbar.toolbar;
         setSupportActionBar(toolbar);
 
@@ -171,43 +145,6 @@ public class EventsListActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
-//    private void registerViewModelObservers() {
-//        viewModel.getEventsList().observeForever(new Observer<List<Event>>() {
-//            @Override
-//            public void onChanged(@Nullable List<Event> events) {
-//                recyclerAdapter.addItems(events);
-//            }
-//        });
-//
-//        viewModel.getTaskStatus().observeForever(new Observer<OnTaskStatusChangeListener.TaskStatus>() {
-//            @Override
-//            public void onChanged(@Nullable OnTaskStatusChangeListener.TaskStatus taskStatus) {
-//                switch (taskStatus) {
-//                    case IN_PROGRESS:
-//                        showProgressBar();
-//                        return;
-//                    default:
-//                        hideProgressBar();
-//                        return;
-//                }
-//            }
-//        });
-//    }
-//
-//    private void showProgressBar() {
-//        progressBar.setVisibility(View.VISIBLE);
-//        getWindow().addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-//        rvEventsList.setAlpha(0.5f);
-//    }
-//
-//
-//    private void hideProgressBar() {
-//        progressBar.setVisibility(View.GONE);
-//        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-//        rvEventsList.setAlpha(1f);
-//    }
-
 
 }
 

@@ -107,6 +107,7 @@ public class EventsListFragment extends Fragment implements LocationListener {
 
         mFragmentBinding.rvEventsList.setLayoutManager(new LinearLayoutManager(getContext()));
         registerViewModelObservers();
+
 //        mViewModel.loadEvents();
 
         updateLocation();
@@ -131,11 +132,20 @@ public class EventsListFragment extends Fragment implements LocationListener {
 
         } else {
 
-            mCurrentLocation = LocationUtil.getLastKnownLocation(mLocationManager, null);
+            mCurrentLocation = LocationUtil.updateLastKnownLocation(mLocationManager, null);
 
-            if (mCurrentLocation != null) {
-                Log.d(TAG, "updateLocation: " + mCurrentLocation.toString());
+            if(mCurrentLocation!=null){
+                LocationFilter locationFilter = new LocationFilter();
+                locationFilter.setLocation(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()));
+
+                locationFilter.setHeight(100);
+                locationFilter.setWidth(100);
+
+                LocationUtil.updateLastKnownLocation(mLocationManager, null);
+
+                mViewModel.searchEventByLocation(locationFilter);
             }
+
             mLocationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, this, null);
 
         }
@@ -156,17 +166,20 @@ public class EventsListFragment extends Fragment implements LocationListener {
         }
     }
 
+
     @Override
     public void onLocationChanged(Location location) {
         Log.d(TAG, "onLocationChanged: " + location.toString());
         //TODO:
-        LocationFilter locationFilter = new LocationFilter();
-        locationFilter.setLocation(new LatLng(location.getLatitude(), location.getLongitude()));
+//        LocationFilter locationFilter = new LocationFilter();
+//        locationFilter.setLocation(new LatLng(location.getLatitude(), location.getLongitude()));
+//
+//        locationFilter.setHeight(1);
+//        locationFilter.setWidth(1);
 
-        locationFilter.setHeight(100);
-        locationFilter.setWidth(100);
+        LocationUtil.updateLastKnownLocation(mLocationManager, null);
 
-        mViewModel.searchEventByLocation(locationFilter);
+//        mViewModel.searchEventByLocation(locationFilter);
 
 
     }

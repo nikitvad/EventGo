@@ -14,22 +14,13 @@ import java.util.List;
  * Created by nikit on 21.12.2017.
  */
 
-//if ((time > minTime && accuracy < bestAccuracy)) {
-//        bestResult = location;
-//        bestAccuracy = accuracy;
-//        bestTime = time;
-//        }
-//        else if (time < minTime &&
-//        bestAccuracy == Float.MAX_VALUE && time > bestTime){
-//        bestResult = location;
-//        bestTime = time;
-//        }
-//        }
 public class LocationUtil {
+
+    public static Location lastKnownLocation;
 
     @SuppressLint("MissingPermission")
     @Nullable
-    public static Location getLastKnownLocation(LocationManager locationManager, @Nullable Date minDate) {
+    public static Location updateLastKnownLocation(LocationManager locationManager, @Nullable Date minDate) {
         List<String> providers = locationManager.getAllProviders();
 
         float bestAccuracy = Float.MAX_VALUE;
@@ -61,7 +52,13 @@ public class LocationUtil {
 
             }
         }
-        return bestLocation;
+
+        lastKnownLocation = bestLocation;
+        return lastKnownLocation;
+    }
+
+    public static Location getLastKnownLocation() {
+        return lastKnownLocation;
     }
 
     private static double EARTH_RADIUS = 6378;
@@ -71,8 +68,8 @@ public class LocationUtil {
         double kilometersPerDegreeOfLongitude = (2 * Math.PI / 360) * EARTH_RADIUS * Math.cos(center.latitude);
         double kilometersPerDegreeOfLatitude = (2 * Math.PI / 360) * EARTH_RADIUS;
 
-        double leftTopLatitude = center.latitude + (height / 2) / kilometersPerDegreeOfLatitude;
-        double leftTopLongitude = center.longitude - (width / 2) / kilometersPerDegreeOfLongitude;
+        double leftTopLatitude = center.latitude + (height / 2) * kilometersPerDegreeOfLatitude;
+        double leftTopLongitude = center.longitude - (width / 2) * kilometersPerDegreeOfLongitude;
 
         double rightBottomLatitude = center.latitude - (height / 2) / kilometersPerDegreeOfLatitude;
         double rightBottomLongitude = center.longitude + (width / 2) / kilometersPerDegreeOfLongitude;
@@ -81,6 +78,21 @@ public class LocationUtil {
         LatLng bottomRight = new LatLng(rightBottomLatitude, rightBottomLongitude);
 
         return new LatLng[]{topLeft, bottomRight};
+    }
+
+    public static double calculateDistance(double latitude1, double longitude1,
+                                           double latitude2, double longitude2) {
+
+        double kilometersPerDegreeOfLongitude = (2 * Math.PI / 360) * EARTH_RADIUS * Math.cos(latitude1);
+        double kilometersPerDegreeOfLatitude = (2 * Math.PI / 360) * EARTH_RADIUS;
+
+
+        double longitudeCathetus = (longitude1 - longitude2) * kilometersPerDegreeOfLongitude;
+        double latitudeCathetus = (latitude1 - latitude2) * kilometersPerDegreeOfLatitude;
+
+        double distance = Math.sqrt((longitudeCathetus * longitudeCathetus) + (latitudeCathetus * latitudeCathetus));
+
+        return distance;
     }
 
 }

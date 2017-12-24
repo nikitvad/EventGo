@@ -84,10 +84,11 @@ public class EventsDataSource {
 
                         List<Event> eventList = documentSnapshots.toObjects(Event.class);
 
-                        for (Event item : eventList) {
-                            if (item.getLocation().getLatitude() > rectangle[0].latitude
-                                    || item.getLocation().getLatitude() < rectangle[1].latitude) {
-                                eventList.remove(item);
+
+                        for (int i = 0; i < eventList.size(); i++) {
+                            if (eventList.get(i).getLocation().getLatitude() > rectangle[0].latitude
+                                    || eventList.get(i).getLocation().getLatitude() < rectangle[1].latitude) {
+                                eventList.remove(eventList.get(i));
                             }
                         }
 

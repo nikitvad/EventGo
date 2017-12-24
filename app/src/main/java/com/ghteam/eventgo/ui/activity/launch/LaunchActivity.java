@@ -17,7 +17,6 @@ import com.ghteam.eventgo.ui.activity.login.LoginActivity;
 import com.ghteam.eventgo.ui.activity.profilesettings.ProfileSettingsActivity;
 import com.ghteam.eventgo.ui.activity.userslist.PeopleActivity;
 import com.ghteam.eventgo.util.network.LocationUtil;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.text.SimpleDateFormat;
@@ -98,9 +97,8 @@ public class LaunchActivity extends AppCompatActivity {
             }
         });
 
-        LatLng latLng = new LatLng(49.426301, 32.049254);
-        LocationUtil.calculateRectangle(latLng, 100, 100);
-
+        Log.d("Distance", "onCreate: " + LocationUtil.calculateDistance(49.415398, 32.030653
+                , 48.881528, 30.390074));
     }
 
 
