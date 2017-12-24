@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 
 import com.ghteam.eventgo.data.Repository;
 import com.ghteam.eventgo.data.entity.Event;
+import com.ghteam.eventgo.data.network.LocationFilter;
 import com.ghteam.eventgo.util.LiveDataList;
 import com.ghteam.eventgo.util.network.OnTaskStatusChangeListener;
 
@@ -30,6 +31,15 @@ public class EventsListViewModel extends ViewModel {
 
     public void loadEvents() {
         mRepository.loadEvents(new OnTaskStatusChangeListener() {
+            @Override
+            public void onStatusChanged(TaskStatus status) {
+                mLoadingEventsTaskStatus.setValue(status);
+            }
+        });
+    }
+
+    public void searchEventByLocation(LocationFilter locationFilter){
+        mRepository.searchEventsByLocation(locationFilter, new OnTaskStatusChangeListener() {
             @Override
             public void onStatusChanged(TaskStatus status) {
                 mLoadingEventsTaskStatus.setValue(status);

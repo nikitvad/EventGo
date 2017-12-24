@@ -5,6 +5,8 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.support.annotation.Nullable;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.Date;
 import java.util.List;
 
@@ -60,6 +62,25 @@ public class LocationUtil {
             }
         }
         return bestLocation;
+    }
+
+    private static double EARTH_RADIUS = 6378;
+
+    public static LatLng[] calculateRectangle(LatLng center, double height, double width) {
+
+        double kilometersPerDegreeOfLongitude = (2 * Math.PI / 360) * EARTH_RADIUS * Math.cos(center.latitude);
+        double kilometersPerDegreeOfLatitude = (2 * Math.PI / 360) * EARTH_RADIUS;
+
+        double leftTopLatitude = center.latitude + (height / 2) / kilometersPerDegreeOfLatitude;
+        double leftTopLongitude = center.longitude - (width / 2) / kilometersPerDegreeOfLongitude;
+
+        double rightBottomLatitude = center.latitude - (height / 2) / kilometersPerDegreeOfLatitude;
+        double rightBottomLongitude = center.longitude + (width / 2) / kilometersPerDegreeOfLongitude;
+
+        LatLng topLeft = new LatLng(leftTopLatitude, leftTopLongitude);
+        LatLng bottomRight = new LatLng(rightBottomLatitude, rightBottomLongitude);
+
+        return new LatLng[]{topLeft, bottomRight};
     }
 
 }

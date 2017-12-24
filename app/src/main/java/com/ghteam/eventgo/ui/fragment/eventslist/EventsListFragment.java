@@ -27,12 +27,14 @@ import android.view.WindowManager;
 import com.ghteam.eventgo.BR;
 import com.ghteam.eventgo.R;
 import com.ghteam.eventgo.data.entity.Event;
+import com.ghteam.eventgo.data.network.LocationFilter;
 import com.ghteam.eventgo.databinding.FragmentEventsListBinding;
 import com.ghteam.eventgo.ui.RecyclerBindingAdapter;
 import com.ghteam.eventgo.ui.activity.eventdetails.EventDetailsActivity;
 import com.ghteam.eventgo.util.InjectorUtil;
 import com.ghteam.eventgo.util.network.LocationUtil;
 import com.ghteam.eventgo.util.network.OnTaskStatusChangeListener;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -105,13 +107,11 @@ public class EventsListFragment extends Fragment implements LocationListener {
 
         mFragmentBinding.rvEventsList.setLayoutManager(new LinearLayoutManager(getContext()));
         registerViewModelObservers();
-        mViewModel.loadNext();
+//        mViewModel.loadEvents();
 
         updateLocation();
 
-
     }
-
 
     private void updateLocation() {
 
@@ -160,6 +160,14 @@ public class EventsListFragment extends Fragment implements LocationListener {
     public void onLocationChanged(Location location) {
         Log.d(TAG, "onLocationChanged: " + location.toString());
         //TODO:
+        LocationFilter locationFilter = new LocationFilter();
+        locationFilter.setLocation(new LatLng(location.getLatitude(), location.getLongitude()));
+
+        locationFilter.setHeight(100);
+        locationFilter.setWidth(100);
+
+        mViewModel.searchEventByLocation(locationFilter);
+
 
     }
 
@@ -176,6 +184,8 @@ public class EventsListFragment extends Fragment implements LocationListener {
     @Override
     public void onProviderDisabled(String provider) {
 
+//        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+//        startActivity(intent);
     }
 
     @Override
@@ -199,7 +209,7 @@ public class EventsListFragment extends Fragment implements LocationListener {
         mViewModel.getEventsList().observeForever(new Observer<List<Event>>() {
             @Override
             public void onChanged(@Nullable List<Event> events) {
-                mRecyclerAdapter.addItems(events);
+                mRecyclerAdapter.setItems(events);
             }
         });
 

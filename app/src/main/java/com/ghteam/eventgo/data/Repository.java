@@ -20,6 +20,7 @@ import com.ghteam.eventgo.data.network.CategoriesDataSource;
 import com.ghteam.eventgo.data.network.EventsDataSource;
 import com.ghteam.eventgo.data.network.FirebaseAccountManager;
 import com.ghteam.eventgo.data.network.FirebaseDatabaseManager;
+import com.ghteam.eventgo.data.network.LocationFilter;
 import com.ghteam.eventgo.data.network.UsersDataSource;
 import com.ghteam.eventgo.util.LiveDataList;
 import com.ghteam.eventgo.util.network.AccountStatus;
@@ -81,17 +82,17 @@ public class Repository {
         usersDataSource = UsersDataSource.getInstance();
 
         events = eventsDataSource.getCurrentEvents();
-        //TODO: finish this block
+
         events.observeForever(new Observer<List<Event>>() {
             @Override
             public void onChanged(@Nullable final List<Event> events) {
                 appExecutors.diskIO().execute(new Runnable() {
                     @Override
                     public void run() {
+
                         imageDao.deleteAll();
                         categoryDao.deleteAll();
                         eventDao.deleteAll();
-
 
                         saveEventsToDb(events);
                     }
@@ -111,9 +112,14 @@ public class Repository {
         return mUsers;
     }
 
+    public void searchEventsByLocation(LocationFilter locationFilter, OnTaskStatusChangeListener listener) {
+        eventsDataSource.searchEvents(locationFilter, listener);
+    }
+
     public void pushUser(String uid, User user, @Nullable FirebaseDatabaseManager.OnPullUserResultListener listener) {
         FirebaseDatabaseManager.pushUserInfo(uid, user, listener);
     }
+
 
     public MutableLiveData<User> initializeUser() {
         return usersDataSource.getCurrentUser();
