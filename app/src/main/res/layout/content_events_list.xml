@@ -6,6 +6,6 @@
         android:layout_width="match_parent"
         android:id="@+id/fl_container"
         android:layout_height="match_parent"
-        tools:context="com.ghteam.eventgo.ui.activity.eventslist.EventsListActivity"
+        tools:context="com.ghteam.eventgo.ui.activity.eventslist.EventsActivity"
         tools:showIn="@layout/app_bar_events_list" />
 </layout>

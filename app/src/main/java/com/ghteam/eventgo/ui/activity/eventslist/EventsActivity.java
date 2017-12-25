@@ -20,25 +20,25 @@ import android.view.View;
 import android.widget.SearchView;
 
 import com.ghteam.eventgo.R;
-import com.ghteam.eventgo.databinding.ActivityEventsListBinding;
+import com.ghteam.eventgo.databinding.ActivityEventsBinding;
 import com.ghteam.eventgo.ui.activity.createevent.CreateEventActivity;
 import com.ghteam.eventgo.ui.fragment.eventslist.EventsListFragment;
 
-public class EventsListActivity extends AppCompatActivity
+public class EventsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, EventsListFragment.OnFragmentInteractionListener {
 
-    private ActivityEventsListBinding activityBinding;
+    private ActivityEventsBinding activityBinding;
 
     private FragmentTransaction fragmentTransaction;
 
-    public static final String TAG = EventsListActivity.class.getSimpleName();
+    public static final String TAG = EventsActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_events_list);
+        setContentView(R.layout.activity_events);
 
-        activityBinding = DataBindingUtil.setContentView(this, R.layout.activity_events_list);
+        activityBinding = DataBindingUtil.setContentView(this, R.layout.activity_events);
 
         Toolbar toolbar = activityBinding.includeToolbar.toolbar;
         setSupportActionBar(toolbar);
@@ -48,7 +48,7 @@ public class EventsListActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent createEventIntent = new Intent(EventsListActivity.this, CreateEventActivity.class);
+                Intent createEventIntent = new Intent(EventsActivity.this, CreateEventActivity.class);
                 startActivity(createEventIntent);
             }
         });
@@ -61,7 +61,6 @@ public class EventsListActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
 
     }
 
@@ -125,19 +124,9 @@ public class EventsListActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
-        int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
+        switch (item.getItemId()) {
+            case R.id.nav_sign_out:
 
         }
 

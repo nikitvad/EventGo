@@ -18,7 +18,7 @@ import android.widget.Toast;
 import com.ghteam.eventgo.R;
 import com.ghteam.eventgo.data.entity.Category;
 import com.ghteam.eventgo.databinding.ActivityProfileSettingsV2Binding;
-import com.ghteam.eventgo.ui.activity.eventslist.EventsListActivity;
+import com.ghteam.eventgo.ui.activity.eventslist.EventsActivity;
 import com.ghteam.eventgo.ui.adapter.SelectedCategoriesRecyclerAdapter;
 import com.ghteam.eventgo.ui.dialog.selectcategories.CategoriesDialog;
 import com.ghteam.eventgo.util.CustomTextWatcher;
@@ -167,7 +167,7 @@ public class ProfileSettingsActivity extends AppCompatActivity {
         public void onChanged(@Nullable ProfileSettingsViewModel.SaveUserResult saveUserResult) {
             if (saveUserResult == ProfileSettingsViewModel.SaveUserResult.RESULT_OK) {
                 shortToast("Success");
-                Intent intent = new Intent(ProfileSettingsActivity.this, EventsListActivity.class);
+                Intent intent = new Intent(ProfileSettingsActivity.this, EventsActivity.class);
                 startActivity(intent);
 
             } else if (saveUserResult == ProfileSettingsViewModel.SaveUserResult.RESULT_FAIL) {

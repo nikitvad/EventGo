@@ -9,7 +9,6 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.ghteam.eventgo.data.Repository;
 import com.ghteam.eventgo.data.entity.Category;
@@ -80,7 +79,6 @@ public class CreateEventViewModel extends ViewModel {
         });
     }
 
-
     String getEventName() {
         return mEventName;
     }
@@ -132,8 +130,9 @@ public class CreateEventViewModel extends ViewModel {
         Event event = new Event();
         event.setName(mEventName);
         event.setDescription(mEventDescription);
+
         event.setAddress(mEventAddress.getValue());
-        if (getCategories().getValue()!=null && getCategories().getValue().size()>0) {
+        if (getCategories().getValue() != null && getCategories().getValue().size() > 0) {
             event.setCategory(getCategories().getValue().get(0));
         }
         event.setImages(imageUrlsOnCloudStorage);

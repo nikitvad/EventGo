@@ -109,12 +109,25 @@ public class EventsListFragment extends Fragment implements LocationListener {
         registerViewModelObservers();
 
 //        mViewModel.loadEvents();
-
-        updateLocation();
+        updateCurrentLocation();
+        searchEventsByCurrentLocation(10);
 
     }
 
-    private void updateLocation() {
+    private void searchEventsByCurrentLocation(int searchAreaSize) {
+        if (mCurrentLocation != null) {
+            LocationFilter locationFilter = new LocationFilter();
+            locationFilter.setLocation(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()));
+
+            locationFilter.setHeight(searchAreaSize);
+            locationFilter.setWidth(searchAreaSize);
+
+            mViewModel.searchEventByLocation(locationFilter);
+        }
+
+    }
+
+    private void updateCurrentLocation() {
 
         int checkFineLocationPermission = ActivityCompat
                 .checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION);
@@ -134,23 +147,11 @@ public class EventsListFragment extends Fragment implements LocationListener {
 
             mCurrentLocation = LocationUtil.updateLastKnownLocation(mLocationManager, null);
 
-            if(mCurrentLocation!=null){
-                LocationFilter locationFilter = new LocationFilter();
-                locationFilter.setLocation(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()));
-
-                locationFilter.setHeight(100);
-                locationFilter.setWidth(100);
-
-                LocationUtil.updateLastKnownLocation(mLocationManager, null);
-
-                mViewModel.searchEventByLocation(locationFilter);
-            }
-
-            mLocationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, this, null);
-
         }
-    }
 
+        mLocationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, this, null);
+
+    }
 
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
@@ -171,17 +172,16 @@ public class EventsListFragment extends Fragment implements LocationListener {
     public void onLocationChanged(Location location) {
         Log.d(TAG, "onLocationChanged: " + location.toString());
         //TODO:
-//        LocationFilter locationFilter = new LocationFilter();
-//        locationFilter.setLocation(new LatLng(location.getLatitude(), location.getLongitude()));
-//
-//        locationFilter.setHeight(1);
-//        locationFilter.setWidth(1);
+        if (mCurrentLocation != null) {
+            double distance = LocationUtil.calculateDistance(location.getLatitude(), location.getLongitude(),
+                    mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
 
-        LocationUtil.updateLastKnownLocation(mLocationManager, null);
+            if (distance > 0.5) {
+                mCurrentLocation = location;
+                searchEventsByCurrentLocation(10);
+            }
 
-//        mViewModel.searchEventByLocation(locationFilter);
-
-
+        }
     }
 
     @Override

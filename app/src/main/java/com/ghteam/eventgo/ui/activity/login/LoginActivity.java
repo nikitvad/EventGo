@@ -22,7 +22,7 @@ import com.facebook.login.LoginResult;
 import com.ghteam.eventgo.R;
 import com.ghteam.eventgo.data.network.FirebaseDatabaseManager;
 import com.ghteam.eventgo.databinding.ActivityLoginBinding;
-import com.ghteam.eventgo.ui.activity.eventslist.EventsListActivity;
+import com.ghteam.eventgo.ui.activity.eventslist.EventsActivity;
 import com.ghteam.eventgo.ui.activity.profilesettings.ProfileSettingsActivity;
 import com.ghteam.eventgo.ui.activity.singup.SignUpActivity;
 import com.ghteam.eventgo.util.InjectorUtil;
@@ -195,7 +195,7 @@ public class LoginActivity extends LifecycleActivity {
                     return;
 
                 case OK:
-                    startActivity(EventsListActivity.class);
+                    startActivity(EventsActivity.class);
                     return;
 
                 case REQUIRE_UPDATE_PROFILE:

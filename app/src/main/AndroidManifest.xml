@@ -15,7 +15,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".ui.activity.launch.LaunchActivity">
+        <activity android:name=".ui.activity.launch.LaunchingActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -31,7 +31,7 @@
             android:name=".ui.activity.profilesettings.ProfileSettingsActivity"
             android:label="Profile settings" />
         <activity
-            android:name=".ui.activity.eventslist.EventsListActivity"
+            android:name=".ui.activity.eventslist.EventsActivity"
             android:label="@string/title_activity_events_list"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
 

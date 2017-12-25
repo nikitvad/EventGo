@@ -4,37 +4,52 @@ import android.app.Activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 
 import com.ghteam.eventgo.R;
-import com.ghteam.eventgo.databinding.ActivityLaunchBinding;
+import com.ghteam.eventgo.databinding.ActivityLaunchingBinding;
 import com.ghteam.eventgo.ui.activity.createevent.CreateEventActivity;
 import com.ghteam.eventgo.ui.activity.eventdetails.EventDetailsActivity;
-import com.ghteam.eventgo.ui.activity.eventslist.EventsListActivity;
+import com.ghteam.eventgo.ui.activity.eventslist.EventsActivity;
 import com.ghteam.eventgo.ui.activity.login.LoginActivity;
 import com.ghteam.eventgo.ui.activity.profilesettings.ProfileSettingsActivity;
 import com.ghteam.eventgo.ui.activity.userslist.PeopleActivity;
-import com.ghteam.eventgo.util.network.LocationUtil;
+import com.ghteam.eventgo.util.PrefsUtil;
 import com.google.firebase.auth.FirebaseAuth;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-
-public class LaunchActivity extends AppCompatActivity {
+public class LaunchingActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
-    private ActivityLaunchBinding activityBinding;
+    private ActivityLaunchingBinding activityBinding;
 
-    public static final String TAG = LaunchActivity.class.getSimpleName();
+    public static final String TAG = LaunchingActivity.class.getSimpleName();
 
+
+    public Class activity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        activityBinding = DataBindingUtil.setContentView(this, R.layout.activity_launch);
+        activityBinding = DataBindingUtil.setContentView(this, R.layout.activity_launching);
+
+
+        if (PrefsUtil.getLoggedType() == PrefsUtil.LOGGED_TYPE_NONE) {
+            activity = LoginActivity.class;
+        } else {
+            activity = EventsActivity.class;
+        }
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Intent intent = new Intent(LaunchingActivity.this, activity);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                finish();
+            }
+        }, 5000);
 
         activityBinding.btLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,7 +75,6 @@ public class LaunchActivity extends AppCompatActivity {
             }
         });
 
-
         activityBinding.btPeople.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -68,11 +82,10 @@ public class LaunchActivity extends AppCompatActivity {
             }
         });
 
-
         activityBinding.btEventsList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(EventsListActivity.class);
+                startActivity(EventsActivity.class);
             }
         });
 
@@ -97,25 +110,11 @@ public class LaunchActivity extends AppCompatActivity {
             }
         });
 
-        Log.d("Distance", "onCreate: " + LocationUtil.calculateDistance(49.415398, 32.030653
-                , 48.881528, 30.390074));
     }
 
 
     private void startActivity(Class<? extends Activity> activity) {
-        Intent intent = new Intent(LaunchActivity.this, activity);
+        Intent intent = new Intent(LaunchingActivity.this, activity);
         startActivity(intent);
-    }
-
-    private void bindEventTime() {
-        SimpleDateFormat weekDay = new SimpleDateFormat("EEEE", Locale.ENGLISH);
-        SimpleDateFormat month = new SimpleDateFormat("MMM", Locale.ENGLISH);
-
-        SimpleDateFormat numb = new SimpleDateFormat("dd", Locale.ENGLISH);
-
-
-        Log.d(TAG, "bindEventTime: " + weekDay.format(new Date()));
-        Log.d(TAG, "bindEventTime: " + month.format(new Date()));
-        Log.d(TAG, "bindEventTime: " + numb.format(new Date()));
     }
 }
