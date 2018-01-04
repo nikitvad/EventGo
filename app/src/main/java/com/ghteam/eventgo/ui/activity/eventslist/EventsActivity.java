@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.SearchView;
 
+import com.facebook.CallbackManager;
 import com.ghteam.eventgo.R;
 import com.ghteam.eventgo.databinding.ActivityEventsBinding;
 import com.ghteam.eventgo.ui.activity.createevent.CreateEventActivity;
@@ -32,6 +33,7 @@ public class EventsActivity extends AppCompatActivity
     private FragmentTransaction fragmentTransaction;
 
     public static final String TAG = EventsActivity.class.getSimpleName();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +63,8 @@ public class EventsActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+
 
     }
 

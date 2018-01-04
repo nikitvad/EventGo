@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.ghteam.eventgo.R;
+import com.ghteam.eventgo.data_new.Repository;
 import com.ghteam.eventgo.databinding.ActivityLaunchingBinding;
 import com.ghteam.eventgo.ui.activity.createevent.CreateEventActivity;
 import com.ghteam.eventgo.ui.activity.eventdetails.EventDetailsActivity;
@@ -41,15 +42,18 @@ public class LaunchingActivity extends AppCompatActivity {
             activity = EventsActivity.class;
         }
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Intent intent = new Intent(LaunchingActivity.this, activity);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                finish();
-            }
-        }, 5000);
+        Repository repository = Repository.getInstance();
+
+        repository.loadEvents(20);
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                Intent intent = new Intent(LaunchingActivity.this, activity);
+//                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                startActivity(intent);
+//                finish();
+//            }
+//        }, 5000);
 
         activityBinding.btLogin.setOnClickListener(new View.OnClickListener() {
             @Override
