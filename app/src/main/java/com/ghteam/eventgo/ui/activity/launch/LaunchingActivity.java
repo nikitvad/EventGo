@@ -42,9 +42,10 @@ public class LaunchingActivity extends AppCompatActivity {
             activity = EventsActivity.class;
         }
 
+        startActivity(LoginActivity.class);
         Repository repository = Repository.getInstance();
 
-        repository.loadEvents(20);
+//        repository.loadEvents(20);
 //        new Handler().postDelayed(new Runnable() {
 //            @Override
 //            public void run() {

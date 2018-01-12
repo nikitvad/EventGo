@@ -3,7 +3,10 @@
 
     <item>
         <shape>
-            <solid android:color="#2980b9"/>
-            </shape>
+            <gradient
+                android:angle="90"
+                android:endColor="@color/primaryLightColor"
+                android:startColor="@color/primaryDarkColor" />
+        </shape>
     </item>
 </selector>

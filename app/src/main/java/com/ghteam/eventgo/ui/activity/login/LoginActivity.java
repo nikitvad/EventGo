@@ -95,6 +95,7 @@ public class LoginActivity extends LifecycleActivity {
 
     }
 
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -137,6 +138,11 @@ public class LoginActivity extends LifecycleActivity {
         });
     }
 
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.move_to_up_in, R.anim.move_to_up_out);
+    }
 
     private void handleFacebookAccessToken(final AccessToken token) {
         Log.d(TAG, "handleFacebookAccessToken:" + token);
@@ -163,6 +169,7 @@ public class LoginActivity extends LifecycleActivity {
     private void startActivity(Class<? extends Activity> activity) {
         Intent intent = new Intent(this, activity);
         startActivity(intent);
+        finish();
     }
 
     private void addNewFacebookUser() {
@@ -269,4 +276,5 @@ public class LoginActivity extends LifecycleActivity {
             }
         });
     }
+
 }
