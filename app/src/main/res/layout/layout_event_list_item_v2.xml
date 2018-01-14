@@ -99,12 +99,9 @@
                     android:text="@{event.description}" />
 
             </RelativeLayout>
-
-
+            
         </RelativeLayout>
 
-
     </android.support.v7.widget.CardView>
-
 
 </layout>
