@@ -7,4 +7,4 @@
     android:padding="40dp"
     android:scaleType="fitCenter"
     android:src="@drawable/ic_add"
-    android:tint="@color/colorPrimaryDark" />
+    android:tint="@color/primaryDarkColor" />

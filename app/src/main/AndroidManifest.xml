@@ -7,6 +7,11 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+
     <application
         android:name=".EventGoApplication"
         android:allowBackup="true"
@@ -34,11 +39,9 @@
             android:name=".ui.activity.eventslist.EventsActivity"
             android:label="@string/title_activity_events_list"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
-
         </activity>
 
         <meta-data
@@ -79,7 +82,10 @@
             android:value="AIzaSyC01M4nvT9veni6H1eg3R2oZONgbWkfqZg" />
 
         <activity android:name=".ui.activity.userslist.PeopleActivity" />
-        <activity android:name=".ui.activity.eventdetails.EventDetailsActivity"></activity>
+        <activity android:name=".ui.activity.eventdetails.EventDetailsActivity" />
+        <activity
+            android:name=".LoginActivity"
+            android:label="@string/title_activity_login"></activity>
     </application>
 
 </manifest>

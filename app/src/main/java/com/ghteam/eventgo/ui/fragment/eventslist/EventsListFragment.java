@@ -108,9 +108,9 @@ public class EventsListFragment extends Fragment implements LocationListener {
         mFragmentBinding.rvEventsList.setLayoutManager(new LinearLayoutManager(getContext()));
         registerViewModelObservers();
 
-//        mViewModel.loadEvents();
-        updateCurrentLocation();
-        searchEventsByCurrentLocation(10);
+        mViewModel.loadEvents();
+//        updateCurrentLocation();
+//        searchEventsByCurrentLocation(10);
 
     }
 

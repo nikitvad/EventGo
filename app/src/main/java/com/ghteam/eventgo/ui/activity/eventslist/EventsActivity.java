@@ -65,7 +65,6 @@ public class EventsActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
 
-
     }
 
     @Override

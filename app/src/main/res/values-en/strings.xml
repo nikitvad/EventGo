@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- hints -->
+
+    <string name="hint_email">email</string>
+    <string name="hint_password">password</string>
+
+
+
+    <!-- login activity -->
+    <string name="show_password">Show password</string>
+    <string name="forgot_your_password">Forgot you password?</string>
+    <string name="sign_in">Sign in</string>
+    <string name="dont_nave_an_account_sign_up">Don`t have an account? Sign up</string>
+    <string name="or">Or</string>
+    <string name="log_in_with_facebook"> Log in with facebook</string>
+
+
+</resources>
