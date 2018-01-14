@@ -31,7 +31,7 @@ public class LoadEventsTask implements NetworkTask<Integer> {
     @Override
     public void execute(Integer... params) {
 
-        if(params.length>0){
+        if (params.length > 0) {
             referenceEvents.limit(params[0]);
         }
 
