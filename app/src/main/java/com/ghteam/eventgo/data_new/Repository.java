@@ -5,7 +5,9 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.ghteam.eventgo.data.entity.Event;
+import com.ghteam.eventgo.data_new.task.LoadCollectionTask;
 import com.ghteam.eventgo.data_new.task.LoadEventsTask;
+import com.ghteam.eventgo.util.network.FirestoreUtil;
 
 import java.util.List;
 
@@ -37,24 +39,22 @@ public class Repository {
     }
 
     public void loadEvents(int limit) {
-        new LoadEventsTask()
-                .setTaskResultListener(new TaskResultListener<List<Event>>() {
-                    @Nullable
-                    @Override
-                    public void onResult(List<Event> result) {
-                        events.setValue(result);
-                        Log.d(TAG, "onResult: " + result.toString());
-                    }
-                })
-                .setTaskStatusListener(new TaskStatusListener() {
-                    @Override
-                    public void onStatusChanged(TaskStatus status) {
-                        Log.d(TAG, "onStatusChanged: " + status.toString());
+       new LoadCollectionTask<Event>(Event.class, FirestoreUtil.getReferenceToEvents())
+               .addTaskResultListener(new TaskResultListener<List<Event>>() {
+                   @Nullable
+                   @Override
+                   public void onResult(List<Event> result) {
+                       Log.d(TAG, "onResult: " + result);
+                       events.setValue(result);
+                   }
+               })
+               .addTaskStatusListener(new TaskStatusListener() {
+                   @Override
+                   public void onStatusChanged(TaskStatus status) {
+                       Log.d(TAG, "onStatusChanged: " + status);
 
-                    }
-                })
-                .execute(20);
+                   }
+               })
+       .execute(limit);
     }
-
-
 }
