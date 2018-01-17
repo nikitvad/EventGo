@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.ghteam.eventgo.data.entity.Category;
 import com.ghteam.eventgo.data.entity.Event;
+import com.ghteam.eventgo.data.entity.User;
 import com.ghteam.eventgo.data_new.task.FirestoreCollectionLoader;
 import com.ghteam.eventgo.data_new.task.TaskResultListener;
 import com.ghteam.eventgo.data_new.task.TaskStatus;
@@ -30,6 +31,9 @@ public class Repository {
     private MutableLiveData<List<Event>> events;
     private MutableLiveData<TaskStatus> loadEventsTaskStatus;
 
+    private MutableLiveData<List<User>> users;
+    private MutableLiveData<TaskStatus> loadUsersTaskStatus;
+
 
     private MutableLiveData<List<Category>> categories;
     private MutableLiveData<TaskStatus> loadCategoriesTaskStatus;
@@ -41,6 +45,9 @@ public class Repository {
 
         categories = new MutableLiveData<>();
         loadCategoriesTaskStatus = new MutableLiveData<>();
+
+        users = new MutableLiveData<>();
+        loadUsersTaskStatus = new MutableLiveData<>();
     }
 
     public static Repository getInstance(Context context) {
@@ -78,7 +85,7 @@ public class Repository {
                 .execute(limit);
     }
 
-    public MutableLiveData<TaskStatus> initializeLoadingEventsStatus() {
+    public MutableLiveData<TaskStatus> getLoadEventsTaskStatus() {
         return loadEventsTaskStatus;
     }
 
@@ -117,7 +124,36 @@ public class Repository {
         return categories;
     }
 
-    public MutableLiveData<TaskStatus> initializeLoadingCategoriesTaskStatus() {
+    public MutableLiveData<TaskStatus> getLoadCategoriesTaskStatus() {
         return loadCategoriesTaskStatus;
+    }
+
+
+    public void loadUsers(Integer limit) {
+        new FirestoreCollectionLoader<User>(FirestoreUtil.getReferenceToUsers(), User.class)
+                .addTaskResultListener(new TaskResultListener<List<User>>() {
+                    @Nullable
+                    @Override
+                    public void onResult(List<User> result) {
+                        users.setValue(result);
+                        Log.d(TAG, "onResult: " + result);
+                    }
+                })
+                .addTaskStatusListener(new TaskStatusListener() {
+                    @Override
+                    public void onStatusChanged(TaskStatus status) {
+                        loadUsersTaskStatus.setValue(status);
+                        Log.d(TAG, "onStatusChanged: " + status);
+                    }
+                })
+                .execute(limit);
+    }
+
+    public MutableLiveData<List<User>> initializeUsers() {
+        return users;
+    }
+
+    public MutableLiveData<TaskStatus> getLoadUsersTaskStatus() {
+        return loadUsersTaskStatus;
     }
 }

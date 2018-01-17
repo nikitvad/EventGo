@@ -13,7 +13,6 @@ import java.util.concurrent.Executors;
 
 public class AppExecutors {
 
-    // For Singleton instantiation
     private static final Object LOCK = new Object();
     private static AppExecutors sInstance;
     private final Executor diskIO;

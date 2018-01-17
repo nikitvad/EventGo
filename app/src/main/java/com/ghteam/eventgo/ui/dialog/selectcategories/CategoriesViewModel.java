@@ -24,7 +24,7 @@ public class CategoriesViewModel extends ViewModel {
 
         //TODO: get list of categories
         mCategoriesList = repository.initializeCategories();
-        taskStatus = repository.initializeLoadingCategoriesTaskStatus();
+        taskStatus = repository.getLoadCategoriesTaskStatus();
 
     }
 

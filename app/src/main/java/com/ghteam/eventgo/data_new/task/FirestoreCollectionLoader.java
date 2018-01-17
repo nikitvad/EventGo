@@ -29,7 +29,7 @@ public class FirestoreCollectionLoader<R> implements NetworkTask<Integer>, TaskS
     private static final String TAG = FirestoreCollectionLoader.class.getSimpleName();
 
 
-    public FirestoreCollectionLoader(CollectionReference collectionReference, Class typeOfResult) {
+    public FirestoreCollectionLoader(CollectionReference collectionReference, Class<R> typeOfResult) {
         this.collectionReference = collectionReference;
         this.typeOfResult = typeOfResult;
     }

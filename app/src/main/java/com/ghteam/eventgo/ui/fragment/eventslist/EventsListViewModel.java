@@ -29,7 +29,7 @@ public class EventsListViewModel extends ViewModel {
         mRepository = repository;
 
         mEventsList = repository.initializeEvents();
-        taskStatus = repository.initializeLoadingEventsStatus();
+        taskStatus = repository.getLoadEventsTaskStatus();
     }
 
 
@@ -66,6 +66,4 @@ public class EventsListViewModel extends ViewModel {
             return (T) new EventsListViewModel(mRepository);
         }
     }
-
-
 }

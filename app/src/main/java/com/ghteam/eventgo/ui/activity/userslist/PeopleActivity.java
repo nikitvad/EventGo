@@ -14,8 +14,9 @@ import android.widget.ProgressBar;
 
 import com.ghteam.eventgo.R;
 import com.ghteam.eventgo.data.entity.User;
+import com.ghteam.eventgo.data_new.Repository;
+import com.ghteam.eventgo.data_new.task.TaskStatus;
 import com.ghteam.eventgo.databinding.ActivityPeopleBinding;
-import com.ghteam.eventgo.util.InjectorUtil;
 
 import java.util.List;
 
@@ -36,9 +37,10 @@ public class PeopleActivity extends AppCompatActivity {
 
         activityBinding = DataBindingUtil.setContentView(this, R.layout.activity_people);
 
-        viewModel = ViewModelProviders.of(this, new PeopleViewModel
-                .UsersViewModelFactory(InjectorUtil.provideRepository(this))).get(PeopleViewModel.class);
-
+//        viewModel = ViewModelProviders.of(this, new PeopleViewModel
+//                .UsersViewModelFactory(InjectorUtil.provideRepository(this))).get(PeopleViewModel.class);
+        viewModel = ViewModelProviders.of(this, new PeopleViewModel.UsersViewModelFactory(Repository.getInstance(this)))
+                .get(PeopleViewModel.class);
         usersAdapter = new PeopleRecyclerAdapter(this);
 
         rvUsers = activityBinding.rvUsers;
@@ -48,6 +50,8 @@ public class PeopleActivity extends AppCompatActivity {
         rvUsers.setLayoutManager(new GridLayoutManager(this, 3));
 
         registerViewModelObservers();
+
+        viewModel.startLoading();
     }
 
 
@@ -59,13 +63,15 @@ public class PeopleActivity extends AppCompatActivity {
             }
         });
 
-        viewModel.getIsLoading().observeForever(new Observer<Boolean>() {
+        viewModel.getTaskStatus().observeForever(new Observer<TaskStatus>() {
             @Override
-            public void onChanged(@Nullable Boolean aBoolean) {
-                if(aBoolean){
-                    showProgressBar();
-                }else{
-                    hideProgressBar();
+            public void onChanged(@Nullable TaskStatus taskStatus) {
+                switch (taskStatus) {
+                    case IN_PROGRESS:
+                        showProgressBar();
+                        return;
+                    default:
+                        hideProgressBar();
                 }
             }
         });

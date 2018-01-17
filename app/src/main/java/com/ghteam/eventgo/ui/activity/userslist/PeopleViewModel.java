@@ -5,10 +5,12 @@ import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.NonNull;
 
-import com.ghteam.eventgo.data.Repository;
 import com.ghteam.eventgo.data.entity.User;
+import com.ghteam.eventgo.data_new.Repository;
+import com.ghteam.eventgo.data_new.task.TaskStatus;
 import com.ghteam.eventgo.util.LiveDataList;
-import com.ghteam.eventgo.util.network.OnTaskStatusChangeListener;
+
+import java.util.List;
 
 /**
  * Created by nikit on 08.12.2017.
@@ -16,37 +18,29 @@ import com.ghteam.eventgo.util.network.OnTaskStatusChangeListener;
 
 public class PeopleViewModel extends ViewModel {
     private Repository mRepository;
-    private LiveDataList<User> mUsers;
+    private MutableLiveData<List<User>> mUsers;
 
-    private MutableLiveData<Boolean> mIsLoading;
+    private MutableLiveData<TaskStatus> taskStatus;
 
     private PeopleViewModel(Repository repository) {
         mRepository = repository;
 
         mUsers = mRepository.initializeUsers();
 
-        mIsLoading = new MutableLiveData<>();
-        mRepository.loadUsers(new OnTaskStatusChangeListener() {
-            @Override
-            public void onStatusChanged(TaskStatus status) {
-                switch (status) {
-                    case IN_PROGRESS:
-                        mIsLoading.setValue(true);
-                        return;
-                    default:
-                        mIsLoading.setValue(false);
-                        return;
-                }
-            }
-        });
+        taskStatus = mRepository.getLoadUsersTaskStatus();
+
     }
 
-    public LiveDataList<User> getUsers() {
+    public void startLoading(){
+        mRepository.loadUsers(20);
+    }
+
+    public MutableLiveData<List<User>> getUsers() {
         return mUsers;
     }
 
-    public MutableLiveData<Boolean> getIsLoading() {
-        return mIsLoading;
+    public MutableLiveData<TaskStatus> getTaskStatus() {
+        return taskStatus;
     }
 
     static class UsersViewModelFactory extends ViewModelProvider.NewInstanceFactory {
