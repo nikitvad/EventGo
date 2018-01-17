@@ -5,11 +5,13 @@ import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.NonNull;
 
-import com.ghteam.eventgo.data.Repository;
 import com.ghteam.eventgo.data.entity.Event;
 import com.ghteam.eventgo.data.network.LocationFilter;
-import com.ghteam.eventgo.util.LiveDataList;
+import com.ghteam.eventgo.data_new.Repository;
+import com.ghteam.eventgo.data_new.task.TaskStatus;
 import com.ghteam.eventgo.util.network.OnTaskStatusChangeListener;
+
+import java.util.List;
 
 /**
  * Created by nikit on 11.12.2017.
@@ -18,50 +20,37 @@ import com.ghteam.eventgo.util.network.OnTaskStatusChangeListener;
 public class EventsListViewModel extends ViewModel {
     private Repository mRepository;
 
-    private LiveDataList<Event> mEventsList;
+    private MutableLiveData<List<Event>> mEventsList;
+    private MutableLiveData<TaskStatus> taskStatus;
     private MutableLiveData<OnTaskStatusChangeListener.TaskStatus> mLoadingEventsTaskStatus;
 
 
     private EventsListViewModel(Repository repository) {
         mRepository = repository;
-        mEventsList = mRepository.initializeEvents();
-        mLoadingEventsTaskStatus = new MutableLiveData<>();
+
+        mEventsList = repository.initializeEvents();
+        taskStatus = repository.initializeLoadingEventsStatus();
     }
 
 
     public void loadEvents() {
-        mRepository.loadEvents(new OnTaskStatusChangeListener() {
-            @Override
-            public void onStatusChanged(TaskStatus status) {
-                mLoadingEventsTaskStatus.setValue(status);
-            }
-        });
+        mRepository.loadEvents(30);
     }
 
-    public void searchEventByLocation(LocationFilter locationFilter){
-        mRepository.searchEventsByLocation(locationFilter, new OnTaskStatusChangeListener() {
-            @Override
-            public void onStatusChanged(TaskStatus status) {
-                mLoadingEventsTaskStatus.setValue(status);
-            }
-        });
+    public void searchEventByLocation(LocationFilter locationFilter) {
+
     }
 
     public void loadNext() {
-        mRepository.loadNextEvents(10, new OnTaskStatusChangeListener() {
-            @Override
-            public void onStatusChanged(TaskStatus status) {
-                mLoadingEventsTaskStatus.setValue(status);
-            }
-        });
+
     }
 
-    public LiveDataList<Event> getEventsList() {
+    public MutableLiveData<List<Event>> getEventsList() {
         return mEventsList;
     }
 
-    public MutableLiveData<OnTaskStatusChangeListener.TaskStatus> getTaskStatus() {
-        return mLoadingEventsTaskStatus;
+    public MutableLiveData<TaskStatus> getTaskStatus() {
+        return taskStatus;
     }
 
     public static class EventsListViewModelFactory extends ViewModelProvider.NewInstanceFactory {

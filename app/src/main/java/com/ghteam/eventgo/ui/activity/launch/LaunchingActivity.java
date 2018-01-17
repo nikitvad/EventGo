@@ -42,19 +42,6 @@ public class LaunchingActivity extends AppCompatActivity {
             activity = EventsActivity.class;
         }
 
-        startActivity(LoginActivity.class);
-        Repository repository = Repository.getInstance();
-
-        repository.loadEvents(20);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Intent intent = new Intent(LaunchingActivity.this, activity);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                finish();
-            }
-        }, 5000);
 //        repository.loadEvents(20);
 //        new Handler().postDelayed(new Runnable() {
 //            @Override

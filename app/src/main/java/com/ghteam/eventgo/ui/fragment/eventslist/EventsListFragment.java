@@ -28,12 +28,12 @@ import com.ghteam.eventgo.BR;
 import com.ghteam.eventgo.R;
 import com.ghteam.eventgo.data.entity.Event;
 import com.ghteam.eventgo.data.network.LocationFilter;
+import com.ghteam.eventgo.data_new.task.TaskStatus;
 import com.ghteam.eventgo.databinding.FragmentEventsListBinding;
 import com.ghteam.eventgo.ui.RecyclerBindingAdapter;
 import com.ghteam.eventgo.ui.activity.eventdetails.EventDetailsActivity;
 import com.ghteam.eventgo.util.InjectorUtil;
 import com.ghteam.eventgo.util.network.LocationUtil;
-import com.ghteam.eventgo.util.network.OnTaskStatusChangeListener;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
@@ -121,8 +121,8 @@ public class EventsListFragment extends Fragment implements LocationListener {
 
             locationFilter.setHeight(searchAreaSize);
             locationFilter.setWidth(searchAreaSize);
-
-            mViewModel.searchEventByLocation(locationFilter);
+            mViewModel.loadEvents();
+//            mViewModel.searchEventByLocation(locationFilter);
         }
 
     }
@@ -166,7 +166,6 @@ public class EventsListFragment extends Fragment implements LocationListener {
             mLocationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, this, null);
         }
     }
-
 
     @Override
     public void onLocationChanged(Location location) {
@@ -226,9 +225,9 @@ public class EventsListFragment extends Fragment implements LocationListener {
             }
         });
 
-        mViewModel.getTaskStatus().observeForever(new Observer<OnTaskStatusChangeListener.TaskStatus>() {
+        mViewModel.getTaskStatus().observeForever(new Observer<TaskStatus>() {
             @Override
-            public void onChanged(@Nullable OnTaskStatusChangeListener.TaskStatus taskStatus) {
+            public void onChanged(@Nullable TaskStatus taskStatus) {
                 switch (taskStatus) {
                     case IN_PROGRESS:
                         showProgressBar();
@@ -242,16 +241,19 @@ public class EventsListFragment extends Fragment implements LocationListener {
     }
 
     private void showProgressBar() {
-        mFragmentBinding.progressBar.setVisibility(View.VISIBLE);
-        getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        mFragmentBinding.rvEventsList.setAlpha(0.5f);
+        if (getActivity() != null) {
+            mFragmentBinding.progressBar.setVisibility(View.VISIBLE);
+            getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            mFragmentBinding.rvEventsList.setAlpha(0.5f);
+        }
     }
 
-
     private void hideProgressBar() {
-        mFragmentBinding.progressBar.setVisibility(View.GONE);
-        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        mFragmentBinding.rvEventsList.setAlpha(1f);
+        if (getActivity() != null) {
+            mFragmentBinding.progressBar.setVisibility(View.GONE);
+            getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            mFragmentBinding.rvEventsList.setAlpha(1f);
+        }
     }
 
     /**

@@ -4,8 +4,9 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 
-import com.ghteam.eventgo.data.Repository;
 import com.ghteam.eventgo.data.entity.Category;
+import com.ghteam.eventgo.data_new.Repository;
+import com.ghteam.eventgo.data_new.task.TaskStatus;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ import java.util.List;
  */
 
 public class CategoriesViewModel extends ViewModel {
-    private MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
+    private MutableLiveData<TaskStatus> taskStatus;
     private Repository mRepository;
     private LiveData<List<Category>> mCategoriesList;
 
@@ -23,6 +24,7 @@ public class CategoriesViewModel extends ViewModel {
 
         //TODO: get list of categories
         mCategoriesList = repository.initializeCategories();
+        taskStatus = repository.initializeLoadingCategoriesTaskStatus();
 
     }
 
@@ -30,8 +32,9 @@ public class CategoriesViewModel extends ViewModel {
         return mCategoriesList;
     }
 
-    public MutableLiveData<Boolean> getIsLoading() {
-        return isLoading;
+    public LiveData<TaskStatus> getLoadingTaskStatus() {
+        return taskStatus;
     }
+
 
 }

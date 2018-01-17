@@ -14,10 +14,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ghteam.eventgo.R;
-import com.ghteam.eventgo.data.Repository;
+import com.ghteam.eventgo.data_new.Repository;
 import com.ghteam.eventgo.data.entity.Category;
+import com.ghteam.eventgo.data_new.task.TaskStatus;
 import com.ghteam.eventgo.databinding.DialogSelectCategoriesBinding;
-import com.ghteam.eventgo.util.InjectorUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +65,7 @@ public class CategoriesDialog extends DialogFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 
-        mRepository = InjectorUtil.provideRepository(getContext());
+        mRepository = Repository.getInstance(getContext());
         viewModel = ViewModelProviders.of(this, new CategoriesViewModelFactory(mRepository))
                 .get(CategoriesViewModel.class);
 
@@ -114,23 +114,21 @@ public class CategoriesDialog extends DialogFragment {
             @Override
             public void onChanged(@Nullable List<Category> categoryEntries) {
                 recyclerAdapter.setItems(categoryEntries);
-                if (recyclerAdapter.getItemCount() > 0) {
-                    viewModel.getIsLoading().setValue(false);
-                } else {
-                    viewModel.getIsLoading().setValue(true);
-                }
             }
         });
 
-        viewModel.getIsLoading().observeForever(new Observer<Boolean>() {
+        viewModel.getLoadingTaskStatus().observeForever(new Observer<TaskStatus>() {
             @Override
-            public void onChanged(@Nullable Boolean aBoolean) {
-                if (aBoolean) {
-                    dialogBinding.progressBar.setVisibility(View.INVISIBLE);
-                    dialogBinding.rvCategoryList.setVisibility(View.INVISIBLE);
-                } else {
-                    dialogBinding.progressBar.setVisibility(View.GONE);
-                    dialogBinding.rvCategoryList.setVisibility(View.VISIBLE);
+            public void onChanged(@Nullable TaskStatus taskStatus) {
+                switch (taskStatus) {
+                    case IN_PROGRESS:
+                        dialogBinding.progressBar.setVisibility(View.INVISIBLE);
+                        dialogBinding.rvCategoryList.setVisibility(View.INVISIBLE);
+                        return;
+                    default:
+                        dialogBinding.progressBar.setVisibility(View.GONE);
+                        dialogBinding.rvCategoryList.setVisibility(View.VISIBLE);
+                        return;
                 }
             }
         });

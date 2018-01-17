@@ -37,7 +37,7 @@ public class InjectorUtil {
     }
 
     public static EventsListViewModel.EventsListViewModelFactory provideEventsListViewModelFactory(Context context) {
-        return new EventsListViewModel.EventsListViewModelFactory(provideRepository(context));
+        return new EventsListViewModel.EventsListViewModelFactory(com.ghteam.eventgo.data_new.Repository.getInstance(context));
     }
 
     public static SearchEventsViewModel.SearchEventsViewModelFactory provideSearchEventsViewModelFactory(Context context) {

@@ -1,4 +1,4 @@
-package com.ghteam.eventgo.data_new;
+package com.ghteam.eventgo.data_new.task;
 
 import android.support.annotation.Nullable;
 
