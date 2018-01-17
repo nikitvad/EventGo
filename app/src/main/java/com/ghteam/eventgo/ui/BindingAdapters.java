@@ -1,11 +1,10 @@
 package com.ghteam.eventgo.ui;
 
 import android.databinding.BindingAdapter;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.ghteam.eventgo.data.entity.Location;
+import com.ghteam.eventgo.data_new.entity.Location;
 import com.ghteam.eventgo.util.network.LocationUtil;
 import com.squareup.picasso.Picasso;
 

@@ -15,7 +15,6 @@ public abstract class BaseNetworkTask<P, R> implements NetworkTask<P>, TaskStatu
 
     protected TaskStatus taskStatus = TaskStatus.NONE;
 
-
     protected void publishResult(R result) {
         if (taskResultListener != null) {
             taskResultListener.onResult(result);

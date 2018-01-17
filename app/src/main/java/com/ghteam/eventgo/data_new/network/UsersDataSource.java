@@ -1,9 +1,9 @@
-package com.ghteam.eventgo.data.network;
+package com.ghteam.eventgo.data_new.network;
 
 import android.arch.lifecycle.MutableLiveData;
 import android.util.Log;
 
-import com.ghteam.eventgo.data.entity.User;
+import com.ghteam.eventgo.data_new.entity.User;
 import com.ghteam.eventgo.util.LiveDataList;
 import com.ghteam.eventgo.util.network.OnTaskStatusChangeListener;
 import com.google.firebase.firestore.DocumentSnapshot;

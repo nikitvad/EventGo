@@ -1,17 +1,14 @@
 package com.ghteam.eventgo.ui.activity.profilesettings;
 
 import android.arch.lifecycle.MutableLiveData;
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.util.Log;
 
-import com.ghteam.eventgo.data.Repository;
-import com.ghteam.eventgo.data.entity.Category;
-import com.ghteam.eventgo.data.entity.User;
-import com.ghteam.eventgo.data.network.FirebaseDatabaseManager;
+import com.ghteam.eventgo.data_new.Repository;
+import com.ghteam.eventgo.data_new.entity.Category;
+import com.ghteam.eventgo.data_new.entity.User;
+import com.ghteam.eventgo.data_new.task.TaskStatus;
 import com.ghteam.eventgo.util.LiveDataList;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -25,125 +22,138 @@ import java.util.List;
 public class ProfileSettingsViewModel extends ViewModel {
     private Repository mRepository;
 
-    private MutableLiveData<String> mFirstName;
-    private MutableLiveData<String> mLastName;
-    private MutableLiveData<String> mImageUrl;
-    private LiveDataList<Category> mCategoriesList;
-    private MutableLiveData<User> mUser;
-    private MutableLiveData<String> mUserDescription;
+    private MutableLiveData<String> firstName;
+    private MutableLiveData<String> lastName;
+    private MutableLiveData<String> imageUrl;
+    private LiveDataList<Category> categoriesList;
+    private MutableLiveData<User> currentUser;
+    private MutableLiveData<String> userDescription;
 
-    private MutableLiveData<Boolean> isLoading;
-    private MutableLiveData<SaveUserResult> mSaveUserInfoResult;
+    private MutableLiveData<TaskStatus> updateUserTaskStatus;
+
+    private MutableLiveData<TaskStatus> loadCurrentUserTaskStatus;
 
     private static final String TAG = ProfileSettingsViewModel.class.getSimpleName();
 
     public ProfileSettingsViewModel(Repository repository) {
         mRepository = repository;
 
-        isLoading = new MutableLiveData<>();
-        mSaveUserInfoResult = new MutableLiveData<>();
+        //        saveUserInfoResult = new MutableLiveData<>();
 
-        mLastName = new MutableLiveData<>();
-        mFirstName = new MutableLiveData<>();
-        mImageUrl = new MutableLiveData<>();
 
-        mCategoriesList = new LiveDataList<>();
-        mUserDescription = new MutableLiveData<>();
+        lastName = new MutableLiveData<>();
+        firstName = new MutableLiveData<>();
+        imageUrl = new MutableLiveData<>();
 
-        mUser = repository.getCurrentAccount();
+        categoriesList = new LiveDataList<>();
+        userDescription = new MutableLiveData<>();
 
-        mUser.observeForever(new Observer<User>() {
-            @Override
-            public void onChanged(@Nullable User user) {
-                if (user != null) {
-                    Log.d(TAG, "onStatusChanged: " + user.toString());
-                    mFirstName.setValue(user.getFirstName());
-                    mLastName.setValue(user.getLastName());
-                    mCategoriesList.setValue(user.getInterests());
-                    mUserDescription.setValue(user.getDescription());
-                    mImageUrl.setValue(user.getProfileImageUrl());
-                }
-            }
-        });
+        updateUserTaskStatus = repository.getUpdateUserTaskStatus();
+        currentUser = repository.initializeCurrentUser();
+        loadCurrentUserTaskStatus = repository.getLoadCurrentUserTaskStatus();
+
     }
 
+    public void loadCurrentUser() {
+        mRepository.loadCurrentUser();
+    }
+
+    MutableLiveData<User> getCurrentUser() {
+        return currentUser;
+    }
+
+    MutableLiveData<TaskStatus> getLoadCurrentUserTaskStatus() {
+        return loadCurrentUserTaskStatus;
+    }
+
+
+    //----------------------------
     LiveDataList<Category> getCategories() {
-        return mCategoriesList;
+        return categoriesList;
     }
 
     void setCategories(List<Category> categories) {
-        mUser.getValue().setInterests(new ArrayList<>(categories));
-        mCategoriesList.setValue(categories);
+        currentUser.getValue().setInterests(new ArrayList<>(categories));
+        categoriesList.setValue(categories);
     }
 
     public MutableLiveData<String> getFirstName() {
-        return mFirstName;
+        return firstName;
     }
 
     public void setFirstName(String firstName) {
         if (firstName != null && firstName.length() > 0) {
-            mUser.getValue().setFirstName(firstName);
+            currentUser.getValue().setFirstName(firstName);
         }
     }
 
     public MutableLiveData<String> getLastName() {
-        return mLastName;
+        return lastName;
     }
 
     public void setLastName(String lastName) {
         if (lastName != null && lastName.length() > 0) {
-            mUser.getValue().setLastName(lastName);
+            currentUser.getValue().setLastName(lastName);
         }
     }
 
     public MutableLiveData<String> getImageUrl() {
-        return mImageUrl;
+        return imageUrl;
     }
 
     public void setImageUrl(String url) {
-        mImageUrl.setValue(url);
+        imageUrl.setValue(url);
     }
 
     public MutableLiveData<String> getUserDescription() {
-        return mUserDescription;
+        return userDescription;
     }
 
     public void setUserDescription(String description) {
-        mUser.getValue().setDescription(description);
+        currentUser.getValue().setDescription(description);
     }
 
-    public void saveUserData() {
-
-        isLoading.setValue(true);
-
-        Log.d(TAG, "saveUserData: " + mUser.getValue().toString());
-
-        mRepository.pushUser(FirebaseAuth.getInstance().getUid(),
-                mUser.getValue(),
-                new FirebaseDatabaseManager.OnPullUserResultListener() {
-                    @Override
-                    public void onSuccess() {
-                        isLoading.setValue(false);
-                        mSaveUserInfoResult.setValue(SaveUserResult.RESULT_OK);
-                    }
-
-                    @Override
-                    public void onFail(Exception e) {
-                        isLoading.setValue(false);
-                        mSaveUserInfoResult.setValue(SaveUserResult.RESULT_FAIL);
-                    }
-                });
-
+    public void updateUser() {
+        mRepository.updateUser(currentUser.getValue(),
+                FirebaseAuth.getInstance().getCurrentUser().getUid());
     }
 
-    public MutableLiveData<Boolean> getIsLoading() {
-        return isLoading;
+    public MutableLiveData<TaskStatus> getUpdateUserTaskStatus() {
+        return updateUserTaskStatus;
     }
 
-    public MutableLiveData<SaveUserResult> getSaveUserResult() {
-        return mSaveUserInfoResult;
-    }
-
+    //    public void saveUserData() {
+//
+//        isLoading.setValue(true);
+//
+//        Log.d(TAG, "saveUserData: " + currentUser.getValue().toString());
+//
+//        mRepository.pushUser(FirebaseAuth.getInstance().getUid(),
+//                currentUser.getValue(),
+//                new FirebaseDatabaseManager.OnPullUserResultListener() {
+//                    @Override
+//                    public void onSuccess() {
+//                        isLoading.setValue(false);
+//                        saveUserInfoResult.setValue(SaveUserResult.RESULT_OK);
+//                    }
+//
+//                    @Override
+//                    public void onFail(Exception e) {
+//                        isLoading.setValue(false);
+//                        saveUserInfoResult.setValue(SaveUserResult.RESULT_FAIL);
+//                    }
+//                });
+//
+//    }
+//
+//    public MutableLiveData<Boolean> getIsLoading() {
+//        return isLoading;
+//    }
+//
+//    public MutableLiveData<SaveUserResult> getSaveUserResult() {
+//        return saveUserInfoResult;
+//    }
+//
     public static class ProfileSettingViewModelFactory extends ViewModelProvider.NewInstanceFactory {
         private final Repository mRepository;
 
@@ -158,11 +168,11 @@ public class ProfileSettingsViewModel extends ViewModel {
             return (T) new ProfileSettingsViewModel(mRepository);
         }
     }
-
-    public enum SaveUserResult {
-        RESULT_NONE,
-        RESULT_OK,
-        RESULT_FAIL
-    }
+//
+//    public enum SaveUserResult {
+//        RESULT_NONE,
+//        RESULT_OK,
+//        RESULT_FAIL
+//    }
 
 }

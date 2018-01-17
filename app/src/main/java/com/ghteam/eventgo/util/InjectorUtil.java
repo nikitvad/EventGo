@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.ghteam.eventgo.AppExecutors;
 import com.ghteam.eventgo.data.Repository;
-import com.ghteam.eventgo.data.database.Database;
+import com.ghteam.eventgo.data_new.database.Database;
 import com.ghteam.eventgo.ui.activity.eventdetails.EventDetailsViewModel.EventDetailsViewModelFactory;
 import com.ghteam.eventgo.ui.activity.login.LoginViewModel;
 import com.ghteam.eventgo.ui.fragment.eventslist.EventsListViewModel;

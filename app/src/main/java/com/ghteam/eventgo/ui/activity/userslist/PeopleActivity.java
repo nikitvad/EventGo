@@ -13,7 +13,7 @@ import android.view.WindowManager;
 import android.widget.ProgressBar;
 
 import com.ghteam.eventgo.R;
-import com.ghteam.eventgo.data.entity.User;
+import com.ghteam.eventgo.data_new.entity.User;
 import com.ghteam.eventgo.data_new.Repository;
 import com.ghteam.eventgo.data_new.task.TaskStatus;
 import com.ghteam.eventgo.databinding.ActivityPeopleBinding;

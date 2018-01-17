@@ -3,7 +3,7 @@ package com.ghteam.eventgo.ui.activity.singup;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 
-import com.ghteam.eventgo.data.entity.User;
+import com.ghteam.eventgo.data_new.entity.User;
 
 /**
  * Created by nikit on 18.11.2017.

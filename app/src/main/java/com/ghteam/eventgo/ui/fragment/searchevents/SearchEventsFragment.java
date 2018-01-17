@@ -18,7 +18,7 @@ import android.view.WindowManager;
 
 import com.ghteam.eventgo.BR;
 import com.ghteam.eventgo.R;
-import com.ghteam.eventgo.data.entity.Event;
+import com.ghteam.eventgo.data_new.entity.Event;
 import com.ghteam.eventgo.databinding.FragmentSearchEventsBinding;
 import com.ghteam.eventgo.ui.RecyclerBindingAdapter;
 import com.ghteam.eventgo.ui.activity.eventdetails.EventDetailsActivity;

@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 
 import com.ghteam.eventgo.BR;
 import com.ghteam.eventgo.R;
-import com.ghteam.eventgo.data.entity.Category;
+import com.ghteam.eventgo.data_new.entity.Category;
 import com.ghteam.eventgo.databinding.LayoutCategoryItemBinding;
 
 import java.util.ArrayList;

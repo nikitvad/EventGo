@@ -1,4 +1,4 @@
-package com.ghteam.eventgo.data.database;
+package com.ghteam.eventgo.data_new.database;
 
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
@@ -6,9 +6,9 @@ import android.arch.persistence.room.TypeConverter;
 import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
 
-import com.ghteam.eventgo.data.entity.Category;
-import com.ghteam.eventgo.data.entity.Event;
-import com.ghteam.eventgo.data.entity.Location;
+import com.ghteam.eventgo.data_new.entity.Category;
+import com.ghteam.eventgo.data_new.entity.Event;
+import com.ghteam.eventgo.data_new.entity.Location;
 
 import java.util.Date;
 

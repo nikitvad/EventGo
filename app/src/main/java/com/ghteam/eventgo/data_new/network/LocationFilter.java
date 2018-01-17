@@ -1,6 +1,5 @@
-package com.ghteam.eventgo.data.network;
+package com.ghteam.eventgo.data_new.network;
 
-import com.ghteam.eventgo.data.entity.Location;
 import com.google.android.gms.maps.model.LatLng;
 
 /**

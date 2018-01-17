@@ -6,7 +6,7 @@ import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.NonNull;
 
 import com.ghteam.eventgo.data.Repository;
-import com.ghteam.eventgo.data.entity.Event;
+import com.ghteam.eventgo.data_new.entity.Event;
 import com.ghteam.eventgo.util.LiveDataList;
 import com.ghteam.eventgo.util.network.OnTaskStatusChangeListener;
 

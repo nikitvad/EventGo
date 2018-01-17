@@ -5,19 +5,19 @@
 
         <variable
             name="event"
-            type="com.ghteam.eventgo.data.entity.Event" />
+            type="com.ghteam.eventgo.data_new.entity.Event" />
 
         <variable
             name="user"
-            type="com.ghteam.eventgo.data.entity.User" />
+            type="com.ghteam.eventgo.data_new.entity.User" />
 
         <variable
             name="category"
-            type="com.ghteam.eventgo.data.entity.Category" />
+            type="com.ghteam.eventgo.data_new.entity.Category" />
 
         <variable
             name="location"
-            type="com.ghteam.eventgo.data.entity.Location" />
+            type="com.ghteam.eventgo.data_new.entity.Location" />
 
         <import
             alias="v"

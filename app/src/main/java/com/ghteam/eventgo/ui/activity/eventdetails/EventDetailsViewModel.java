@@ -9,11 +9,11 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.ghteam.eventgo.data.Repository;
-import com.ghteam.eventgo.data.database.ImageEntry;
-import com.ghteam.eventgo.data.entity.Category;
-import com.ghteam.eventgo.data.entity.Event;
-import com.ghteam.eventgo.data.entity.Location;
-import com.ghteam.eventgo.data.entity.User;
+import com.ghteam.eventgo.data_new.database.ImageEntry;
+import com.ghteam.eventgo.data_new.entity.Category;
+import com.ghteam.eventgo.data_new.entity.Event;
+import com.ghteam.eventgo.data_new.entity.Location;
+import com.ghteam.eventgo.data_new.entity.User;
 import com.ghteam.eventgo.util.network.OnTaskStatusChangeListener;
 
 import java.util.List;

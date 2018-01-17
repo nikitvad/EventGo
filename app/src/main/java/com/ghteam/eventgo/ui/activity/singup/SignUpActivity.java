@@ -23,7 +23,7 @@ import android.widget.DatePicker;
 import android.widget.Toast;
 
 import com.ghteam.eventgo.R;
-import com.ghteam.eventgo.data.network.FirebaseAccountManager;
+import com.ghteam.eventgo.data_new.network.FirebaseAccountManager;
 import com.ghteam.eventgo.databinding.ActivitySignUpBinding;
 import com.ghteam.eventgo.ui.activity.profilesettings.ProfileSettingsActivity;
 import com.ghteam.eventgo.util.network.FirebaseUtil;

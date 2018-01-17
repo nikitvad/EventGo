@@ -1,4 +1,4 @@
-package com.ghteam.eventgo.data.database;
+package com.ghteam.eventgo.data_new.database;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;

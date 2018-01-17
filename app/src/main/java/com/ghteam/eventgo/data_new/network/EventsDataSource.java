@@ -1,9 +1,9 @@
-package com.ghteam.eventgo.data.network;
+package com.ghteam.eventgo.data_new.network;
 
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.ghteam.eventgo.data.entity.Event;
+import com.ghteam.eventgo.data_new.entity.Event;
 import com.ghteam.eventgo.util.LiveDataList;
 import com.ghteam.eventgo.util.network.LocationUtil;
 import com.ghteam.eventgo.util.network.OnTaskStatusChangeListener;

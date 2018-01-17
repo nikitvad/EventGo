@@ -20,7 +20,7 @@ import com.facebook.FacebookException;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.ghteam.eventgo.R;
-import com.ghteam.eventgo.data.network.FirebaseDatabaseManager;
+import com.ghteam.eventgo.data_new.network.FirebaseDatabaseManager;
 import com.ghteam.eventgo.databinding.ActivityLoginBinding;
 import com.ghteam.eventgo.ui.activity.eventslist.EventsActivity;
 import com.ghteam.eventgo.ui.activity.profilesettings.ProfileSettingsActivity;

@@ -5,13 +5,15 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.ghteam.eventgo.data.entity.Category;
-import com.ghteam.eventgo.data.entity.Event;
-import com.ghteam.eventgo.data.entity.User;
+import com.ghteam.eventgo.data_new.entity.Category;
+import com.ghteam.eventgo.data_new.entity.Event;
+import com.ghteam.eventgo.data_new.entity.User;
 import com.ghteam.eventgo.data_new.task.FirestoreCollectionLoader;
+import com.ghteam.eventgo.data_new.task.LoadCurrentUser;
 import com.ghteam.eventgo.data_new.task.TaskResultListener;
 import com.ghteam.eventgo.data_new.task.TaskStatus;
 import com.ghteam.eventgo.data_new.task.TaskStatusListener;
+import com.ghteam.eventgo.data_new.task.UpdateUser;
 import com.ghteam.eventgo.util.network.FirestoreUtil;
 
 import java.util.List;
@@ -156,4 +158,54 @@ public class Repository {
     public MutableLiveData<TaskStatus> getLoadUsersTaskStatus() {
         return loadUsersTaskStatus;
     }
+
+    private MutableLiveData<TaskStatus> updateUserTaskStatus;
+
+    public void updateUser(User user, String uid) {
+        new UpdateUser(user, uid)
+                .addTaskStatusListener(new TaskStatusListener() {
+                    @Override
+                    public void onStatusChanged(TaskStatus status) {
+                        updateUserTaskStatus.setValue(status);
+                    }
+                }).execute();
+    }
+
+    public MutableLiveData<TaskStatus> getUpdateUserTaskStatus() {
+        if (updateUserTaskStatus == null) {
+            updateUserTaskStatus = new MutableLiveData<>();
+        }
+        return updateUserTaskStatus;
+    }
+
+
+    private MutableLiveData<User> currentUser = new MutableLiveData<>();
+    private MutableLiveData<TaskStatus> loadCurrentUserTaskStatus = new MutableLiveData<>();
+
+    public void loadCurrentUser() {
+        new LoadCurrentUser()
+                .addTaskResultListener(new TaskResultListener<User>() {
+                    @Nullable
+                    @Override
+                    public void onResult(User result) {
+                        currentUser.setValue(result);
+                    }
+                })
+                .addTaskStatusListener(new TaskStatusListener() {
+                    @Override
+                    public void onStatusChanged(TaskStatus status) {
+                        loadCurrentUserTaskStatus.setValue(status);
+                    }
+                }).execute();
+    }
+
+    public MutableLiveData<User> initializeCurrentUser(){
+        return currentUser;
+    }
+
+    public MutableLiveData<TaskStatus> getLoadCurrentUserTaskStatus() {
+        return loadCurrentUserTaskStatus;
+    }
+
+
 }

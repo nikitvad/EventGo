@@ -1,10 +1,10 @@
-package com.ghteam.eventgo.data.database;
+package com.ghteam.eventgo.data_new.database;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
 
-import com.ghteam.eventgo.data.entity.Event;
+import com.ghteam.eventgo.data_new.entity.Event;
 
 /**
  * Created by nikit on 12.12.2017.

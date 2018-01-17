@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 
 import com.ghteam.eventgo.R;
 import com.ghteam.eventgo.data_new.Repository;
-import com.ghteam.eventgo.data.entity.Category;
+import com.ghteam.eventgo.data_new.entity.Category;
 import com.ghteam.eventgo.data_new.task.TaskStatus;
 import com.ghteam.eventgo.databinding.DialogSelectCategoriesBinding;
 

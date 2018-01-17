@@ -2,10 +2,10 @@ package com.ghteam.eventgo.util.network;
 
 import android.support.annotation.NonNull;
 
-import com.ghteam.eventgo.data.entity.Category;
-import com.ghteam.eventgo.data.entity.Event;
-import com.ghteam.eventgo.data.entity.Location;
-import com.ghteam.eventgo.data.network.FirebaseDatabaseManager;
+import com.ghteam.eventgo.data_new.entity.Category;
+import com.ghteam.eventgo.data_new.entity.Event;
+import com.ghteam.eventgo.data_new.entity.Location;
+import com.ghteam.eventgo.data_new.network.FirebaseDatabaseManager;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 

@@ -67,24 +67,24 @@ public class FirestoreCollectionLoader<R> implements NetworkTask<Integer>, TaskS
         return taskStatus;
     }
 
+    private EventListener<QuerySnapshot> eventListener = new EventListener<QuerySnapshot>() {
+        @Override
+        public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
+            if (e == null) {
+                List<R> result = documentSnapshots.toObjects(typeOfResult);
+                publishResult(result);
+                changeStatus(TaskStatus.SUCCESS);
+
+            } else {
+                changeStatus(TaskStatus.FAILED);
+                Log.w(TAG, "onEvent: ", e);
+            }
+        }
+    };
+
     @Override
     public void execute(Integer... limit) {
         changeStatus(TaskStatus.IN_PROGRESS);
-
-        EventListener<QuerySnapshot> eventListener = new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
-                if (e == null) {
-                    List<R> result = documentSnapshots.toObjects(typeOfResult);
-                    publishResult(result);
-                    changeStatus(TaskStatus.SUCCESS);
-
-                } else {
-                    changeStatus(TaskStatus.FAILED);
-                    Log.w(TAG, "onEvent: ", e);
-                }
-            }
-        };
 
         if (limit.length > 0) {
             collectionReference.limit(limit[0]).addSnapshotListener(eventListener);
@@ -93,4 +93,5 @@ public class FirestoreCollectionLoader<R> implements NetworkTask<Integer>, TaskS
         }
 
     }
+
 }

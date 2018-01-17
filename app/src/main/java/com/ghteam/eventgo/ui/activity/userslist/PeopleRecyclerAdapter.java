@@ -12,7 +12,7 @@ import android.widget.ImageView;
 
 import com.ghteam.eventgo.BR;
 import com.ghteam.eventgo.R;
-import com.ghteam.eventgo.data.entity.User;
+import com.ghteam.eventgo.data_new.entity.User;
 import com.ghteam.eventgo.databinding.LayoutUserListItemBinding;
 import com.squareup.picasso.Picasso;
 

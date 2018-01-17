@@ -5,8 +5,8 @@ import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.NonNull;
 
-import com.ghteam.eventgo.data.entity.Event;
-import com.ghteam.eventgo.data.network.LocationFilter;
+import com.ghteam.eventgo.data_new.entity.Event;
+import com.ghteam.eventgo.data_new.network.LocationFilter;
 import com.ghteam.eventgo.data_new.Repository;
 import com.ghteam.eventgo.data_new.task.TaskStatus;
 import com.ghteam.eventgo.util.network.OnTaskStatusChangeListener;

@@ -1,4 +1,4 @@
-package com.ghteam.eventgo.data.database;
+package com.ghteam.eventgo.data_new.database;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
@@ -7,7 +7,7 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 
-import com.ghteam.eventgo.data.entity.Category;
+import com.ghteam.eventgo.data_new.entity.Category;
 
 /**
  * Created by nikit on 12.12.2017.

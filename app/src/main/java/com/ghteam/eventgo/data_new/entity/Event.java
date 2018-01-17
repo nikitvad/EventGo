@@ -1,4 +1,4 @@
-package com.ghteam.eventgo.data.entity;
+package com.ghteam.eventgo.data_new.entity;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;

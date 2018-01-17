@@ -5,12 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.ghteam.eventgo.ui.activity.profilesettings.ProfileSettingsActivity">
 
-    <data>
 
-        <variable
-            name="viewModel"
-            type="com.ghteam.eventgo.ui.activity.profilesettings.ProfileSettingsViewModel" />
-    </data>
 
     <RelativeLayout
         android:layout_width="match_parent"
