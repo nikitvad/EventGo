@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
@@ -20,19 +21,18 @@ import com.facebook.FacebookException;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.ghteam.eventgo.R;
+import com.ghteam.eventgo.data_new.entity.User;
 import com.ghteam.eventgo.data_new.network.FirebaseDatabaseManager;
+import com.ghteam.eventgo.data_new.task.TaskStatus;
 import com.ghteam.eventgo.databinding.ActivityLoginBinding;
 import com.ghteam.eventgo.ui.activity.eventslist.EventsActivity;
 import com.ghteam.eventgo.ui.activity.profilesettings.ProfileSettingsActivity;
 import com.ghteam.eventgo.ui.activity.singup.SignUpActivity;
+import com.ghteam.eventgo.util.AccountUtil;
 import com.ghteam.eventgo.util.InjectorUtil;
 import com.ghteam.eventgo.util.LoginInResult;
 import com.ghteam.eventgo.util.PrefsUtil;
-import com.ghteam.eventgo.util.ProgressBarUtil;
-import com.ghteam.eventgo.util.network.AccountStatus;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
@@ -58,11 +58,6 @@ public class LoginActivity extends LifecycleActivity {
         activityBinding = DataBindingUtil.setContentView(this, R.layout.activity_login);
 
         bindClickListeners();
-
-        if (firebaseAuth.getCurrentUser() != null) {
-            firebaseAuth.signOut();
-            PrefsUtil.setLoggedType(PrefsUtil.LOGGED_TYPE_NONE);
-        }
 
         LoginViewModel.LoginViewModelFactory viewModelFactory = InjectorUtil.provideLoginViewModelFactory(this);
 
@@ -95,47 +90,20 @@ public class LoginActivity extends LifecycleActivity {
 
     }
 
-
     @Override
-    protected void onResume() {
-        super.onResume();
-//        registerViewModelObservers();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-//        removeViewModelObservers();
+    protected void onStart() {
+        super.onStart();
+        if (firebaseAuth.getCurrentUser() != null) {
+            firebaseAuth.signOut();
+            PrefsUtil.setLoggedType(PrefsUtil.LOGGED_TYPE_NONE);
+        }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        // Pass the activity result back to the Facebook SDK
         mCallbackManager.onActivityResult(requestCode, resultCode, data);
-    }
-
-    private void loginWithEmail(String email, String password) {
-
-        viewModel.getLoginInResult().setValue(LoginInResult.IN_PROCESS);
-
-        firebaseAuth.signInWithEmailAndPassword(email, password)
-                .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-                    @Override
-                    public void onSuccess(AuthResult authResult) {
-                        viewModel.getLoginInResult().setValue(LoginInResult.SUCCESS);
-                        PrefsUtil.setLoggedType(PrefsUtil.LOGGED_TYPE_EMAIL);
-                        //TODO
-
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                //TODO
-                viewModel.getLoginInResult().setValue(LoginInResult.ACCOUNT_NOT_FOUND_ERROR);
-            }
-        });
     }
 
     @Override
@@ -166,12 +134,6 @@ public class LoginActivity extends LifecycleActivity {
 
     }
 
-    private void startActivity(Class<? extends Activity> activity) {
-        Intent intent = new Intent(this, activity);
-        startActivity(intent);
-        finish();
-    }
-
     private void addNewFacebookUser() {
         Log.d(TAG, "addNewFacebookUser: ");
 
@@ -191,66 +153,48 @@ public class LoginActivity extends LifecycleActivity {
                 });
     }
 
-    private Observer<AccountStatus> accountStatusObserver = new Observer<AccountStatus>() {
+    private Observer<User> userObserver = new Observer<User>() {
         @Override
-        public void onChanged(@Nullable AccountStatus accountStatus) {
-            switch (accountStatus) {
-                case IN_PROCESS:
-                    ProgressBarUtil.showProgressBar(activityBinding.progressBar,
-                            LoginActivity.this,
-                            activityBinding.mainContainer);
-                    return;
-
+        public void onChanged(@Nullable User user) {
+            switch (AccountUtil.checkUserAccount(user)) {
                 case OK:
                     startActivity(EventsActivity.class);
                     return;
-
                 case REQUIRE_UPDATE_PROFILE:
-                    Log.d(TAG, "onStatusChanged: " + PrefsUtil.getLoggedType());
-                    if (PrefsUtil.getLoggedType().equals(PrefsUtil.LOGGED_TYPE_FACEBOOK)) {
-                        addNewFacebookUser();
-                    } else {
-                        startActivity(ProfileSettingsActivity.class);
-                    }
-                    return;
-
-                default:
-                    ProgressBarUtil.hideProgressBar(activityBinding.progressBar,
-                            LoginActivity.this,
-                            activityBinding.mainContainer);
+                    startActivity(ProfileSettingsActivity.class);
                     return;
             }
         }
     };
 
-    private Observer<LoginInResult> loginInResultObserver = new Observer<LoginInResult>() {
+    private Observer<TaskStatus> logInTaskStatusObserver = new Observer<TaskStatus>() {
         @Override
-        public void onChanged(@Nullable LoginInResult loginInResult) {
-            switch (loginInResult) {
-                case IN_PROCESS:
-                    ProgressBarUtil.showProgressBar(activityBinding.progressBar,
-                            LoginActivity.this,
-                            activityBinding.mainContainer);
+        public void onChanged(@Nullable TaskStatus taskStatus) {
+            switch (taskStatus) {
+                case IN_PROGRESS:
+                    showProgressBar();
                     return;
-
                 default:
-                    ProgressBarUtil.hideProgressBar(activityBinding.progressBar,
-                            LoginActivity.this,
-                            activityBinding.mainContainer);
+                    hideProgressBar();
+                    return;
             }
         }
     };
 
     private void registerViewModelObservers() {
-        viewModel.getAccountStatus().observeForever(accountStatusObserver);
-        viewModel.getLoginInResult().observeForever(loginInResultObserver);
+        viewModel.getCurrentUser().observe(this, userObserver);
+        viewModel.getLogInTaskStatus().observe(this, logInTaskStatusObserver);
     }
 
-    private void removeViewModelObservers() {
-        viewModel.getAccountStatus().removeObserver(accountStatusObserver);
-        viewModel.getLoginInResult().removeObserver(loginInResultObserver);
-    }
+    private static int startActivityCallCount = 0;
 
+    private void startActivity(Class<? extends Activity> activityClass) {
+        startActivityCallCount++;
+        Log.d(TAG, "startActivity: " + startActivityCallCount);
+        Intent intent = new Intent(this, activityClass);
+        startActivity(intent);
+        finish();
+    }
 
     private void bindClickListeners() {
         activityBinding.tvCreateAccount.setOnClickListener(new View.OnClickListener() {
@@ -264,7 +208,9 @@ public class LoginActivity extends LifecycleActivity {
         activityBinding.btSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loginWithEmail(activityBinding.etEmail.getText().toString(), activityBinding.etPassword.getText().toString());
+                viewModel.logInWithEmailAndPassword(activityBinding.etEmail.getText().toString(),
+                        activityBinding.etPassword.getText().toString());
+//                loginWithEmail(activityBinding.etEmail.getText().toString(), activityBinding.etPassword.getText().toString());
             }
         });
 
@@ -277,4 +223,16 @@ public class LoginActivity extends LifecycleActivity {
         });
     }
 
+    private void showProgressBar() {
+        activityBinding.progressBar.setVisibility(View.VISIBLE);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        activityBinding.linearLayout.setAlpha(0.5f);
+    }
+
+    private void hideProgressBar() {
+        activityBinding.progressBar.setVisibility(View.GONE);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        activityBinding.linearLayout.setAlpha(1f);
+    }
 }
+

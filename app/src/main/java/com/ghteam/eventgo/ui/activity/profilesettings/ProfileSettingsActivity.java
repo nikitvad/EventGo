@@ -99,8 +99,10 @@ public class ProfileSettingsActivity extends AppCompatActivity {
         activityBinding.etLastName.setText(user.getLastName());
         activityBinding.etDescribeYourself.setText(user.getDescription());
 
-        Picasso.with(this).load(user.getProfileImageUrl())
-                .into(activityBinding.ivProfilePhoto);
+        if (!user.getProfileImageUrl().isEmpty()) {
+            Picasso.with(this).load(user.getProfileImageUrl())
+                    .into(activityBinding.ivProfilePhoto);
+        }
 
         categoriesRecyclerAdapter.setItems(user.getInterests());
 
@@ -160,7 +162,7 @@ public class ProfileSettingsActivity extends AppCompatActivity {
         viewModel.getLoadCurrentUserTaskStatus().observeForever(new Observer<TaskStatus>() {
             @Override
             public void onChanged(@Nullable TaskStatus taskStatus) {
-                if(taskStatus!=null){
+                if (taskStatus != null) {
                     handleTaskStatus(taskStatus);
                 }
             }
@@ -169,7 +171,7 @@ public class ProfileSettingsActivity extends AppCompatActivity {
         viewModel.getUpdateUserTaskStatus().observeForever(new Observer<TaskStatus>() {
             @Override
             public void onChanged(@Nullable TaskStatus taskStatus) {
-                if(taskStatus!=null){
+                if (taskStatus != null) {
                     handleTaskStatus(taskStatus);
                 }
             }

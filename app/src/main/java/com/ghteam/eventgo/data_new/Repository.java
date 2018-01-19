@@ -10,10 +10,12 @@ import com.ghteam.eventgo.data_new.entity.Event;
 import com.ghteam.eventgo.data_new.entity.User;
 import com.ghteam.eventgo.data_new.task.FirestoreCollectionLoader;
 import com.ghteam.eventgo.data_new.task.LoadCurrentUser;
+import com.ghteam.eventgo.data_new.task.LogInByEmailAndPassword;
 import com.ghteam.eventgo.data_new.task.TaskResultListener;
 import com.ghteam.eventgo.data_new.task.TaskStatus;
 import com.ghteam.eventgo.data_new.task.TaskStatusListener;
 import com.ghteam.eventgo.data_new.task.UpdateUser;
+import com.ghteam.eventgo.util.PrefsUtil;
 import com.ghteam.eventgo.util.network.FirestoreUtil;
 
 import java.util.List;
@@ -162,6 +164,10 @@ public class Repository {
     private MutableLiveData<TaskStatus> updateUserTaskStatus;
 
     public void updateUser(User user, String uid) {
+        if (user.getId().isEmpty() || !user.getId().equals(uid)) {
+            user.setId(uid);
+        }
+
         new UpdateUser(user, uid)
                 .addTaskStatusListener(new TaskStatusListener() {
                     @Override
@@ -178,8 +184,7 @@ public class Repository {
         return updateUserTaskStatus;
     }
 
-
-    private MutableLiveData<User> currentUser = new MutableLiveData<>();
+    private MutableLiveData<User> currentUser;
     private MutableLiveData<TaskStatus> loadCurrentUserTaskStatus = new MutableLiveData<>();
 
     public void loadCurrentUser() {
@@ -199,13 +204,47 @@ public class Repository {
                 }).execute();
     }
 
-    public MutableLiveData<User> initializeCurrentUser(){
+    public MutableLiveData<User> initializeCurrentUser() {
+        currentUser = new MutableLiveData<>();
         return currentUser;
     }
 
     public MutableLiveData<TaskStatus> getLoadCurrentUserTaskStatus() {
+        loadCurrentUserTaskStatus = new MutableLiveData<>();
         return loadCurrentUserTaskStatus;
     }
 
 
+    private MutableLiveData<String> userId = new MutableLiveData<>();
+
+
+    private MutableLiveData<TaskStatus> logInTaskStatus = new MutableLiveData<>();
+
+    public void loginWithEmail(String email, String password) {
+        userId.setValue("");
+        new LogInByEmailAndPassword(email, password)
+                .addTaskResultListener(new TaskResultListener<String>() {
+                    @Override
+                    public void onResult(String result) {
+                        userId.setValue(result);
+                        PrefsUtil.setLoggedType(PrefsUtil.LOGGED_TYPE_EMAIL);
+                    }
+                })
+                .addTaskStatusListener(new TaskStatusListener() {
+                    @Override
+                    public void onStatusChanged(TaskStatus status) {
+                        logInTaskStatus.setValue(status);
+                    }
+                })
+                .execute();
+    }
+
+    public MutableLiveData<String> getCurrentUserId() {
+        return userId;
+    }
+
+    public MutableLiveData<TaskStatus> getLogInTaskStatus() {
+        logInTaskStatus = new MutableLiveData<>();
+        return logInTaskStatus;
+    }
 }

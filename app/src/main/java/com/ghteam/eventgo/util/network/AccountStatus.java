@@ -5,6 +5,7 @@ package com.ghteam.eventgo.util.network;
  */
 
 public enum AccountStatus {
+    NULL,
     NONE,
     IN_PROCESS,
     REQUIRE_UPDATE_PROFILE,

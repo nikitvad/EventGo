@@ -33,7 +33,7 @@ public class InjectorUtil {
     }
 
     public static LoginViewModel.LoginViewModelFactory provideLoginViewModelFactory(Context context) {
-        return new LoginViewModel.LoginViewModelFactory(provideRepository(context));
+        return new LoginViewModel.LoginViewModelFactory(com.ghteam.eventgo.data_new.Repository.getInstance(context));
     }
 
     public static EventsListViewModel.EventsListViewModelFactory provideEventsListViewModelFactory(Context context) {
