@@ -6,7 +6,7 @@ import android.support.annotation.Nullable;
  * Created by nikit on 08.01.2018.
  */
 
-public abstract class BaseNetworkTask<P, R> implements NetworkTask<P>, TaskStatusInterface {
+public abstract class BaseTask<P, R> implements NetworkTask<P>, TaskStatusInterface {
 
     protected TaskResultListener<R> taskResultListener;
     protected TaskStatusListener taskStatusListener;
@@ -21,12 +21,12 @@ public abstract class BaseNetworkTask<P, R> implements NetworkTask<P>, TaskStatu
         }
     }
 
-    public BaseNetworkTask<P, R> addTaskStatusListener(TaskStatusListener listener) {
+    public BaseTask<P, R> addTaskStatusListener(TaskStatusListener listener) {
         taskStatusListener = listener;
         return this;
     }
 
-    public BaseNetworkTask<P, R> addTaskResultListener(TaskResultListener<R> listener) {
+    public BaseTask<P, R> addTaskResultListener(TaskResultListener<R> listener) {
         taskResultListener = listener;
         return this;
     }

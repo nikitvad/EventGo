@@ -12,7 +12,7 @@ import com.google.firebase.auth.FirebaseAuth;
  * Created by nikit on 19.01.2018.
  */
 
-public class LogInByEmailAndPassword extends BaseNetworkTask<Void, String> {
+public class LogInByEmailAndPassword extends BaseTask<Void, String> {
 
     private String mEmail;
     private String mPassword;
@@ -38,10 +38,10 @@ public class LogInByEmailAndPassword extends BaseNetworkTask<Void, String> {
                                 publishResult(task.getResult().getUser().getUid());
                                 changeStatus(TaskStatus.SUCCESS);
                             }else{
-                                changeStatus(TaskStatus.FAILED);
+                                changeStatus(TaskStatus.ERROR);
                             }
                         } else {
-                            changeStatus(TaskStatus.FAILED);
+                            changeStatus(TaskStatus.ERROR);
                             exception = task.getException();
                             Log.w(TAG, "onComplete: ", exception);
                         }

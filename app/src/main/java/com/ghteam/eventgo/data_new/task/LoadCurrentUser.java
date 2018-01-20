@@ -14,7 +14,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
  * Created by nikit on 17.01.2018.
  */
 
-public class LoadCurrentUser extends BaseNetworkTask<Void, User> {
+public class LoadCurrentUser extends BaseTask<Void, User> {
 
     private static final String TAG = LoadCurrentUser.class.getSimpleName();
 
@@ -34,7 +34,7 @@ public class LoadCurrentUser extends BaseNetworkTask<Void, User> {
 
                 }else{
                     exception = e;
-                    changeStatus(TaskStatus.FAILED);
+                    changeStatus(TaskStatus.ERROR);
                     Log.w(TAG, "onEvent: ", e );
                 }
             }

@@ -1,16 +1,20 @@
 package com.ghteam.eventgo.data_new;
 
+import android.app.Activity;
 import android.arch.lifecycle.MutableLiveData;
 import android.content.Context;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.facebook.CallbackManager;
 import com.ghteam.eventgo.data_new.entity.Category;
 import com.ghteam.eventgo.data_new.entity.Event;
 import com.ghteam.eventgo.data_new.entity.User;
 import com.ghteam.eventgo.data_new.task.FirestoreCollectionLoader;
 import com.ghteam.eventgo.data_new.task.LoadCurrentUser;
 import com.ghteam.eventgo.data_new.task.LogInByEmailAndPassword;
+import com.ghteam.eventgo.data_new.task.LogInWithFacebook;
 import com.ghteam.eventgo.data_new.task.TaskResultListener;
 import com.ghteam.eventgo.data_new.task.TaskStatus;
 import com.ghteam.eventgo.data_new.task.TaskStatusListener;
@@ -216,8 +220,6 @@ public class Repository {
 
 
     private MutableLiveData<String> userId = new MutableLiveData<>();
-
-
     private MutableLiveData<TaskStatus> logInTaskStatus = new MutableLiveData<>();
 
     public void loginWithEmail(String email, String password) {
@@ -247,4 +249,23 @@ public class Repository {
         logInTaskStatus = new MutableLiveData<>();
         return logInTaskStatus;
     }
+
+    public void logInWithFacebook(Activity activity, CallbackManager callbackManager) {
+        new LogInWithFacebook(activity, callbackManager)
+                .addTaskResultListener(new TaskResultListener<String>() {
+                    @Override
+                    public void onResult(String result) {
+                        userId.setValue(result);
+                    }
+                })
+                .addTaskStatusListener(new TaskStatusListener() {
+                    @Override
+                    public void onStatusChanged(TaskStatus status) {
+                        logInTaskStatus.setValue(status);
+                    }
+                })
+                .execute();
+    }
+
+
 }

@@ -1,5 +1,6 @@
 package com.ghteam.eventgo.ui.activity.login;
 
+import android.app.Activity;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModel;
@@ -9,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
@@ -64,6 +66,10 @@ public class LoginViewModel extends ViewModel {
         mRepository.loginWithEmail(email, password);
     }
 
+    void logInWithFacebook(Activity activity, CallbackManager callbackManager){
+        mRepository.logInWithFacebook(activity, callbackManager);
+    }
+
     MutableLiveData<TaskStatus> getLogInTaskStatus(){
         return logInTaskStatus;
     }
@@ -89,10 +95,6 @@ public class LoginViewModel extends ViewModel {
                     }
                 }
         ).executeAsync();
-    }
-
-    MutableLiveData<LoginInResult> getLoginInResult() {
-        return loginInResult;
     }
 
     public static class LoginViewModelFactory extends ViewModelProvider.NewInstanceFactory {

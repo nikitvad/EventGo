@@ -4,7 +4,6 @@ import android.util.Log;
 
 import com.ghteam.eventgo.data_new.entity.Event;
 import com.ghteam.eventgo.data_new.network.LocationFilter;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -15,7 +14,7 @@ import java.util.List;
  * Created by nikit on 17.01.2018.
  */
 
-public class LoadEventsByLocation extends BaseNetworkTask<Integer, List<Event>> {
+public class LoadEventsByLocation extends BaseTask<Integer, List<Event>> {
 
     private static final String TAG = LoadEventsByLocation.class.getSimpleName();
 
@@ -41,7 +40,7 @@ public class LoadEventsByLocation extends BaseNetworkTask<Integer, List<Event>> 
                 } else {
                     Log.w(TAG, "onEvent: ", e);
                     LoadEventsByLocation.this.exception = e;
-                    changeStatus(TaskStatus.FAILED);
+                    changeStatus(TaskStatus.ERROR);
                 }
             }
         };

@@ -6,7 +6,7 @@ package com.ghteam.eventgo.data_new.task;
 
 public enum TaskStatus {
     SUCCESS,
-    FAILED,
+    ERROR,
     PAUSED,
     IN_PROGRESS,
     NONE,

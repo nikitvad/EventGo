@@ -13,7 +13,7 @@ import com.google.firebase.firestore.CollectionReference;
  * Created by nikit on 17.01.2018.
  */
 
-public class UpdateUser extends BaseNetworkTask<Void, Void> {
+public class UpdateUser extends BaseTask<Void, Void> {
 
     private User mUser;
     private String mUid;
@@ -42,7 +42,7 @@ public class UpdateUser extends BaseNetworkTask<Void, Void> {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        changeStatus(TaskStatus.FAILED);
+                        changeStatus(TaskStatus.ERROR);
                         UpdateUser.this.exception = e;
                         Log.w(TAG, "onFailure: ", e);
                     }

@@ -76,7 +76,7 @@ public class FirestoreCollectionLoader<R> implements NetworkTask<Integer>, TaskS
                 changeStatus(TaskStatus.SUCCESS);
 
             } else {
-                changeStatus(TaskStatus.FAILED);
+                changeStatus(TaskStatus.ERROR);
                 Log.w(TAG, "onEvent: ", e);
             }
         }
