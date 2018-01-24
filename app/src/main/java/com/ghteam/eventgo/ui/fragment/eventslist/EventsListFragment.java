@@ -18,6 +18,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -84,7 +85,7 @@ public class EventsListFragment extends Fragment implements LocationListener {
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         EventsListViewModel.EventsListViewModelFactory viewModelFactory = InjectorUtil
@@ -108,7 +109,21 @@ public class EventsListFragment extends Fragment implements LocationListener {
         mFragmentBinding.rvEventsList.setLayoutManager(new LinearLayoutManager(getContext()));
         registerViewModelObservers();
 
-        mViewModel.loadEvents();
+
+        mFragmentBinding.rvEventsList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+
+                if (mViewModel.getTaskStatus().getValue() != TaskStatus.IN_PROGRESS) {
+                    if(!recyclerView.canScrollVertically(1)){
+                        mViewModel.loadNextEvents(5);
+                    }
+                }
+            }
+        });
+
+        mViewModel.loadEvents(5);
 //        updateCurrentLocation();
 //        searchEventsByCurrentLocation(10);
 
@@ -121,7 +136,7 @@ public class EventsListFragment extends Fragment implements LocationListener {
 
             locationFilter.setHeight(searchAreaSize);
             locationFilter.setWidth(searchAreaSize);
-            mViewModel.loadEvents();
+            mViewModel.loadEvents(10);
 //            mViewModel.searchEventByLocation(locationFilter);
         }
 
@@ -221,7 +236,7 @@ public class EventsListFragment extends Fragment implements LocationListener {
         mViewModel.getEventsList().observeForever(new Observer<List<Event>>() {
             @Override
             public void onChanged(@Nullable List<Event> events) {
-                mRecyclerAdapter.setItems(events);
+                mRecyclerAdapter.addItems(events);
             }
         });
 

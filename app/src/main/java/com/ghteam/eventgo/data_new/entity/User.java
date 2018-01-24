@@ -18,7 +18,6 @@ import java.util.List;
         childColumns = "ownerId"
 ))
 public class User {
-    //    private String firebaseId;
     @NonNull
     @PrimaryKey()
     private String id;

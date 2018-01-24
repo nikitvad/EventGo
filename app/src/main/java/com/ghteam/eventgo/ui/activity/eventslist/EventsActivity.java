@@ -24,6 +24,7 @@ import com.ghteam.eventgo.R;
 import com.ghteam.eventgo.databinding.ActivityEventsBinding;
 import com.ghteam.eventgo.ui.activity.createevent.CreateEventActivity;
 import com.ghteam.eventgo.ui.fragment.eventslist.EventsListFragment;
+import com.ghteam.eventgo.ui.fragment.searchevents.SearchEventsFragment;
 
 public class EventsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, EventsListFragment.OnFragmentInteractionListener {
@@ -74,6 +75,8 @@ public class EventsActivity extends AppCompatActivity
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
 
         EventsListFragment eventsListFragment = EventsListFragment.newInstance();
+
+        SearchEventsFragment searchEventsFragment = SearchEventsFragment.newInstance();
 
         fragmentTransaction.replace(R.id.fl_container, eventsListFragment).commit();
     }

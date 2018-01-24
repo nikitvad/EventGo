@@ -201,10 +201,6 @@ public class ProfileSettingsActivity extends AppCompatActivity {
         activityBinding.mainContainer.setAlpha(1f);
     }
 
-    private void shortToast(String text) {
-        Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
-    }
-
     private void showKeyboard(View view) {
         view.requestFocus();
         mInputMethodManager.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);

@@ -16,7 +16,7 @@ import java.util.Date;
  * Created by nikit on 12.12.2017.
  */
 @android.arch.persistence.room.Database(entities = {Event.class, ImageEntry.class,
-        Category.class, Location.class}, version = 4)
+        Category.class, Location.class}, version = 5)
 @TypeConverters(Database.Converters.class)
 public abstract class Database extends RoomDatabase {
 

@@ -26,11 +26,11 @@ public class ProfileSettingsViewModel extends ViewModel {
     private MutableLiveData<String> lastName;
     private MutableLiveData<String> imageUrl;
     private LiveDataList<Category> categoriesList;
-    private MutableLiveData<User> currentUser;
     private MutableLiveData<String> userDescription;
 
     private MutableLiveData<TaskStatus> updateUserTaskStatus;
 
+    private MutableLiveData<User> currentUser;
     private MutableLiveData<TaskStatus> loadCurrentUserTaskStatus;
 
     private static final String TAG = ProfileSettingsViewModel.class.getSimpleName();
@@ -122,38 +122,6 @@ public class ProfileSettingsViewModel extends ViewModel {
         return updateUserTaskStatus;
     }
 
-    //    public void saveUserData() {
-//
-//        isLoading.setValue(true);
-//
-//        Log.d(TAG, "saveUserData: " + currentUser.getValue().toString());
-//
-//        mRepository.pushUser(FirebaseAuth.getInstance().getUid(),
-//                currentUser.getValue(),
-//                new FirebaseDatabaseManager.OnPullUserResultListener() {
-//                    @Override
-//                    public void onSuccess() {
-//                        isLoading.setValue(false);
-//                        saveUserInfoResult.setValue(SaveUserResult.RESULT_OK);
-//                    }
-//
-//                    @Override
-//                    public void onFail(Exception e) {
-//                        isLoading.setValue(false);
-//                        saveUserInfoResult.setValue(SaveUserResult.RESULT_FAIL);
-//                    }
-//                });
-//
-//    }
-//
-//    public MutableLiveData<Boolean> getIsLoading() {
-//        return isLoading;
-//    }
-//
-//    public MutableLiveData<SaveUserResult> getSaveUserResult() {
-//        return saveUserInfoResult;
-//    }
-//
     public static class ProfileSettingViewModelFactory extends ViewModelProvider.NewInstanceFactory {
         private final Repository mRepository;
 
@@ -168,11 +136,4 @@ public class ProfileSettingsViewModel extends ViewModel {
             return (T) new ProfileSettingsViewModel(mRepository);
         }
     }
-//
-//    public enum SaveUserResult {
-//        RESULT_NONE,
-//        RESULT_OK,
-//        RESULT_FAIL
-//    }
-
 }

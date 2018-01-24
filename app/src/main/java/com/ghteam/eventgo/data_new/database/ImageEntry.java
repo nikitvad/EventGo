@@ -11,6 +11,7 @@ import com.ghteam.eventgo.data_new.entity.Event;
  */
 
 @Entity(foreignKeys = @ForeignKey(
+        onDelete = ForeignKey.SET_NULL,
         entity = Event.class,
         parentColumns = "id",
         childColumns = "ownerId"
@@ -19,7 +20,6 @@ import com.ghteam.eventgo.data_new.entity.Event;
 public class ImageEntry {
 
     public String ownerId;
-
 
     @PrimaryKey(autoGenerate = true)
     public int id;

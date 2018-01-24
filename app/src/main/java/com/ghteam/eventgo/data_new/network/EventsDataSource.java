@@ -1,6 +1,5 @@
 package com.ghteam.eventgo.data_new.network;
 
-import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.ghteam.eventgo.data_new.entity.Event;
@@ -9,9 +8,8 @@ import com.ghteam.eventgo.util.network.LocationUtil;
 import com.ghteam.eventgo.util.network.OnTaskStatusChangeListener;
 import com.ghteam.eventgo.util.network.OnTaskStatusChangeListener.TaskStatus;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -103,32 +101,36 @@ public class EventsDataSource {
         });
     }
 
+    private DocumentSnapshot lastLoadedDocument;
+
     public void loadNextEvents(int count, final OnTaskStatusChangeListener listener) {
         listener.onStatusChanged(TaskStatus.IN_PROGRESS);
 
         Query query = collectionEvents.orderBy("id", Query.Direction.DESCENDING);
 
-        if (lastLoadedEvent != null) {
-            query.startAfter(lastLoadedEvent.getId());
-            Log.d(TAG, "loadNextEvents: " + lastLoadedEvent.getId());
-        }
 
-        query.limit(count).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+        EventListener<QuerySnapshot> eventListener = new EventListener<QuerySnapshot>() {
             @Override
-            public void onSuccess(QuerySnapshot documentSnapshots) {
-                if (documentSnapshots != null && documentSnapshots.size() > 0) {
-                    listener.onStatusChanged(TaskStatus.SUCCESS);
-                    lastLoadedEvent = documentSnapshots.getDocuments().get(documentSnapshots.size() - 1).toObject(Event.class);
+            public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
+                if (e == null) {
+                    lastLoadedDocument = documentSnapshots.getDocuments().get(documentSnapshots.size()-1);
                     downloadedEventsList.setValue(documentSnapshots.toObjects(Event.class));
+                    listener.onStatusChanged(TaskStatus.SUCCESS);
+                    Log.d(TAG, "onEvent: " + lastLoadedDocument.getId());
+                } else {
+                    Log.w(TAG, "onEvent: ", e);
+                    listener.onStatusChanged(TaskStatus.FAILED);
+
                 }
             }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                listener.onStatusChanged(TaskStatus.FAILED);
-                Log.w(TAG, "onFailure: ", e);
-            }
-        });
+        };
+
+
+        if (lastLoadedDocument != null) {
+            query.startAfter(lastLoadedDocument).limit(10).addSnapshotListener(eventListener);
+        } else {
+            query.limit(10).addSnapshotListener(eventListener);
+        }
 
     }
 

@@ -10,6 +10,7 @@ import android.arch.persistence.room.PrimaryKey;
  */
 
 @Entity(tableName = "locations", foreignKeys = @ForeignKey(
+        onDelete = ForeignKey.SET_NULL,
         entity = Event.class,
         parentColumns = "id",
         childColumns = "ownerId"

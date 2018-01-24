@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.arch.lifecycle.MutableLiveData;
 import android.content.Context;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.facebook.CallbackManager;
@@ -13,6 +12,7 @@ import com.ghteam.eventgo.data_new.entity.Event;
 import com.ghteam.eventgo.data_new.entity.User;
 import com.ghteam.eventgo.data_new.task.FirestoreCollectionLoader;
 import com.ghteam.eventgo.data_new.task.LoadCurrentUser;
+import com.ghteam.eventgo.data_new.task.LoadEventsAfter;
 import com.ghteam.eventgo.data_new.task.LogInByEmailAndPassword;
 import com.ghteam.eventgo.data_new.task.LogInWithFacebook;
 import com.ghteam.eventgo.data_new.task.TaskResultListener;
@@ -91,6 +91,28 @@ public class Repository {
                     }
                 })
                 .execute(limit);
+    }
+
+    private LoadEventsAfter loadEventsAfter;
+
+    public void loadEventsSequentially(String eventId, int countLimit) {
+
+        if (loadEventsAfter == null) {
+            loadEventsAfter = new LoadEventsAfter();
+            loadEventsAfter.addTaskResultListener(new TaskResultListener<List<Event>>() {
+                @Override
+                public void onResult(List<Event> result) {
+                    events.setValue(result);
+                }
+            }).addTaskStatusListener(new TaskStatusListener() {
+                @Override
+                public void onStatusChanged(TaskStatus status) {
+                    loadEventsTaskStatus.setValue(status);
+                }
+            });
+        }
+
+        loadEventsAfter.execute(eventId, countLimit + "");
     }
 
     public MutableLiveData<TaskStatus> getLoadEventsTaskStatus() {
@@ -266,6 +288,5 @@ public class Repository {
                 })
                 .execute();
     }
-
 
 }

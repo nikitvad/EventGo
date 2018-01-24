@@ -28,15 +28,6 @@ public class SearchEventsViewModel extends ViewModel {
     }
 
 
-    public void loadEvents() {
-        mRepository.loadEvents(new OnTaskStatusChangeListener() {
-            @Override
-            public void onStatusChanged(TaskStatus status) {
-                mLoadingEventsTaskStatus.setValue(status);
-            }
-        });
-    }
-
     public void loadNext() {
         mRepository.loadNextEvents(10, new OnTaskStatusChangeListener() {
             @Override

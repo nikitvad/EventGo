@@ -11,6 +11,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,6 +45,8 @@ public class SearchEventsFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     private FragmentSearchEventsBinding fragmentBinding;
+
+    private static final String TAG = SearchEventsFragment.class.getSimpleName();
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -80,7 +84,7 @@ public class SearchEventsFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         SearchEventsViewModel.SearchEventsViewModelFactory viewModelFactory = InjectorUtil
@@ -99,11 +103,24 @@ public class SearchEventsFragment extends Fragment {
             }
         });
 
+        fragmentBinding.rvEventsList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (!recyclerView.canScrollVertically(-1)) {
+                    if (viewModel.getTaskStatus().getValue() != OnTaskStatusChangeListener.TaskStatus.IN_PROGRESS) {
+                        viewModel.loadNext();
+                        Log.d(TAG, "onScrollStateChanged: ");
+                    }
+                }
+            }
+        });
+
         fragmentBinding.rvEventsList.setAdapter(recyclerAdapter);
 
         fragmentBinding.rvEventsList.setLayoutManager(new LinearLayoutManager(getContext()));
         registerViewModelObservers();
-        viewModel.loadNext();
+//        viewModel.loadNext();
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -113,16 +130,16 @@ public class SearchEventsFragment extends Fragment {
         }
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
+//    @Override
+//    public void onAttach(Context context) {
+//        super.onAttach(context);
+//        if (context instanceof OnFragmentInteractionListener) {
+//            mListener = (OnFragmentInteractionListener) context;
+//        } else {
+//            throw new RuntimeException(context.toString()
+//                    + " must implement OnFragmentInteractionListener");
+//        }
+//    }
 
     @Override
     public void onDetach() {
