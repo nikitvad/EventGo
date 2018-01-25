@@ -3,7 +3,7 @@ package com.ghteam.eventgo.util;
 import android.content.Context;
 
 import com.ghteam.eventgo.AppExecutors;
-import com.ghteam.eventgo.data.Repository;
+import com.ghteam.eventgo.data_new.Repository;
 import com.ghteam.eventgo.data_new.database.Database;
 import com.ghteam.eventgo.ui.activity.eventdetails.EventDetailsViewModel.EventDetailsViewModelFactory;
 import com.ghteam.eventgo.ui.activity.login.LoginViewModel;
@@ -33,11 +33,11 @@ public class InjectorUtil {
     }
 
     public static LoginViewModel.LoginViewModelFactory provideLoginViewModelFactory(Context context) {
-        return new LoginViewModel.LoginViewModelFactory(com.ghteam.eventgo.data_new.Repository.getInstance(context));
+        return new LoginViewModel.LoginViewModelFactory(provideRepository(context));
     }
 
     public static EventsListViewModel.EventsListViewModelFactory provideEventsListViewModelFactory(Context context) {
-        return new EventsListViewModel.EventsListViewModelFactory(com.ghteam.eventgo.data_new.Repository.getInstance(context));
+        return new EventsListViewModel.EventsListViewModelFactory(provideRepository(context));
     }
 
     public static SearchEventsViewModel.SearchEventsViewModelFactory provideSearchEventsViewModelFactory(Context context) {

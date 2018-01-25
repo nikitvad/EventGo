@@ -7,6 +7,11 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.facebook.CallbackManager;
+import com.ghteam.eventgo.AppExecutors;
+import com.ghteam.eventgo.data_new.database.CategoryDao;
+import com.ghteam.eventgo.data_new.database.EventDao;
+import com.ghteam.eventgo.data_new.database.ImageDao;
+import com.ghteam.eventgo.data_new.database.LocationDao;
 import com.ghteam.eventgo.data_new.entity.Category;
 import com.ghteam.eventgo.data_new.entity.Event;
 import com.ghteam.eventgo.data_new.entity.User;
@@ -15,6 +20,7 @@ import com.ghteam.eventgo.data_new.task.LoadCurrentUser;
 import com.ghteam.eventgo.data_new.task.LoadEventsAfter;
 import com.ghteam.eventgo.data_new.task.LogInByEmailAndPassword;
 import com.ghteam.eventgo.data_new.task.LogInWithFacebook;
+import com.ghteam.eventgo.data_new.task.PostEvent;
 import com.ghteam.eventgo.data_new.task.TaskResultListener;
 import com.ghteam.eventgo.data_new.task.TaskStatus;
 import com.ghteam.eventgo.data_new.task.TaskStatusListener;
@@ -35,6 +41,12 @@ public class Repository {
 
     private static Repository sInstance;
 
+    private final EventDao eventDao;
+    private final CategoryDao categoryDao;
+    private final ImageDao imageDao;
+    private final LocationDao locationDao;
+
+    private final AppExecutors appExecutors;
 
     private MutableLiveData<List<Event>> events;
     private MutableLiveData<TaskStatus> loadEventsTaskStatus;
@@ -46,7 +58,15 @@ public class Repository {
     private MutableLiveData<List<Category>> categories;
     private MutableLiveData<TaskStatus> loadCategoriesTaskStatus;
 
-    private Repository() {
+    private Repository(Context context, AppExecutors executors, EventDao eventDao, CategoryDao categoryDao,
+                       ImageDao imageDao, LocationDao locationDao) {
+
+        this.appExecutors = executors;
+
+        this.eventDao = eventDao;
+        this.categoryDao = categoryDao;
+        this.imageDao = imageDao;
+        this.locationDao = locationDao;
 
         events = new MutableLiveData<>();
         loadEventsTaskStatus = new MutableLiveData<>();
@@ -58,11 +78,12 @@ public class Repository {
         loadUsersTaskStatus = new MutableLiveData<>();
     }
 
-    public static Repository getInstance(Context context) {
+    public static Repository getInstance(Context context, AppExecutors executors, EventDao eventDao, CategoryDao categoryDao,
+                                         ImageDao imageDao, LocationDao locationDao) {
         if (sInstance == null) {
             synchronized (Repository.class) {
                 if (sInstance == null) {
-                    sInstance = new Repository();
+                    sInstance = new Repository(context, executors, eventDao, categoryDao, imageDao, locationDao);
                 }
             }
         }
@@ -284,6 +305,35 @@ public class Repository {
                     @Override
                     public void onStatusChanged(TaskStatus status) {
                         logInTaskStatus.setValue(status);
+                    }
+                })
+                .execute();
+    }
+
+    private MutableLiveData<String> postedEventId;
+    private MutableLiveData<TaskStatus> postEventTaskStatus = new MutableLiveData<>();
+
+    public MutableLiveData<String> initializePostedEventId() {
+        postedEventId = new MutableLiveData<>();
+        return postedEventId;
+    }
+
+    public MutableLiveData<TaskStatus> getPostEventTaskStatus() {
+        return postEventTaskStatus;
+    }
+
+    public void postNewEvent(Event event) {
+        new PostEvent(event)
+                .addTaskResultListener(new TaskResultListener<String>() {
+                    @Override
+                    public void onResult(String result) {
+                        postedEventId.setValue(result);
+                    }
+                })
+                .addTaskStatusListener(new TaskStatusListener() {
+                    @Override
+                    public void onStatusChanged(TaskStatus status) {
+                        postEventTaskStatus.setValue(status);
                     }
                 })
                 .execute();

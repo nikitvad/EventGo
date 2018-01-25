@@ -5,7 +5,7 @@ import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.NonNull;
 
-import com.ghteam.eventgo.data.Repository;
+import com.ghteam.eventgo.data_new.Repository;
 import com.ghteam.eventgo.data_new.entity.Event;
 import com.ghteam.eventgo.util.LiveDataList;
 import com.ghteam.eventgo.util.network.OnTaskStatusChangeListener;
@@ -22,19 +22,19 @@ public class SearchEventsViewModel extends ViewModel {
 
 
     private SearchEventsViewModel(Repository repository) {
-        mRepository = repository;
-        mEventsList = mRepository.initializeEvents();
+//        mRepository = repository;
+//        mEventsList = mRepository.initializeEvents();
         mLoadingEventsTaskStatus = new MutableLiveData<>();
     }
 
 
     public void loadNext() {
-        mRepository.loadNextEvents(10, new OnTaskStatusChangeListener() {
-            @Override
-            public void onStatusChanged(TaskStatus status) {
-                mLoadingEventsTaskStatus.setValue(status);
-            }
-        });
+//        mRepository.loadNextEvents(10, new OnTaskStatusChangeListener() {
+//            @Override
+//            public void onStatusChanged(TaskStatus status) {
+//                mLoadingEventsTaskStatus.setValue(status);
+//            }
+//        });
     }
 
     public LiveDataList<Event> getEventsList() {

@@ -10,10 +10,11 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.ghteam.eventgo.data.Repository;
+import com.ghteam.eventgo.data_new.Repository;
 import com.ghteam.eventgo.data_new.entity.Category;
 import com.ghteam.eventgo.data_new.entity.Event;
 import com.ghteam.eventgo.data_new.entity.Location;
+import com.ghteam.eventgo.data_new.task.TaskStatus;
 import com.ghteam.eventgo.util.LiveDataList;
 import com.ghteam.eventgo.util.MapLiveData;
 import com.ghteam.eventgo.util.network.FirebaseUtil;
@@ -45,9 +46,10 @@ public class CreateEventViewModel extends ViewModel {
     private LiveDataList<Category> mCategories;
     private Date mDate;
 
-    private List<String> imageUrlsOnCloudStorage;
+    private MutableLiveData<String> postedEventId;
+    private MutableLiveData<TaskStatus> postEventTaskStatus;
 
-    private MutableLiveData<Boolean> mIsLoading;
+    private List<String> imageUrlsOnCloudStorage;
 
     private MapLiveData<String, Boolean> mUploadingImages;
 
@@ -65,7 +67,8 @@ public class CreateEventViewModel extends ViewModel {
         mImageSources = new LiveDataList<>(new ArrayList<String>());
         mCategories = new LiveDataList<>();
 
-        mIsLoading = new MutableLiveData<>();
+        postedEventId = mRepository.initializePostedEventId();
+        postEventTaskStatus = mRepository.getPostEventTaskStatus();
 
         mUploadingImages = new MapLiveData<>(new HashMap<String, Boolean>());
 
@@ -121,9 +124,8 @@ public class CreateEventViewModel extends ViewModel {
 
     void createEvent(OnSuccessListener<Void> successListener,
                      OnFailureListener failureListener) {
-        getEventEntry();
-        mRepository.pushNewEvent(getEventEntry(), successListener
-                , failureListener);
+
+        mRepository.postNewEvent(getEventEntry());
     }
 
     private Event getEventEntry() {
@@ -146,6 +148,20 @@ public class CreateEventViewModel extends ViewModel {
 
         return event;
     }
+
+    public void postEvent(){
+        mRepository.postNewEvent(getEventEntry());
+    }
+
+    public MutableLiveData<TaskStatus> getPostEventTaskStatus() {
+        return postEventTaskStatus;
+    }
+
+    public MutableLiveData<String> getPostedEventId() {
+        return postedEventId;
+    }
+
+    //----------------------------------------------
 
     private void uploadEventImage(final Uri imageUri, FirebaseUser user) {
         final File imageFile = new File(imageUri.getPath());
@@ -171,9 +187,6 @@ public class CreateEventViewModel extends ViewModel {
         });
     }
 
-    public MutableLiveData<Boolean> getIsLoading() {
-        return mIsLoading;
-    }
 
     static class CreateEventViewModelFactory extends ViewModelProvider.NewInstanceFactory {
         private FirebaseUser mUser;

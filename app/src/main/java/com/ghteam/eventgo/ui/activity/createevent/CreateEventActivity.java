@@ -1,5 +1,6 @@
 package com.ghteam.eventgo.ui.activity.createevent;
 
+import android.arch.lifecycle.LifecycleActivity;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
@@ -9,10 +10,8 @@ import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.View;
@@ -21,6 +20,7 @@ import android.widget.Toast;
 
 import com.ghteam.eventgo.R;
 import com.ghteam.eventgo.data_new.entity.Category;
+import com.ghteam.eventgo.data_new.task.TaskStatus;
 import com.ghteam.eventgo.databinding.ActivityCreateEventBinding;
 import com.ghteam.eventgo.ui.dialog.datetimepicker.DateAndTimePicker;
 import com.ghteam.eventgo.ui.dialog.selectcategories.CategoriesDialog;
@@ -32,8 +32,6 @@ import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.File;
@@ -42,7 +40,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class CreateEventActivity extends AppCompatActivity {
+public class CreateEventActivity extends LifecycleActivity {
 
 
     private ActivityCreateEventBinding activityBinding;
@@ -192,20 +190,7 @@ public class CreateEventActivity extends AppCompatActivity {
         activityBinding.btCreateEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                viewModel.getIsLoading().setValue(true);
-
-                viewModel.createEvent(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        activityBinding.btCreateEvent.setEnabled(false);
-                        viewModel.getIsLoading().setValue(false);
-                    }
-                }, new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        viewModel.getIsLoading().setValue(false);
-                    }
-                });
+                viewModel.postEvent();
             }
         });
     }
@@ -276,11 +261,10 @@ public class CreateEventActivity extends AppCompatActivity {
                 activityBinding.tvEventAddress.setText(s);
             }
         });
-
-        viewModel.getIsLoading().observeForever(new Observer<Boolean>() {
+        viewModel.getPostEventTaskStatus().observe(this, new Observer<TaskStatus>() {
             @Override
-            public void onChanged(@Nullable Boolean aBoolean) {
-                if (aBoolean) {
+            public void onChanged(@Nullable TaskStatus taskStatus) {
+                if (taskStatus == TaskStatus.IN_PROGRESS) {
                     showProgressBar();
                 } else {
                     hideProgressBar();
