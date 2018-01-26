@@ -126,7 +126,7 @@ public class ProfileSettingsViewModel extends ViewModel {
         private final Repository mRepository;
 
 
-        ProfileSettingViewModelFactory(Repository repository) {
+        public ProfileSettingViewModelFactory(Repository repository) {
             mRepository = repository;
         }
 

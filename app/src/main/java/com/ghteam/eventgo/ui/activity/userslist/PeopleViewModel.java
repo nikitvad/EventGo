@@ -42,7 +42,7 @@ public class PeopleViewModel extends ViewModel {
         return taskStatus;
     }
 
-    static class UsersViewModelFactory extends ViewModelProvider.NewInstanceFactory {
+    public static class UsersViewModelFactory extends ViewModelProvider.NewInstanceFactory {
         private Repository mRepository;
 
         public UsersViewModelFactory(Repository mRepository) {

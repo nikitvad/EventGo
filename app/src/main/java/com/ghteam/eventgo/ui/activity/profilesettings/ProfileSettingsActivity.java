@@ -11,10 +11,8 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Toast;
 
 import com.ghteam.eventgo.R;
-import com.ghteam.eventgo.data_new.Repository;
 import com.ghteam.eventgo.data_new.entity.Category;
 import com.ghteam.eventgo.data_new.entity.User;
 import com.ghteam.eventgo.data_new.task.TaskStatus;
@@ -22,6 +20,7 @@ import com.ghteam.eventgo.databinding.ActivityProfileSettingsV2Binding;
 import com.ghteam.eventgo.ui.adapter.SelectedCategoriesRecyclerAdapter;
 import com.ghteam.eventgo.ui.dialog.selectcategories.CategoriesDialog;
 import com.ghteam.eventgo.util.CustomTextWatcher;
+import com.ghteam.eventgo.util.InjectorUtil;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -50,7 +49,7 @@ public class ProfileSettingsActivity extends AppCompatActivity {
         categoriesDialog = getCategoriesDialog();
 
         viewModel = ViewModelProviders.of(this,
-                new ProfileSettingsViewModel.ProfileSettingViewModelFactory(Repository.getInstance(this)))
+                InjectorUtil.profileSettingViewModelFactory(this))
                 .get(ProfileSettingsViewModel.class);
 
         categoriesRecyclerAdapter = new SelectedCategoriesRecyclerAdapter();

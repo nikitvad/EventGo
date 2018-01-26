@@ -5,6 +5,7 @@ import android.util.Log;
 import com.ghteam.eventgo.data_new.entity.User;
 import com.ghteam.eventgo.util.network.FirestoreUtil;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -21,24 +22,30 @@ public class LoadCurrentUser extends BaseTask<Void, User> {
     @Override
     public void execute(Void... params) {
         changeStatus(TaskStatus.IN_PROGRESS);
-        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        if (firebaseAuth.getCurrentUser() != null && !firebaseAuth.getCurrentUser().getUid().isEmpty()) {
+            String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        CollectionReference usersCollection = FirestoreUtil.getReferenceToUsers();
+            CollectionReference usersCollection = FirestoreUtil.getReferenceToUsers();
 
-        usersCollection.document(uid).addSnapshotListener(new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
-                if(e==null){
-                    publishResult(documentSnapshot.toObject(User.class));
-                    changeStatus(TaskStatus.SUCCESS);
+            usersCollection.document(uid).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                @Override
+                public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
+                    if (e == null) {
+                        publishResult(documentSnapshot.toObject(User.class));
+                        changeStatus(TaskStatus.SUCCESS);
 
-                }else{
-                    exception = e;
-                    changeStatus(TaskStatus.ERROR);
-                    Log.w(TAG, "onEvent: ", e );
+                    } else {
+                        exception = e;
+                        changeStatus(TaskStatus.ERROR);
+                        Log.w(TAG, "onEvent: ", e);
+                    }
                 }
-            }
-        });
+            });
 
+        } else {
+            exception = new RuntimeException("Not authorized");
+            changeStatus(TaskStatus.ERROR);
+        }
     }
 }
