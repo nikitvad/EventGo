@@ -2,7 +2,6 @@ package com.ghteam.eventgo.ui.fragment.searchevents;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
@@ -20,7 +19,7 @@ import android.view.WindowManager;
 
 import com.ghteam.eventgo.BR;
 import com.ghteam.eventgo.R;
-import com.ghteam.eventgo.data_new.entity.Event;
+import com.ghteam.eventgo.data.entity.Event;
 import com.ghteam.eventgo.databinding.FragmentSearchEventsBinding;
 import com.ghteam.eventgo.ui.RecyclerBindingAdapter;
 import com.ghteam.eventgo.ui.activity.eventdetails.EventDetailsActivity;

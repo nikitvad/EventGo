@@ -4,7 +4,7 @@ import android.databinding.BindingAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.ghteam.eventgo.data_new.entity.Location;
+import com.ghteam.eventgo.data.entity.Location;
 import com.ghteam.eventgo.util.network.LocationUtil;
 import com.squareup.picasso.Picasso;
 

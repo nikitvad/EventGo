@@ -2,8 +2,8 @@ package com.ghteam.eventgo.util.network;
 
 import android.util.Log;
 
-import com.ghteam.eventgo.data_new.entity.Category;
-import com.ghteam.eventgo.data_new.entity.User;
+import com.ghteam.eventgo.data.entity.Category;
+import com.ghteam.eventgo.data.entity.User;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 

@@ -4,12 +4,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.ghteam.eventgo.R;
-import com.ghteam.eventgo.data_new.Repository;
 import com.ghteam.eventgo.databinding.ActivityLaunchingBinding;
 import com.ghteam.eventgo.ui.activity.createevent.CreateEventActivity;
 import com.ghteam.eventgo.ui.activity.eventdetails.EventDetailsActivity;

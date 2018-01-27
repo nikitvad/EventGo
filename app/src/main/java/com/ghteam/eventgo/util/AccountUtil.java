@@ -2,7 +2,7 @@ package com.ghteam.eventgo.util;
 
 import android.support.annotation.Nullable;
 
-import com.ghteam.eventgo.data_new.entity.User;
+import com.ghteam.eventgo.data.entity.User;
 import com.ghteam.eventgo.util.network.AccountStatus;
 
 /**

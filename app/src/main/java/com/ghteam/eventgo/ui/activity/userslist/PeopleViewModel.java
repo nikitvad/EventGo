@@ -5,9 +5,9 @@ import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.NonNull;
 
-import com.ghteam.eventgo.data_new.entity.User;
-import com.ghteam.eventgo.data_new.Repository;
-import com.ghteam.eventgo.data_new.task.TaskStatus;
+import com.ghteam.eventgo.data.entity.User;
+import com.ghteam.eventgo.data.Repository;
+import com.ghteam.eventgo.data.task.TaskStatus;
 
 import java.util.List;
 

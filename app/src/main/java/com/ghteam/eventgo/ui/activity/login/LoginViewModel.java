@@ -14,16 +14,12 @@ import com.facebook.CallbackManager;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
-import com.ghteam.eventgo.data_new.Repository;
-import com.ghteam.eventgo.data_new.entity.User;
-import com.ghteam.eventgo.data_new.network.FirebaseDatabaseManager;
-import com.ghteam.eventgo.data_new.task.TaskStatus;
+import com.ghteam.eventgo.data.Repository;
+import com.ghteam.eventgo.data.entity.User;
+import com.ghteam.eventgo.data.network.FirebaseDatabaseManager;
+import com.ghteam.eventgo.data.task.TaskStatus;
 import com.ghteam.eventgo.util.FacebookUserJsonConverter;
 import com.ghteam.eventgo.util.LoginInResult;
-import com.ghteam.eventgo.util.network.AccountStatus;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
 
 /**
  * Created by nikit on 17.11.2017.

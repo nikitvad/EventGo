@@ -19,8 +19,8 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.ghteam.eventgo.R;
-import com.ghteam.eventgo.data_new.entity.Category;
-import com.ghteam.eventgo.data_new.task.TaskStatus;
+import com.ghteam.eventgo.data.entity.Category;
+import com.ghteam.eventgo.data.task.TaskStatus;
 import com.ghteam.eventgo.databinding.ActivityCreateEventBinding;
 import com.ghteam.eventgo.ui.dialog.datetimepicker.DateAndTimePicker;
 import com.ghteam.eventgo.ui.dialog.selectcategories.CategoriesDialog;

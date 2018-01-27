@@ -27,9 +27,9 @@ import android.view.WindowManager;
 
 import com.ghteam.eventgo.BR;
 import com.ghteam.eventgo.R;
-import com.ghteam.eventgo.data_new.entity.Event;
-import com.ghteam.eventgo.data_new.network.LocationFilter;
-import com.ghteam.eventgo.data_new.task.TaskStatus;
+import com.ghteam.eventgo.data.entity.Event;
+import com.ghteam.eventgo.data.network.LocationFilter;
+import com.ghteam.eventgo.data.task.TaskStatus;
 import com.ghteam.eventgo.databinding.FragmentEventsListBinding;
 import com.ghteam.eventgo.ui.RecyclerBindingAdapter;
 import com.ghteam.eventgo.ui.activity.eventdetails.EventDetailsActivity;

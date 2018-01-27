@@ -10,11 +10,11 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.ghteam.eventgo.data_new.Repository;
-import com.ghteam.eventgo.data_new.entity.Category;
-import com.ghteam.eventgo.data_new.entity.Event;
-import com.ghteam.eventgo.data_new.entity.Location;
-import com.ghteam.eventgo.data_new.task.TaskStatus;
+import com.ghteam.eventgo.data.Repository;
+import com.ghteam.eventgo.data.entity.Category;
+import com.ghteam.eventgo.data.entity.Event;
+import com.ghteam.eventgo.data.entity.Location;
+import com.ghteam.eventgo.data.task.TaskStatus;
 import com.ghteam.eventgo.util.LiveDataList;
 import com.ghteam.eventgo.util.MapLiveData;
 import com.ghteam.eventgo.util.network.FirebaseUtil;

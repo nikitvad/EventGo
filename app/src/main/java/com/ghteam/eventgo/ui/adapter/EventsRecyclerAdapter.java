@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 
 import com.ghteam.eventgo.BR;
 import com.ghteam.eventgo.R;
-import com.ghteam.eventgo.data_new.entity.Event;
+import com.ghteam.eventgo.data.entity.Event;
 import com.ghteam.eventgo.databinding.LayoutEventListItemV2Binding;
 
 import java.util.ArrayList;

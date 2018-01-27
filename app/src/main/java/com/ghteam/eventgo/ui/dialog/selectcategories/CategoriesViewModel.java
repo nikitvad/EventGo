@@ -4,9 +4,9 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 
-import com.ghteam.eventgo.data_new.entity.Category;
-import com.ghteam.eventgo.data_new.Repository;
-import com.ghteam.eventgo.data_new.task.TaskStatus;
+import com.ghteam.eventgo.data.entity.Category;
+import com.ghteam.eventgo.data.Repository;
+import com.ghteam.eventgo.data.task.TaskStatus;
 
 import java.util.List;
 

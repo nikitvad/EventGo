@@ -1,20 +1,16 @@
 package com.ghteam.eventgo.ui.activity.eventdetails;
 
 import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.util.Log;
 
-import com.ghteam.eventgo.data_new.Repository;
-import com.ghteam.eventgo.data_new.database.ImageEntry;
-import com.ghteam.eventgo.data_new.entity.Category;
-import com.ghteam.eventgo.data_new.entity.Event;
-import com.ghteam.eventgo.data_new.entity.Location;
-import com.ghteam.eventgo.data_new.entity.User;
-import com.ghteam.eventgo.util.network.OnTaskStatusChangeListener;
+import com.ghteam.eventgo.data.Repository;
+import com.ghteam.eventgo.data.database.ImageEntry;
+import com.ghteam.eventgo.data.entity.Category;
+import com.ghteam.eventgo.data.entity.Event;
+import com.ghteam.eventgo.data.entity.Location;
+import com.ghteam.eventgo.data.entity.User;
 
 import java.util.List;
 

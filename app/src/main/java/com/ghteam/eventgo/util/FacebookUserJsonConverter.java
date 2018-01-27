@@ -3,7 +3,7 @@ package com.ghteam.eventgo.util;
 import android.util.Log;
 
 import com.facebook.GraphResponse;
-import com.ghteam.eventgo.data_new.entity.User;
+import com.ghteam.eventgo.data.entity.User;
 
 import org.json.JSONException;
 import org.json.JSONObject;

@@ -4,7 +4,7 @@ import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.NonNull;
 
-import com.ghteam.eventgo.data_new.Repository;
+import com.ghteam.eventgo.data.Repository;
 
 /**
  * Created by nikit on 20.11.2017.

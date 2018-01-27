@@ -6,7 +6,7 @@
 
         <variable
             name="user"
-            type="com.ghteam.eventgo.data_new.entity.User" />
+            type="com.ghteam.eventgo.data.entity.User" />
     </data>
 
     <LinearLayout
