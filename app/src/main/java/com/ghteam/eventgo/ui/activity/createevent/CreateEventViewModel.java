@@ -31,6 +31,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import io.realm.RealmList;
+
 /**
  * Created by nikit on 30.11.2017.
  */
@@ -137,7 +139,7 @@ public class CreateEventViewModel extends ViewModel {
         if (getCategories().getValue() != null && getCategories().getValue().size() > 0) {
             event.setCategory(getCategories().getValue().get(0));
         }
-        event.setImages(imageUrlsOnCloudStorage);
+        event.setImages(new RealmList<String>((String[]) imageUrlsOnCloudStorage.toArray()));
         event.setOwnerId(mFirebaseUser.getUid());
         event.setDate(mDate);
 

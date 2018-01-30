@@ -33,6 +33,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import io.realm.Realm;
+import io.realm.RealmQuery;
+
 public class EventDetailsActivity extends AppCompatActivity {
 
     private ActivityEventDetailsBinding activityBinding;
@@ -55,12 +58,19 @@ public class EventDetailsActivity extends AppCompatActivity {
 
         String eventId = getIntent().getStringExtra("eventId");
 
+
         EventDetailsViewModelFactory viewModelFactory = InjectorUtil
-                .provideEventDetailsViewModelFactory(this, eventId);
+                .provideEventDetailsViewModelFactory(this, "1DaM4uttOQV6EHYPwnMu");
 
 
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(EventDetailsViewModel.class);
+
+        RealmQuery realmQuery = Realm.getDefaultInstance().where(Event.class);
+
+        Event event = (Event) realmQuery.findFirst();
+
+        Log.d(TAG, "onCreate: " + event.getImages().size());
 
         setUpImageSwitcher();
 
@@ -90,7 +100,7 @@ public class EventDetailsActivity extends AppCompatActivity {
             }
         });
 
-        registerViewModelObservers();
+//        registerViewModelObservers();
     }
 
     private void setUpImageSwitcher() {

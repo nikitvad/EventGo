@@ -12,7 +12,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.List;
 
-
 /**
  * Created by nikit on 22.01.2018.
  */
@@ -48,14 +47,12 @@ public class LoadEventsAfter extends BaseTask<String, List<Event>> {
     public void execute(String... params) {
         changeStatus(TaskStatus.IN_PROGRESS);
 
-        String eventId = params[0];
-        int limit = Integer.parseInt(params[1]);
+        int limit = Integer.parseInt(params[0]);
 
         if (lastLoadedDocument != null) {
             mQuery.orderBy("date").limit(limit).startAfter(lastLoadedDocument).addSnapshotListener(mEventListener);
         } else {
             mQuery.orderBy("date").limit(limit).addSnapshotListener(mEventListener);
-
         }
 
     }

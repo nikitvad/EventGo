@@ -59,7 +59,7 @@ public class FirebaseDatabaseManager {
         Log.d(TAG, "pushNewEvent: " + eventId);
 
         event.setId(eventId);
-        event.getCategory().setOwnerId(eventId);
+//        event.getCategory().setOwnerId(eventId);
         Log.d(TAG, "pushNewEvent: " + event.getDate());
         documentReference.set(event).addOnSuccessListener(onSuccessListener)
                 .addOnFailureListener(onFailureListener);

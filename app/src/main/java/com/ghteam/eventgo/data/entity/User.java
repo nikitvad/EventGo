@@ -1,25 +1,19 @@
 package com.ghteam.eventgo.data.entity;
 
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.ForeignKey;
-import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import io.realm.annotations.PrimaryKey;
+
 /**
  * Created by nikit on 19.11.2017.
  */
-@Entity(tableName = "users", foreignKeys = @ForeignKey(
-        entity = Event.class,
-        parentColumns = "id",
-        childColumns = "ownerId"
-))
+
 public class User {
-    @NonNull
-    @PrimaryKey()
+    @PrimaryKey
     private String id;
 
     public int ownerId;

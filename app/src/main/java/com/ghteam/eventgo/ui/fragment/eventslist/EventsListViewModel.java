@@ -27,8 +27,6 @@ public class EventsListViewModel extends ViewModel {
     private MutableLiveData<TaskStatus> taskStatus;
     private MutableLiveData<OnTaskStatusChangeListener.TaskStatus> mLoadingEventsTaskStatus;
 
-    private String lastLoadedEventId = "";
-
     private static final String TAG = EventsListViewModel.class.getSimpleName();
 
     private EventsListViewModel(Repository repository) {
@@ -36,24 +34,14 @@ public class EventsListViewModel extends ViewModel {
 
         mEventsList = repository.initializeEvents();
         taskStatus = repository.getLoadEventsTaskStatus();
-
-        mEventsList.observeForever(new Observer<List<Event>>() {
-            @Override
-            public void onChanged(@Nullable List<Event> events) {
-                if (events.size() > 0) {
-                    lastLoadedEventId = events.get(events.size()-1).getId();
-                    Log.d(TAG, "onChanged: " + lastLoadedEventId);
-                }
-            }
-        });
     }
 
-    public void loadEvents(int limit) {
-        mRepository.loadEvents(limit);
-    }
+//    public void loadEvents(int limit) {
+////        mRepository.loadEvents(limit);
+//    }
 
     public void loadNextEvents(int limit) {
-        mRepository.loadEventsSequentially(lastLoadedEventId, limit);
+        mRepository.loadNextEvents(limit);
     }
 
     public void searchEventByLocation(LocationFilter locationFilter) {

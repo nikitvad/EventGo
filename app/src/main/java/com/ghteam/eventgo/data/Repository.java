@@ -2,22 +2,18 @@ package com.ghteam.eventgo.data;
 
 import android.app.Activity;
 import android.arch.lifecycle.MutableLiveData;
+import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.facebook.CallbackManager;
 import com.ghteam.eventgo.AppExecutors;
-import com.ghteam.eventgo.data.database.CategoryDao;
-import com.ghteam.eventgo.data.database.EventDao;
-import com.ghteam.eventgo.data.database.ImageDao;
-import com.ghteam.eventgo.data.database.LocationDao;
 import com.ghteam.eventgo.data.entity.Category;
 import com.ghteam.eventgo.data.entity.Event;
 import com.ghteam.eventgo.data.entity.User;
 import com.ghteam.eventgo.data.task.FirestoreCollectionLoader;
 import com.ghteam.eventgo.data.task.LoadCurrentUser;
-import com.ghteam.eventgo.data.task.LoadEventsAfter;
 import com.ghteam.eventgo.data.task.LogInByEmailAndPassword;
 import com.ghteam.eventgo.data.task.LogInWithFacebook;
 import com.ghteam.eventgo.data.task.PostEvent;
@@ -30,6 +26,8 @@ import com.ghteam.eventgo.util.network.FirestoreUtil;
 
 import java.util.List;
 
+import io.realm.Realm;
+
 /**
  * Created by nikit on 04.01.2018.
  */
@@ -41,23 +39,12 @@ public class Repository {
 
     private static Repository sInstance;
 
-    private final EventDao eventDao;
-    private final CategoryDao categoryDao;
-    private final ImageDao imageDao;
-    private final LocationDao locationDao;
-
     private final AppExecutors appExecutors;
 
 
-    private Repository(Context context, AppExecutors executors, EventDao eventDao, CategoryDao categoryDao,
-                       ImageDao imageDao, LocationDao locationDao) {
+    private Repository(Context context, AppExecutors executors) {
 
         this.appExecutors = executors;
-
-        this.eventDao = eventDao;
-        this.categoryDao = categoryDao;
-        this.imageDao = imageDao;
-        this.locationDao = locationDao;
 
         events = new MutableLiveData<>();
         loadEventsTaskStatus = new MutableLiveData<>();
@@ -67,14 +54,15 @@ public class Repository {
 
         users = new MutableLiveData<>();
         loadUsersTaskStatus = new MutableLiveData<>();
+
+        registerDataObserves();
     }
 
-    public static Repository getInstance(Context context, AppExecutors executors, EventDao eventDao, CategoryDao categoryDao,
-                                         ImageDao imageDao, LocationDao locationDao) {
+    public static Repository getInstance(Context context, AppExecutors executors) {
         if (sInstance == null) {
             synchronized (Repository.class) {
                 if (sInstance == null) {
-                    sInstance = new Repository(context, executors, eventDao, categoryDao, imageDao, locationDao);
+                    sInstance = new Repository(context, executors);
                 }
             }
         }
@@ -89,7 +77,6 @@ public class Repository {
 
     private MutableLiveData<List<Event>> events;
     private MutableLiveData<TaskStatus> loadEventsTaskStatus;
-
 
     public void loadEvents(int limit) {
 
@@ -110,29 +97,30 @@ public class Repository {
                         loadEventsTaskStatus.setValue(status);
                     }
                 })
-                .execute(limit);
+                .load(limit);
     }
 
-    private LoadEventsAfter loadEventsAfter;
+    private FirestoreCollectionLoader<Event> eventsLoader;
 
-    public void loadEventsSequentially(String eventId, int countLimit) {
+    public void loadNextEvents(int countLimit) {
 
-        if (loadEventsAfter == null) {
-            loadEventsAfter = new LoadEventsAfter();
-            loadEventsAfter.addTaskResultListener(new TaskResultListener<List<Event>>() {
+        if (eventsLoader == null) {
+            eventsLoader = new FirestoreCollectionLoader<>(FirestoreUtil.getReferenceToEvents(), Event.class);
+            eventsLoader.addTaskResultListener(new TaskResultListener<List<Event>>() {
                 @Override
                 public void onResult(List<Event> result) {
                     events.setValue(result);
                 }
-            }).addTaskStatusListener(new TaskStatusListener() {
+            });
+
+            eventsLoader.addTaskStatusListener(new TaskStatusListener() {
                 @Override
                 public void onStatusChanged(TaskStatus status) {
                     loadEventsTaskStatus.setValue(status);
                 }
             });
         }
-
-        loadEventsAfter.execute(eventId, countLimit + "");
+        eventsLoader.loadNext(countLimit);
     }
 
     public MutableLiveData<TaskStatus> getLoadEventsTaskStatus() {
@@ -168,7 +156,7 @@ public class Repository {
                         Log.d(TAG, "onStatusChanged: " + status);
                     }
                 })
-                .execute();
+                .load(null);
     }
 
     public MutableLiveData<List<Category>> initializeCategories() {
@@ -208,7 +196,7 @@ public class Repository {
                         Log.d(TAG, "onStatusChanged: " + status);
                     }
                 })
-                .execute(limit);
+                .load(limit);
     }
 
     public MutableLiveData<List<User>> initializeUsers() {
@@ -220,6 +208,10 @@ public class Repository {
     }
 
     private MutableLiveData<TaskStatus> updateUserTaskStatus;
+
+    /*
+     * Update or insert new User data in remote DB
+     */
 
     public void updateUser(User user, String uid) {
         if (user.getId().isEmpty() || !user.getId().equals(uid)) {
@@ -241,6 +233,10 @@ public class Repository {
         }
         return updateUserTaskStatus;
     }
+
+    /*
+     * Loading current user from remote DB
+     */
 
     private MutableLiveData<User> currentUser;
     private MutableLiveData<TaskStatus> loadCurrentUserTaskStatus = new MutableLiveData<>();
@@ -275,6 +271,10 @@ public class Repository {
     private MutableLiveData<String> userId = new MutableLiveData<>();
     private MutableLiveData<TaskStatus> logInTaskStatus = new MutableLiveData<>();
 
+    /*
+     * Log ing with email and password
+     */
+
     public void loginWithEmail(String email, String password) {
         userId.setValue("");
         new LogInByEmailAndPassword(email, password)
@@ -303,6 +303,10 @@ public class Repository {
         return logInTaskStatus;
     }
 
+    /*
+     * Log in with Facebook
+     */
+
     public void logInWithFacebook(Activity activity, CallbackManager callbackManager) {
         new LogInWithFacebook(activity, callbackManager)
                 .addTaskResultListener(new TaskResultListener<String>() {
@@ -319,6 +323,11 @@ public class Repository {
                 })
                 .execute();
     }
+
+    /*
+     * Post event to remote DB
+     */
+
 
     private MutableLiveData<String> postedEventId;
     private MutableLiveData<TaskStatus> postEventTaskStatus = new MutableLiveData<>();
@@ -347,6 +356,25 @@ public class Repository {
                     }
                 })
                 .execute();
+    }
+
+
+    private void registerDataObserves() {
+        final Realm realm = Realm.getDefaultInstance();
+
+        events.observeForever(new Observer<List<Event>>() {
+            @Override
+            public void onChanged(@Nullable final List<Event> events) {
+                Log.d(TAG, "onChanged: " + events.size());
+
+                realm.executeTransactionAsync(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        realm.insert(events);
+                    }
+                });
+            }
+        });
     }
 
 }

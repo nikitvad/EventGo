@@ -1,30 +1,21 @@
 package com.ghteam.eventgo.data.entity;
 
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.ForeignKey;
-import android.arch.persistence.room.Ignore;
-import android.arch.persistence.room.PrimaryKey;
+import io.realm.RealmObject;
 
 /**
  * Created by nikit on 04.12.2017.
  */
 
-@Entity(tableName = "locations", foreignKeys = @ForeignKey(
-        onDelete = ForeignKey.SET_NULL,
-        entity = Event.class,
-        parentColumns = "id",
-        childColumns = "ownerId"
-))
-public class Location {
-    @PrimaryKey(autoGenerate = true)
-    public int id;
+
+public class Location extends RealmObject {
+//    @PrimaryKey(autoGenerate = true)
+//    public int id;
 
     public int ownerId;
 
     private double latitude;
     private double longitude;
 
-    @Ignore
     public Location(double latitude, double longitude) {
         this.latitude = latitude;
         this.longitude = longitude;

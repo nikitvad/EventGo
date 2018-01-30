@@ -5,9 +5,11 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 
 import com.ghteam.eventgo.R;
+import com.ghteam.eventgo.data.entity.Event;
 import com.ghteam.eventgo.databinding.ActivityLaunchingBinding;
 import com.ghteam.eventgo.ui.activity.createevent.CreateEventActivity;
 import com.ghteam.eventgo.ui.activity.eventdetails.EventDetailsActivity;
@@ -17,6 +19,9 @@ import com.ghteam.eventgo.ui.activity.profilesettings.ProfileSettingsActivity;
 import com.ghteam.eventgo.ui.activity.userslist.PeopleActivity;
 import com.ghteam.eventgo.util.PrefsUtil;
 import com.google.firebase.auth.FirebaseAuth;
+
+import io.realm.Realm;
+import io.realm.RealmQuery;
 
 public class LaunchingActivity extends AppCompatActivity {
 
@@ -39,6 +44,7 @@ public class LaunchingActivity extends AppCompatActivity {
         } else {
             activity = EventsActivity.class;
         }
+
 
 //        repository.loadEvents(20);
 //        new Handler().postDelayed(new Runnable() {

@@ -123,7 +123,7 @@ public class EventsListFragment extends Fragment implements LocationListener {
             }
         });
 
-        mViewModel.loadEvents(5);
+        mViewModel.loadNextEvents(5);
 //        updateCurrentLocation();
 //        searchEventsByCurrentLocation(10);
 
@@ -136,7 +136,7 @@ public class EventsListFragment extends Fragment implements LocationListener {
 
             locationFilter.setHeight(searchAreaSize);
             locationFilter.setWidth(searchAreaSize);
-            mViewModel.loadEvents(10);
+            mViewModel.loadNextEvents(10);
 //            mViewModel.searchEventByLocation(locationFilter);
         }
 
@@ -243,6 +243,7 @@ public class EventsListFragment extends Fragment implements LocationListener {
         mViewModel.getTaskStatus().observeForever(new Observer<TaskStatus>() {
             @Override
             public void onChanged(@Nullable TaskStatus taskStatus) {
+                Log.d(TAG, "onChanged: " + taskStatus);
                 switch (taskStatus) {
                     case IN_PROGRESS:
                         showProgressBar();

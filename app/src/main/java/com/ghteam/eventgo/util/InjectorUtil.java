@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.ghteam.eventgo.AppExecutors;
 import com.ghteam.eventgo.data.Repository;
-import com.ghteam.eventgo.data.database.Database;
 import com.ghteam.eventgo.ui.activity.eventdetails.EventDetailsViewModel.EventDetailsViewModelFactory;
 import com.ghteam.eventgo.ui.activity.login.LoginViewModel;
 import com.ghteam.eventgo.ui.activity.profilesettings.ProfileSettingsViewModel;
@@ -19,13 +18,8 @@ import com.ghteam.eventgo.ui.fragment.searchevents.SearchEventsViewModel;
 public class InjectorUtil {
 
     public static Repository provideRepository(Context context) {
-        Database db = Database.getInstance(context);
         Repository repository = Repository.getInstance(context,
-                AppExecutors.getInstance(),
-                db.eventDao(),
-                db.categoryDao(),
-                db.imageDao(),
-                db.locationDao());
+                AppExecutors.getInstance());
 
         return repository;
     }
@@ -50,7 +44,7 @@ public class InjectorUtil {
         return new ProfileSettingsViewModel.ProfileSettingViewModelFactory(provideRepository(context));
     }
 
-    public static PeopleViewModel.UsersViewModelFactory provideUsersViewModelFactory(Context context){
+    public static PeopleViewModel.UsersViewModelFactory provideUsersViewModelFactory(Context context) {
         return new PeopleViewModel.UsersViewModelFactory(provideRepository(context));
     }
 

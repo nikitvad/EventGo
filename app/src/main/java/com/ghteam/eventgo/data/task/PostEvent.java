@@ -31,7 +31,7 @@ public class PostEvent extends BaseTask<Void, String> {
 
         final String eventId = documentReference.getId();
         mEvent.setId(eventId);
-        mEvent.getCategory().setOwnerId(eventId);
+//        mEvent.getCategory().setOwnerId(eventId);
 
         documentReference.set(eventId).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override

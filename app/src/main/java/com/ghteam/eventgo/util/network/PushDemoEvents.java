@@ -14,6 +14,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
+import io.realm.RealmList;
+
 /**
  * Created by nikit on 09.12.2017.
  */
@@ -129,7 +131,7 @@ public class PushDemoEvents {
                     eventImages.add(images[r.nextInt(images.length - 1)]);
                 }
                 event.setDate(new Date());
-                event.setImages(eventImages);
+                event.setImages(new RealmList<String>((String[])eventImages.toArray()));
                 event.setLocation(locations[r.nextInt(locations.length - 1)]);
                 event.setCategory(categories.get(r.nextInt(categories.size() - 1)));
 

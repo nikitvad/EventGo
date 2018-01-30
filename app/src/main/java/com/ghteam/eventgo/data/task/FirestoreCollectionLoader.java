@@ -4,6 +4,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -14,10 +15,10 @@ import java.util.List;
  * Created by nikit on 08.01.2018.
  */
 
-public class FirestoreCollectionLoader<R> implements NetworkTask<Integer>, TaskStatusInterface {
+public class FirestoreCollectionLoader<R> implements TaskStatusInterface {
 
-    protected TaskResultListener<List<R>> taskResultListener;
-    protected TaskStatusListener taskStatusListener;
+    private TaskResultListener<List<R>> taskResultListener;
+    private TaskStatusListener taskStatusListener;
 
     protected Exception exception;
 
@@ -26,8 +27,12 @@ public class FirestoreCollectionLoader<R> implements NetworkTask<Integer>, TaskS
     private CollectionReference collectionReference;
     private Class typeOfResult;
 
-    private static final String TAG = FirestoreCollectionLoader.class.getSimpleName();
+    private boolean isCollectionFullyLoaded = false;
 
+    private DocumentSnapshot lastLoadedDocument;
+    private long lastDocumentsCountLimit = Long.MAX_VALUE;
+
+    private static final String TAG = FirestoreCollectionLoader.class.getSimpleName();
 
     public FirestoreCollectionLoader(CollectionReference collectionReference, Class<R> typeOfResult) {
         this.collectionReference = collectionReference;
@@ -71,9 +76,18 @@ public class FirestoreCollectionLoader<R> implements NetworkTask<Integer>, TaskS
         @Override
         public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
             if (e == null) {
-                List<R> result = documentSnapshots.toObjects(typeOfResult);
-                publishResult(result);
+                if (documentSnapshots.size() > 0) {
+                    lastLoadedDocument = documentSnapshots.getDocuments().get(documentSnapshots.size() - 1);
+
+                    if (documentSnapshots.size() < lastDocumentsCountLimit) {
+                        isCollectionFullyLoaded = true;
+                    }
+
+                    List<R> result = documentSnapshots.toObjects(typeOfResult);
+                    publishResult(result);
+                }
                 changeStatus(TaskStatus.SUCCESS);
+
 
             } else {
                 changeStatus(TaskStatus.ERROR);
@@ -82,16 +96,28 @@ public class FirestoreCollectionLoader<R> implements NetworkTask<Integer>, TaskS
         }
     };
 
-    @Override
-    public void execute(Integer... limit) {
+    public void load(@Nullable Integer limit) {
         changeStatus(TaskStatus.IN_PROGRESS);
 
-        if (limit.length > 0) {
-            collectionReference.limit(limit[0]).addSnapshotListener(eventListener);
+        if (limit != null) {
+            collectionReference.limit(limit).addSnapshotListener(eventListener);
         } else {
             collectionReference.addSnapshotListener(eventListener);
         }
-
     }
 
+    public void loadNext(long limit) {
+
+        if (!isCollectionFullyLoaded) {
+            changeStatus(TaskStatus.IN_PROGRESS);
+            lastDocumentsCountLimit = limit;
+            if (lastLoadedDocument != null) {
+                collectionReference.limit(limit).startAfter(lastLoadedDocument)
+                        .addSnapshotListener(eventListener);
+
+            } else {
+                collectionReference.limit(limit).addSnapshotListener(eventListener);
+            }
+        }
+    }
 }

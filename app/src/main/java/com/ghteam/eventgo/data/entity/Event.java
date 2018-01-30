@@ -1,20 +1,18 @@
 package com.ghteam.eventgo.data.entity;
 
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.Ignore;
-import android.arch.persistence.room.PrimaryKey;
-import android.support.annotation.NonNull;
 
 import java.util.Date;
 import java.util.List;
 
+import io.realm.RealmList;
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+
 /**
  * Created by nikit on 30.11.2017.
  */
-@Entity(tableName = "events")
-public class Event {
+public class Event extends RealmObject {
 
-    @NonNull
     @PrimaryKey
     private String id;
 
@@ -28,19 +26,16 @@ public class Event {
 
     private String address;
 
-    @Ignore
     private Category category;
 
-    @Ignore
-    private List<String> images;
+    private RealmList<String> images;
 
-    @Ignore
     private Location location;
 
     public Event() {
     }
 
-    public Event(String name, String description, String address, Category category, List<String> images) {
+    public Event(String name, String description, String address, Category category, RealmList<String> images) {
         this.name = name;
         this.description = description;
         this.address = address;
@@ -116,8 +111,14 @@ public class Event {
         return images;
     }
 
+//    public void setImages(RealmList<String> images) {
+//        this.images = images;
+//    }
+
+
     public void setImages(List<String> images) {
-        this.images = images;
+        this.images = new RealmList<>();
+        images.addAll(images);
     }
 
     @Override
