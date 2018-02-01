@@ -32,7 +32,10 @@
         <item name="android:textSize">16sp</item>
     </style>
 
-
+    <style name="ToolbarColoredBackArrow" parent="AppTheme">
+        <item name="android:textColorSecondary">#fff</item>
+        <item name="android:textColor">#fff</item>
+    </style>
 
     <style name="EditTextProfileSettings">
         <item name="android:background">@drawable/edit_text_background</item>

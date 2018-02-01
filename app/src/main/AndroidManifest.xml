@@ -20,18 +20,21 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+
         <activity android:name=".ui.activity.launch.LaunchingActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name=".ui.activity.login.LoginActivity" />
+
         <activity
             android:name=".ui.activity.singup.SignUpActivity"
             android:label=" "
             android:parentActivityName=".ui.activity.login.LoginActivity" />
+
         <activity
             android:name=".ui.activity.profilesettings.ProfileSettingsActivity"
             android:label="Profile settings" />
@@ -52,6 +55,7 @@
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name" />
+
         <activity
             android:name="com.facebook.CustomTabActivity"
             android:exported="true">
@@ -82,7 +86,11 @@
             android:value="AIzaSyC01M4nvT9veni6H1eg3R2oZONgbWkfqZg" />
 
         <activity android:name=".ui.activity.userslist.PeopleActivity" />
-        <activity android:name=".ui.activity.eventdetails.EventDetailsActivity" />
+
+        <activity
+            android:name=".ui.activity.eventdetails.EventDetailsActivity"
+            android:label="Details"
+            android:parentActivityName=".ui.activity.eventslist.EventsActivity" />
     </application>
 
 </manifest>

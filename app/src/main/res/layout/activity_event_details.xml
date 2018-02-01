@@ -39,7 +39,7 @@
 
             <include
                 android:id="@+id/include_toolbar"
-                layout="@layout/transparent_toolbar" />
+                layout="@layout/toolbar" />
 
             <FrameLayout
                 android:id="@+id/lf_images"
@@ -145,7 +145,7 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
                     android:gravity="center_vertical"
-                    android:text="@{category.name}"
+                    android:text="@{event.category.name}"
                     android:textSize="18sp" />
 
                 <View
@@ -219,9 +219,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:visibility="@{event.address.length()>0? v.VISIBLE : v.GONE}">
-
+                android:layout_marginRight="20dp">
                 <Button
                     android:id="@+id/bt_address_on_map"
 

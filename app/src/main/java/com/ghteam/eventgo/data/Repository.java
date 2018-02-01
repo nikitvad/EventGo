@@ -14,6 +14,7 @@ import com.ghteam.eventgo.data.entity.Event;
 import com.ghteam.eventgo.data.entity.User;
 import com.ghteam.eventgo.data.task.FirestoreCollectionLoader;
 import com.ghteam.eventgo.data.task.LoadCurrentUser;
+import com.ghteam.eventgo.data.task.LoadUserById;
 import com.ghteam.eventgo.data.task.LogInByEmailAndPassword;
 import com.ghteam.eventgo.data.task.LogInWithFacebook;
 import com.ghteam.eventgo.data.task.PostEvent;
@@ -132,7 +133,7 @@ public class Repository {
     }
 
     /*
-     * Loading event categories
+     * Loading eventInLocalDb categories
      */
 
     private MutableLiveData<List<Category>> categories;
@@ -325,7 +326,40 @@ public class Repository {
     }
 
     /*
-     * Post event to remote DB
+     * Loading user by id
+     */
+
+    private MutableLiveData<User> user = new MutableLiveData<>();
+    private MutableLiveData<TaskStatus> loadUserByIdTaskStatus = new MutableLiveData<>();
+
+    public MutableLiveData<User> initializeUser() {
+        return user;
+    }
+
+    public MutableLiveData<TaskStatus> getLoadUserTaskStatus() {
+        return loadUserByIdTaskStatus;
+    }
+
+    public void loadUserById(String id) {
+        new LoadUserById()
+                .addTaskResultListener(new TaskResultListener<User>() {
+                    @Override
+                    public void onResult(User result) {
+                        user.setValue(result);
+                    }
+                })
+                .addTaskStatusListener(new TaskStatusListener() {
+                    @Override
+                    public void onStatusChanged(TaskStatus status) {
+                        loadUserByIdTaskStatus.setValue(status);
+                    }
+                })
+                .execute(id);
+    }
+
+
+    /*
+     * Post eventInLocalDb to remote DB
      */
 
 
@@ -370,11 +404,25 @@ public class Repository {
                 realm.executeTransactionAsync(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {
-                        realm.insert(events);
+                        realm.insertOrUpdate(events);
                     }
                 });
             }
         });
+    }
+
+    /*
+     * Getting event from local DB
+     */
+
+
+    public Event getEventFromLocalDb(String id) {
+        Realm realm = Realm.getDefaultInstance();
+
+        Event event = realm.where(Event.class)
+                .equalTo("id", id)
+                .findFirst();
+        return event;
     }
 
 }

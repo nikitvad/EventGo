@@ -1,11 +1,15 @@
 package com.ghteam.eventgo.data.entity;
 
 
+import com.google.firebase.firestore.Exclude;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
+import io.realm.annotations.Ignore;
 import io.realm.annotations.PrimaryKey;
 
 /**
@@ -28,7 +32,13 @@ public class Event extends RealmObject {
 
     private Category category;
 
-    private RealmList<String> images;
+    //to resolve List type conflict between firebase firestore and realm database
+    @Exclude
+    private RealmList<String> realmImages;
+
+    //to resolve List type conflict between firebase firestore and realm database
+    @Ignore
+    private List<String> images;
 
     private Location location;
 
@@ -111,24 +121,32 @@ public class Event extends RealmObject {
         return images;
     }
 
-//    public void setImages(RealmList<String> images) {
-//        this.images = images;
-//    }
+    public RealmList<String> getRealmImages() {
+        return realmImages;
+    }
 
+    public void setRealmImages(RealmList<String> realmImages) {
+        this.realmImages = realmImages;
+    }
 
     public void setImages(List<String> images) {
-        this.images = new RealmList<>();
-        images.addAll(images);
+        this.images = images;
+        RealmList<String> realmList = new RealmList<>();
+        realmList.addAll(images);
+        realmImages = realmList;
     }
 
     @Override
     public String toString() {
         return "Event{" +
-                "ownerId='" + ownerId + '\'' +
+                "id='" + id + '\'' +
+                ", ownerId='" + ownerId + '\'' +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
+                ", date=" + date +
                 ", address='" + address + '\'' +
                 ", category=" + category +
+                ", realmImages=" + realmImages +
                 ", images=" + images +
                 ", location=" + location +
                 '}';

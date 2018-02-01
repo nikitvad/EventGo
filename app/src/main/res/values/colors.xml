@@ -9,5 +9,6 @@
     <color name="primaryTextColor">#ffffff</color>
     <color name="secondaryTextColor">#eeeeee</color>
     <color name="lightBlue">#FF1C77FF</color>
+    <color name="white">#FFF</color>
 
 </resources>
