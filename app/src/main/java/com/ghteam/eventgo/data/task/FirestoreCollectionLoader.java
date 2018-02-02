@@ -34,6 +34,8 @@ public class FirestoreCollectionLoader<R> implements TaskStatusInterface {
 
     private static final String TAG = FirestoreCollectionLoader.class.getSimpleName();
 
+    private long collectionSize;
+
     public FirestoreCollectionLoader(CollectionReference collectionReference, Class<R> typeOfResult) {
         this.collectionReference = collectionReference;
         this.typeOfResult = typeOfResult;
@@ -120,4 +122,5 @@ public class FirestoreCollectionLoader<R> implements TaskStatusInterface {
             }
         }
     }
+
 }

@@ -62,7 +62,6 @@ public class EventsListFragment extends Fragment implements LocationListener {
         // Required empty public constructor
     }
 
-
     public static EventsListFragment newInstance() {
         EventsListFragment fragment = new EventsListFragment();
 

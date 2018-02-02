@@ -23,6 +23,7 @@ import com.ghteam.eventgo.data.entity.Event;
 import com.ghteam.eventgo.data.entity.User;
 import com.ghteam.eventgo.databinding.ActivityEventDetailsBinding;
 import com.ghteam.eventgo.ui.activity.eventdetails.EventDetailsViewModel.EventDetailsViewModelFactory;
+import com.ghteam.eventgo.ui.fragment.eventdiscussion.EventDiscussionFragment;
 import com.ghteam.eventgo.util.ImageSwitcherPicasso;
 import com.ghteam.eventgo.util.InjectorUtil;
 import com.squareup.picasso.Picasso;
@@ -52,12 +53,15 @@ public class EventDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         activityBinding = DataBindingUtil.setContentView(this, R.layout.activity_event_details);
 
+        Event event1 = new Event();
+
+        activityBinding.setVariable(BR.event, event1);
+
         setSupportActionBar(activityBinding.includeToolbar.toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         activityBinding.includeToolbar.toolbar.setTitleTextColor(getResources().getColor(R.color.white));
 
         currentImagePos = new ObservableInt(0);
-
 
         final String eventId = getIntent().getStringExtra("eventId");
 
@@ -67,7 +71,13 @@ public class EventDetailsActivity extends AppCompatActivity {
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(EventDetailsViewModel.class);
 
-        viewModel.getUser().observe(this, new Observer<User>() {
+        registerViewModelObservers();
+
+        EventDiscussionFragment eventDiscussionFragment = EventDiscussionFragment.newInstance("1DaM4uttOQV6EHYPwnMu");
+        getSupportFragmentManager().beginTransaction().replace(R.id.discussion_container,
+                eventDiscussionFragment).commit();
+
+        viewModel.getOwner().observe(this, new Observer<User>() {
             @Override
             public void onChanged(@Nullable User user) {
                 activityBinding.setVariable(BR.user, user);
@@ -144,6 +154,10 @@ public class EventDetailsActivity extends AppCompatActivity {
                 }
             }
         });
+
+    }
+
+    private void registerViewModelObservers() {
 
     }
 

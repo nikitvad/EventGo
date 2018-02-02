@@ -74,6 +74,12 @@
                 android:layout_height="wrap_content"
                 android:text="push demo users" />
 
+            <Button
+                android:id="@+id/bt_create_demo_discussion"
+                android:text="create demo discussion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
         </LinearLayout>
     </RelativeLayout>
 </layout>

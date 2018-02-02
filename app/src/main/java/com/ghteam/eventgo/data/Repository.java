@@ -10,6 +10,7 @@ import android.util.Log;
 import com.facebook.CallbackManager;
 import com.ghteam.eventgo.AppExecutors;
 import com.ghteam.eventgo.data.entity.Category;
+import com.ghteam.eventgo.data.entity.DiscussionMessage;
 import com.ghteam.eventgo.data.entity.Event;
 import com.ghteam.eventgo.data.entity.User;
 import com.ghteam.eventgo.data.task.FirestoreCollectionLoader;
@@ -415,14 +416,57 @@ public class Repository {
      * Getting event from local DB
      */
 
-
     public Event getEventFromLocalDb(String id) {
         Realm realm = Realm.getDefaultInstance();
 
         Event event = realm.where(Event.class)
                 .equalTo("id", id)
                 .findFirst();
+
+        realm.close();
         return event;
+    }
+
+    /*
+     * Loading discussion message
+     */
+
+    private MutableLiveData<List<DiscussionMessage>> discussionMessages = new MutableLiveData<>();
+    private MutableLiveData<TaskStatus> loadDiscussionMessagesTaskStatus = new MutableLiveData<>();
+
+    private FirestoreCollectionLoader<DiscussionMessage> discussionLoader;
+
+    public MutableLiveData<List<DiscussionMessage>> initializeDiscussionMessages(String eventId) {
+
+        discussionMessages = new MutableLiveData<>();
+
+        discussionLoader = new FirestoreCollectionLoader<>(FirestoreUtil.getReferenceToEvents()
+                .document(eventId).collection("messages"), DiscussionMessage.class);
+
+        discussionLoader.addTaskStatusListener(new TaskStatusListener() {
+            @Override
+            public void onStatusChanged(TaskStatus status) {
+                loadDiscussionMessagesTaskStatus.setValue(status);
+            }
+        });
+
+        discussionLoader.addTaskResultListener(new TaskResultListener<List<DiscussionMessage>>() {
+            @Override
+            public void onResult(List<DiscussionMessage> result) {
+                Log.d(TAG, "onResult: " + result);
+                discussionMessages.setValue(result);
+            }
+        });
+
+        return discussionMessages;
+    }
+
+    public MutableLiveData<TaskStatus> getLoadDiscussionMessagesTaskStatus() {
+        return loadDiscussionMessagesTaskStatus;
+    }
+
+    public void loadNextDiscussionMessages(int limit) {
+        discussionLoader.loadNext(limit);
     }
 
 }

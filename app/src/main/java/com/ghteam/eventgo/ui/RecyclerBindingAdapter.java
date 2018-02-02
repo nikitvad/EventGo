@@ -17,8 +17,11 @@ import java.util.List;
 
 public class RecyclerBindingAdapter<T>
         extends RecyclerView.Adapter<RecyclerBindingAdapter.BindingHolder> {
+
     private int holderLayout, variableId;
+
     private List<T> mItems = new ArrayList<>();
+
     private OnItemClickListener<T> onItemClickListener;
 
     private static final String TAG = RecyclerBindingAdapter.class.getSimpleName();
@@ -84,15 +87,7 @@ public class RecyclerBindingAdapter<T>
 
         public BindingHolder(View v) {
             super(v);
-            if (onItemClickListener != null) {
-                itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Log.d(TAG, "onClick: " + getAdapterPosition() + " " + mItems.toString());
-                        onItemClickListener.onItemClick(getAdapterPosition(), mItems.get(getAdapterPosition()));
-                    }
-                });
-            }
+
             binding = DataBindingUtil.bind(v);
         }
 

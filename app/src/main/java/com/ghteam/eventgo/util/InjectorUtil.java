@@ -8,6 +8,7 @@ import com.ghteam.eventgo.ui.activity.eventdetails.EventDetailsViewModel.EventDe
 import com.ghteam.eventgo.ui.activity.login.LoginViewModel;
 import com.ghteam.eventgo.ui.activity.profilesettings.ProfileSettingsViewModel;
 import com.ghteam.eventgo.ui.activity.userslist.PeopleViewModel;
+import com.ghteam.eventgo.ui.fragment.eventdiscussion.EventDiscussionViewModel;
 import com.ghteam.eventgo.ui.fragment.eventslist.EventsListViewModel;
 import com.ghteam.eventgo.ui.fragment.searchevents.SearchEventsViewModel;
 
@@ -48,5 +49,8 @@ public class InjectorUtil {
         return new PeopleViewModel.UsersViewModelFactory(provideRepository(context));
     }
 
+    public static EventDiscussionViewModel.EventDiscussionViewModelFactory provideEventDiscussionViewModelFactory(Context context, String eventId) {
+        return new EventDiscussionViewModel.EventDiscussionViewModelFactory(provideRepository(context), eventId);
+    }
 
 }

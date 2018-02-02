@@ -9,6 +9,9 @@ import com.ghteam.eventgo.util.network.LocationUtil;
 import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by nikit on 21.11.2017.
@@ -43,6 +46,13 @@ public class BindingAdapters {
         }
 
         textView.setText(finalText);
+    }
+
+    @BindingAdapter("android:text")
+    public static void dateAdapter(TextView textView, Date date) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("mmm dd 'at' hh:mm a", Locale.ENGLISH);
+
+        textView.setText(simpleDateFormat.format(date));
     }
 
 }

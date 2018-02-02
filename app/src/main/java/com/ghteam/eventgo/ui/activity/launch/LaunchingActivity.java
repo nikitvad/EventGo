@@ -5,11 +5,10 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 
 import com.ghteam.eventgo.R;
-import com.ghteam.eventgo.data.entity.Event;
+import com.ghteam.eventgo.data.entity.DiscussionMessage;
 import com.ghteam.eventgo.databinding.ActivityLaunchingBinding;
 import com.ghteam.eventgo.ui.activity.createevent.CreateEventActivity;
 import com.ghteam.eventgo.ui.activity.eventdetails.EventDetailsActivity;
@@ -18,10 +17,11 @@ import com.ghteam.eventgo.ui.activity.login.LoginActivity;
 import com.ghteam.eventgo.ui.activity.profilesettings.ProfileSettingsActivity;
 import com.ghteam.eventgo.ui.activity.userslist.PeopleActivity;
 import com.ghteam.eventgo.util.PrefsUtil;
+import com.ghteam.eventgo.util.network.FirestoreUtil;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 
-import io.realm.Realm;
-import io.realm.RealmQuery;
+import java.util.Date;
 
 public class LaunchingActivity extends AppCompatActivity {
 
@@ -116,6 +116,24 @@ public class LaunchingActivity extends AppCompatActivity {
             }
         });
 
+        activityBinding.btCreateDemoDiscussion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DocumentReference discussionReference = FirestoreUtil
+                        .getReferenceToEvents().document("1DaM4uttOQV6EHYPwnMu");
+
+                for (int i = 0; i < 10; i++) {
+                    DocumentReference messageReference = discussionReference.collection("messages").document();
+
+                    DiscussionMessage chatMessage = new DiscussionMessage();
+                    chatMessage.setId(messageReference.getId());
+                    chatMessage.setDate(new Date());
+                    chatMessage.setMessage("lol!!! bOOOm!!!" + i);
+                    messageReference.set(chatMessage);
+                }
+            }
+
+        });
     }
 
 

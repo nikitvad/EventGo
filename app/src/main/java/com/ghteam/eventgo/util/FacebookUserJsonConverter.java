@@ -23,7 +23,7 @@ public class FacebookUserJsonConverter {
         User result = new User();
         if (graphResponse.getError() == null) {
             JSONObject response = graphResponse.getJSONObject();
-            Log.d(TAG, "getUser: " + response.toString());
+            Log.d(TAG, "getOwner: " + response.toString());
             try {
                 firstName = response.getString("first_name");
                 lastName = response.getString("last_name");

@@ -24,7 +24,7 @@
             type="android.view.View" />
     </data>
 
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
@@ -43,9 +43,10 @@
 
             <FrameLayout
                 android:id="@+id/lf_images"
-                android:visibility="gone"
                 android:layout_width="match_parent"
-                android:layout_height="200dp">
+                android:layout_height="200dp"
+
+                android:visibility="visible">
 
                 <ImageSwitcher
                     android:id="@+id/is_images"
@@ -220,6 +221,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp">
+
                 <Button
                     android:id="@+id/bt_address_on_map"
 
@@ -229,6 +231,12 @@
                     android:layout_alignParentEnd="true"
                     android:layout_gravity="center_vertical"
                     android:text="on map" />
+
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@={event.name}" />
 
                 <TextView
 
@@ -261,6 +269,11 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="20dp"
                 android:text="@{event.description}" />
+
+            <FrameLayout
+                android:id="@+id/discussion_container"
+                android:layout_width="match_parent"
+                android:layout_height="400dp"></FrameLayout>
         </LinearLayout>
-    </ScrollView>
+    </android.support.v4.widget.NestedScrollView>
 </layout>

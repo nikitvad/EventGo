@@ -1,9 +1,10 @@
 package com.ghteam.eventgo.data.entity;
 
 
+import android.support.annotation.Nullable;
+
 import com.google.firebase.firestore.Exclude;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -31,6 +32,21 @@ public class Event extends RealmObject {
     private String address;
 
     private Category category;
+
+    private String discussionId;
+
+    private boolean isDiscussionEnabled = false;
+
+    @Nullable
+    public String getDiscussionId() {
+        return discussionId;
+    }
+
+    public void setDiscussionId(String discussionId) {
+        if(isDiscussionEnabled){
+            this.discussionId = discussionId;
+        }
+    }
 
     //to resolve List type conflict between firebase firestore and realm database
     @Exclude
@@ -93,6 +109,14 @@ public class Event extends RealmObject {
         this.description = description;
     }
 
+    public boolean isDiscussionEnabled() {
+        return isDiscussionEnabled;
+    }
+
+    public void setDiscussionEnabled(boolean discussionEnabled) {
+        isDiscussionEnabled = discussionEnabled;
+    }
+
     public String getAddress() {
         return address;
     }
@@ -151,4 +175,6 @@ public class Event extends RealmObject {
                 ", location=" + location +
                 '}';
     }
+
+
 }
