@@ -40,7 +40,7 @@ public class LaunchingActivity extends AppCompatActivity {
         activityBinding = DataBindingUtil.setContentView(this, R.layout.activity_launching);
 
 
-        if (PrefsUtil.getLoggedType() == PrefsUtil.LOGGED_TYPE_NONE) {
+        if (PrefsUtil.getLoggedType().equals(PrefsUtil.LOGGED_TYPE_NONE)) {
             activity = LoginActivity.class;
         } else {
             activity = EventsActivity.class;

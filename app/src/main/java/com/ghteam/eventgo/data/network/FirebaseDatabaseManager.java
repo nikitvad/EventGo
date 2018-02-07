@@ -19,9 +19,9 @@ import java.util.List;
 
 public class FirebaseDatabaseManager {
 
-    public static final String REF_USERS = "users";
+    private static final String REF_USERS = "users";
 
-    public static final String REF_EVENTS = "events";
+    private static final String REF_EVENTS = "events";
 
     public static final String TAG = FirebaseDatabaseManager.class.getSimpleName();
 

@@ -6,7 +6,7 @@
     android:layout_margin="2dp"
     android:background="@color/secondaryLightColor"
 
-    android:text="Add"
+    android:text="@string/add"
     android:textAllCaps="false"
     android:textColor="#fff"
     android:textSize="18sp" />

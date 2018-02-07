@@ -63,9 +63,7 @@ public class EventsListFragment extends Fragment implements LocationListener {
     }
 
     public static EventsListFragment newInstance() {
-        EventsListFragment fragment = new EventsListFragment();
-
-        return fragment;
+        return new EventsListFragment();
     }
 
     @Override
@@ -243,13 +241,15 @@ public class EventsListFragment extends Fragment implements LocationListener {
             @Override
             public void onChanged(@Nullable TaskStatus taskStatus) {
                 Log.d(TAG, "onChanged: " + taskStatus);
-                switch (taskStatus) {
-                    case IN_PROGRESS:
-                        showProgressBar();
-                        return;
-                    default:
-                        hideProgressBar();
-                        return;
+                if (taskStatus != null) {
+                    switch (taskStatus) {
+                        case IN_PROGRESS:
+                            showProgressBar();
+                            break;
+                        default:
+                            hideProgressBar();
+                            break;
+                    }
                 }
             }
         });

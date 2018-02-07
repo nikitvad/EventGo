@@ -40,7 +40,7 @@ public class EventDetailsActivity extends AppCompatActivity {
 
     private EventDetailsViewModel viewModel;
 
-    public static final String TAG = EventDetailsActivity.class.getSimpleName();
+    private static final String TAG = EventDetailsActivity.class.getSimpleName();
 
     private ImageSwitcherPicasso switcherPicasso;
 
@@ -70,8 +70,6 @@ public class EventDetailsActivity extends AppCompatActivity {
 
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(EventDetailsViewModel.class);
-
-        registerViewModelObservers();
 
         EventDiscussionFragment eventDiscussionFragment = EventDiscussionFragment.newInstance("1DaM4uttOQV6EHYPwnMu");
         getSupportFragmentManager().beginTransaction().replace(R.id.discussion_container,
@@ -154,10 +152,6 @@ public class EventDetailsActivity extends AppCompatActivity {
                 }
             }
         });
-
-    }
-
-    private void registerViewModelObservers() {
 
     }
 

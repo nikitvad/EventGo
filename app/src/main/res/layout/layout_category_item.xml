@@ -22,11 +22,12 @@
 
         <ImageView
             android:id="@+id/iv_category_icon"
-            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_gravity="start|center_horizontal"
-            android:src="@{categories.icon}"/>
+            android:src="@{categories.icon}"
+            tools:ignore="ContentDescription" />
 
 
         <TextView

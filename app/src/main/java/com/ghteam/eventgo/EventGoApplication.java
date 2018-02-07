@@ -5,7 +5,7 @@ import android.app.Application;
 import com.facebook.stetho.Stetho;
 import com.ghteam.eventgo.data.database.DatabaseMigration;
 import com.ghteam.eventgo.util.PrefsUtil;
-import com.squareup.okhttp.internal.io.RealConnection;
+
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;

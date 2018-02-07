@@ -19,10 +19,8 @@ import com.ghteam.eventgo.ui.fragment.searchevents.SearchEventsViewModel;
 public class InjectorUtil {
 
     public static Repository provideRepository(Context context) {
-        Repository repository = Repository.getInstance(context,
+        return Repository.getInstance(context,
                 AppExecutors.getInstance());
-
-        return repository;
     }
 
     public static EventDetailsViewModelFactory provideEventDetailsViewModelFactory(Context context, String eventId) {

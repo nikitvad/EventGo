@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -34,7 +34,8 @@
                     android:id="@+id/iv_profile_photo"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:src="@{message.ownerProfileImage}" />
+                    android:src="@{message.ownerProfileImage}"
+                    tools:ignore="ContentDescription" />
             </android.support.v7.widget.CardView>
 
             <TextView
@@ -54,14 +55,14 @@
                 android:layout_marginStart="5dp"
                 android:layout_toEndOf="@id/circle_image"
                 android:text="@{message.date}"
-                android:textSize="10sp" />
+                android:textSize="12sp" />
         </RelativeLayout>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/message_details"
-            android:layout_marginLeft="50dp"
+            android:layout_marginStart="50dp"
             android:layout_marginTop="3dp"
             android:text="@{message.message}" />
     </RelativeLayout>

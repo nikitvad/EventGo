@@ -19,7 +19,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.SearchView;
 
-import com.facebook.CallbackManager;
 import com.ghteam.eventgo.R;
 import com.ghteam.eventgo.databinding.ActivityEventsBinding;
 import com.ghteam.eventgo.ui.activity.createevent.CreateEventActivity;

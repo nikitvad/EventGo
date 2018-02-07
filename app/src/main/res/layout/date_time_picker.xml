@@ -38,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:padding="10dp"
                 android:gravity="center"
-                android:text="date" />
+                android:text="@string/date" />
 
             <TextView
                 android:id="@+id/text_time"
@@ -46,7 +46,7 @@
                 android:gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="time" />
+                android:text="@string/time" />
         </LinearLayout>
 
         <RelativeLayout
@@ -59,7 +59,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
-                android:text="back"
+                android:text="@string/back"
                 android:visibility="gone" />
 
             <Button
@@ -68,7 +68,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toStartOf="@+id/bt_ok_next"
-                android:text="cancel" />
+                android:text="@string/cancel" />
 
             <Button
                 android:id="@+id/bt_ok_next"
@@ -76,7 +76,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:text="next" />
+                android:text="@string/next" />
 
 
         </RelativeLayout>

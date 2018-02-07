@@ -121,15 +121,15 @@ public class CategoriesDialog extends DialogFragment {
         viewModel.getLoadingTaskStatus().observeForever(new Observer<TaskStatus>() {
             @Override
             public void onChanged(@Nullable TaskStatus taskStatus) {
-                switch (taskStatus) {
+                switch (taskStatus != null ? taskStatus : TaskStatus.NONE) {
                     case IN_PROGRESS:
                         dialogBinding.progressBar.setVisibility(View.INVISIBLE);
                         dialogBinding.rvCategoryList.setVisibility(View.INVISIBLE);
-                        return;
+                        break;
                     default:
                         dialogBinding.progressBar.setVisibility(View.GONE);
                         dialogBinding.rvCategoryList.setVisibility(View.VISIBLE);
-                        return;
+                        break;
                 }
             }
         });

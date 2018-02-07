@@ -16,7 +16,7 @@ import java.util.List;
 
 public class LocationUtil {
 
-    public static Location lastKnownLocation;
+    private static Location lastKnownLocation;
 
     @SuppressLint("MissingPermission")
     @Nullable
@@ -90,9 +90,7 @@ public class LocationUtil {
         double longitudeCathetus = (longitude1 - longitude2) * kilometersPerDegreeOfLongitude;
         double latitudeCathetus = (latitude1 - latitude2) * kilometersPerDegreeOfLatitude;
 
-        double distance = Math.sqrt((longitudeCathetus * longitudeCathetus) + (latitudeCathetus * latitudeCathetus));
-
-        return distance;
+        return Math.sqrt((longitudeCathetus * longitudeCathetus) + (latitudeCathetus * latitudeCathetus));
     }
 
 }

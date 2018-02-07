@@ -9,10 +9,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class FirestoreUtil {
 
-    public static final String STR_EVENTS = "events";
-    public static final String STR_EVENT_CATEGORIES = "event_categories";
-    public static final String STR_USERS = "users";
-    public static final String STR_DISCUSSIONS = "event_discussions";
+    private static final String STR_EVENTS = "events";
+    private static final String STR_EVENT_CATEGORIES = "event_categories";
+    private static final String STR_USERS = "users";
+    private static final String STR_DISCUSSIONS = "event_discussions";
 
     public static CollectionReference getReferenceToEvents() {
         return FirebaseFirestore.getInstance().collection(STR_EVENTS);

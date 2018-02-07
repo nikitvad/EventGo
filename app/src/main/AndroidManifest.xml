@@ -86,7 +86,7 @@
             android:name=".ui.activity.eventdetails.EventDetailsActivity"
             android:label="Details"
             android:parentActivityName=".ui.activity.eventslist.EventsActivity" />
-        <activity android:name=".ui.activity.DemoDiscussionActivity"></activity>
+        <activity android:name=".ui.activity.DemoDiscussionActivity"/>
     </application>
 
 </manifest>

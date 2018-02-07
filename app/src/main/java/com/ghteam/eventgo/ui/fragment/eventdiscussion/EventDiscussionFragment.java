@@ -31,7 +31,7 @@ public class EventDiscussionFragment extends Fragment {
 
     private static final String ARG_EVENT_ID = "arg_event_id";
 
-    FragmentEventDiscussionBinding fragmentBinding;
+    private FragmentEventDiscussionBinding fragmentBinding;
 
     private RecyclerBindingAdapter<DiscussionMessage> recyclerBindingAdapter;
 
@@ -48,11 +48,6 @@ public class EventDiscussionFragment extends Fragment {
         args.putString(ARG_EVENT_ID, eventId);
         fragment.setArguments(args);
         return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
     }
 
     @Override

@@ -24,8 +24,8 @@ public class SelectedCategoriesRecyclerAdapter extends RecyclerView.Adapter<Recy
     private OnItemClickListener itemClickListener;
     private OnAddItemClickListener addItemClickListener;
 
-    public static final int VIEW_TYPE_ITEM = 0;
-    public static final int VIEW_TYPE_ADD_ITEM = 1;
+    private static final int VIEW_TYPE_ITEM = 0;
+    private static final int VIEW_TYPE_ADD_ITEM = 1;
 
     public SelectedCategoriesRecyclerAdapter(List<Category> items) {
         this.mItems = items;

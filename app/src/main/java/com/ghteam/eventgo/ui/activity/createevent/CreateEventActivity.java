@@ -1,6 +1,5 @@
 package com.ghteam.eventgo.ui.activity.createevent;
 
-import android.arch.lifecycle.LifecycleActivity;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
@@ -12,6 +11,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.View;
@@ -40,7 +40,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class CreateEventActivity extends LifecycleActivity {
+public class CreateEventActivity extends AppCompatActivity {
 
 
     private ActivityCreateEventBinding activityBinding;
@@ -54,13 +54,13 @@ public class CreateEventActivity extends LifecycleActivity {
 
     private CreateEventViewModel viewModel;
 
-    public static final int REQUEST_CAMERA = 1000;
+    private static final int REQUEST_CAMERA = 1000;
 
-    public static final int PLACE_PICKER_REQUEST_CODE = 1001;
+    private static final int PLACE_PICKER_REQUEST_CODE = 1001;
 
     private static final int REQUEST_GALLERY = 1002;
 
-    public static final String TAG = CreateEventActivity.class.getSimpleName();
+    private static final String TAG = CreateEventActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -172,9 +172,7 @@ public class CreateEventActivity extends LifecycleActivity {
                 try {
                     PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
                     startActivityForResult(builder.build(CreateEventActivity.this), PLACE_PICKER_REQUEST_CODE);
-                } catch (GooglePlayServicesRepairableException e) {
-                    e.printStackTrace();
-                } catch (GooglePlayServicesNotAvailableException e) {
+                } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
                     e.printStackTrace();
                 }
             }
@@ -231,7 +229,7 @@ public class CreateEventActivity extends LifecycleActivity {
         viewModel.getCategories().observeForever(new Observer<List<Category>>() {
             @Override
             public void onChanged(@Nullable List<Category> categories) {
-                if (categories.size() > 0) {
+                if (categories != null && categories.size() > 0) {
                     activityBinding.btSelectCategory.setText(categories.get(0).getName());
                 }
             }
@@ -297,7 +295,7 @@ public class CreateEventActivity extends LifecycleActivity {
         builder.show();
     }
 
-    public void loadImageFromGallery() {
+    private void loadImageFromGallery() {
         Intent galleryIntent = new Intent(Intent.ACTION_PICK,
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 

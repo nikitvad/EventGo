@@ -62,7 +62,7 @@
                                     android:id="@+id/et_event_name"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:hint="Event name"
+                                    android:hint="@string/hint_event_name"
                                     android:inputType="textPersonName"
                                     android:textSize="16sp" />
                             </android.support.design.widget.TextInputLayout>
@@ -90,7 +90,7 @@
                                 android:layout_alignParentEnd="true"
                                 android:layout_centerVertical="true"
                                 android:layout_gravity="center_vertical"
-                                android:text="on map" />
+                                android:text="@string/on_map" />
 
                             <TextView
                                 android:id="@+id/tv_event_address"
@@ -100,7 +100,7 @@
                                 android:layout_centerVertical="true"
                                 android:layout_toStartOf="@+id/bt_set_address_on_map"
                                 android:gravity="center_vertical"
-                                android:hint="Set address"
+                                android:hint="@string/hint_set_address"
                                 android:lines="3"
                                 android:textSize="14sp" />
                         </RelativeLayout>
@@ -127,7 +127,7 @@
                                 android:layout_marginRight="20dp"
                                 android:layout_marginTop="10dp"
                                 android:gravity="center"
-                                android:text="Set date of your event"
+                                android:text="@string/set_date_of_event"
                                 android:textSize="16sp" />
 
                             <View
@@ -153,7 +153,7 @@
                         android:layout_marginRight="20dp"
                         android:layout_marginTop="10dp"
                         android:padding="20dp"
-                        android:text="Select category" />
+                        android:text="@string/select_category" />
 
                     <android.support.v7.widget.CardView
                         android:layout_width="match_parent"
@@ -170,9 +170,9 @@
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="20dp"
+                                android:layout_marginStart="20dp"
                                 android:layout_marginTop="10dp"
-                                android:text="Photos"
+                                android:text="@string/photos"
                                 android:textSize="18sp" />
 
                             <android.support.v7.widget.RecyclerView
@@ -199,9 +199,9 @@
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="20dp"
+                                android:layout_marginStart="20dp"
                                 android:layout_marginTop="10dp"
-                                android:text="About"
+                                android:text="@string/about"
                                 android:textSize="18sp" />
 
                             <android.support.design.widget.TextInputLayout
@@ -213,7 +213,7 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:gravity="start"
-                                    android:hint="Describe your event"
+                                    android:hint="@string/describe_your_event"
                                     android:inputType="textMultiLine"
                                     android:maxLines="10"
                                     android:minLines="4"
@@ -231,7 +231,7 @@
                         android:layout_marginRight="20dp"
                         android:layout_marginTop="10dp"
                         android:padding="20dp"
-                        android:text="create" />
+                        android:text="@string/create" />
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>

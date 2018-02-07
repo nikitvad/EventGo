@@ -13,7 +13,7 @@ import org.json.JSONObject;
  */
 
 public class FacebookUserJsonConverter {
-    public static final String TAG = FacebookUserJsonConverter.class.getSimpleName();
+    private static final String TAG = FacebookUserJsonConverter.class.getSimpleName();
 
     public static User getUser(GraphResponse graphResponse) {
         String firstName;

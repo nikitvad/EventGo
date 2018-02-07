@@ -54,7 +54,8 @@
                     android:id="@+id/iv_profile_photo"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:src="@{userProfilePicture}" />
+                    android:src="@{userProfilePicture}"
+                    tools:ignore="ContentDescription" />
             </android.support.v7.widget.CardView>
 
             <EditText
@@ -75,7 +76,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/et_new_message"
-                android:layout_marginRight="10dp"
+                android:layout_marginEnd="10dp"
                 android:background="@color/grey">
 
                 <TextView
@@ -84,7 +85,7 @@
                     android:layout_gravity="end"
                     android:background="@color/secondaryLightColor"
                     android:padding="10dp"
-                    android:text="Send"
+                    android:text="@string/send"
                     android:textColor="@color/primaryTextColor" />
             </FrameLayout>
         </RelativeLayout>

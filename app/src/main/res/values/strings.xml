@@ -33,6 +33,7 @@
 
     <string name="hint_email">email</string>
     <string name="hint_password">password</string>
+    <string name="hint_event_name">Event name</string>
 
 
     <!-- login activity -->
@@ -42,7 +43,6 @@
     <string name="dont_nave_an_account_sign_up">Don`t have an account? Sign up</string>
     <string name="or">Or</string>
     <string name="log_in_with_facebook"> Log in with facebook</string>
-
 
     <string name="def_profile_picture">https://firebasestorage.googleapis.com/v0/b/eventgo-c6240.appspot.com/o/app%20images%2Fpersonalise-web-experience2-01.png?alt=media&amp;token=639e5890-91b7-46aa-92ec-e1c4eff824b1</string>
 
@@ -98,4 +98,37 @@
         ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
         velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
         proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</string>
+
+    <string name="on_map">on map</string>
+    <string name="hint_set_address">Set address</string>
+    <string name="set_date_of_event">Set date of your event</string>
+    <string name="select_category">Select category</string>
+    <string name="photos">Photos</string>
+    <string name="about">About</string>
+    <string name="describe_your_event">Describe your event</string>
+    <string name="create">create</string>
+
+    <string name="more">more...</string>
+    <string name="add_photo">Add photo</string>
+    <string name="first_name">First name</string>
+    <string name="last_name">Last name</string>
+    <string name="describe_yourself">describe yourself</string>
+    <string name="save">save</string>
+    <string name="hint_first_name">first name</string>
+    <string name="hint_last_name">last name</string>
+    <string name="birthday">birthday</string>
+    <string name="hint_repeat_password">repeat password</string>
+    <string name="submit">submit</string>
+    <string name="date">date</string>
+    <string name="time">time</string>
+    <string name="back">back</string>
+    <string name="cancel">Cancel</string>
+    <string name="next">next</string>
+    <string name="select_images">Select images</string>
+    <string name="apply">apply</string>
+    <string name="search">search</string>
+    <string name="send">Send</string>
+    <string name="add">Add</string>
+    <string name="you_interests">You interests</string>
+
 </resources>

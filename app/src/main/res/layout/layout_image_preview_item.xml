@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
 
@@ -19,6 +20,7 @@
         android:layout_gravity="center"
         android:alpha="@{isSelected==true ? 1.0f : 0.5f}"
         android:scaleType="centerCrop"
-        android:src="@{imageUrl}" />
+        android:src="@{imageUrl}"
+        tools:ignore="ContentDescription" />
 
 </layout>

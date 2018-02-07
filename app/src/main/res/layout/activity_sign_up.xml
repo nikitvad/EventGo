@@ -40,7 +40,8 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_gravity="center_horizontal"
-                android:src="@mipmap/ic_launcher" />
+                android:src="@mipmap/ic_launcher"
+                tools:ignore="ContentDescription" />
 
             <EditText
                 android:id="@+id/et_first_name"
@@ -48,7 +49,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="3dp"
-                android:hint="first name"
+                android:hint="@string/hint_first_name"
 
                 android:inputType="textPersonName"
                 android:text="@={viewModel.userData.firstName}" />
@@ -59,7 +60,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="3dp"
-                android:hint="last name"
+                android:hint="@string/hint_last_name"
                 android:inputType="textPersonName"
                 android:text="@={viewModel.userData.lastName}" />
 
@@ -67,7 +68,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:text="birthday"
+                android:text="@string/birthday"
                 android:textColor="#eee"
                 android:textSize="18sp" />
 
@@ -87,7 +88,7 @@
                 style="@style/EditTextProfileSettings"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="email"
+                android:hint="@string/hint_email"
                 android:inputType="textEmailAddress"
                 android:text="@={viewModel.email}" />
 
@@ -102,7 +103,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/et_password"
                     style="@style/EditTextProfileSettings"
-                    android:hint="password"
+                    android:hint="@string/hint_password"
                     android:inputType="textPassword"
                     android:text="@={viewModel.password}" />
 
@@ -118,7 +119,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/et_repeat_password"
                     style="@style/EditTextProfileSettings"
-                    android:hint="repeat password"
+                    android:hint="@string/hint_repeat_password"
                     android:inputType="textPassword"
                     android:text="@={viewModel.copyOfPassword}" />
 
@@ -129,7 +130,7 @@
                 android:id="@+id/bt_submit"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:text="submit" />
+                android:text="@string/submit" />
 
         </LinearLayout>
     </RelativeLayout>

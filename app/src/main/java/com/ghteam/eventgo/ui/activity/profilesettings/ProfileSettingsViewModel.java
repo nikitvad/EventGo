@@ -66,8 +66,6 @@ public class ProfileSettingsViewModel extends ViewModel {
         return loadCurrentUserTaskStatus;
     }
 
-
-    //----------------------------
     LiveDataList<Category> getCategories() {
         return categoriesList;
     }

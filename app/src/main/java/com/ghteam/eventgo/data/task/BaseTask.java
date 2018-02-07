@@ -8,8 +8,8 @@ import android.support.annotation.Nullable;
 
 public abstract class BaseTask<P, R> implements NetworkTask<P>, TaskStatusInterface {
 
-    protected TaskResultListener<R> taskResultListener;
-    protected TaskStatusListener taskStatusListener;
+    private TaskResultListener<R> taskResultListener;
+    private TaskStatusListener taskStatusListener;
 
     protected Exception exception;
 

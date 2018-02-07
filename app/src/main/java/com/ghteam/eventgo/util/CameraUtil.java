@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by nikit on 01.12.2017.
@@ -61,7 +62,7 @@ public class CameraUtil {
 
     private File createImageFile() throws IOException {
         // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ENGLISH).format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = mActivity.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(

@@ -75,7 +75,7 @@ public class PushDemoUsersTest {
 
     }
 
-    public List<User> generateUsers() {
+    private List<User> generateUsers() {
         List<User> users = new ArrayList<>();
         for (String firstName : firstNames) {
 

@@ -27,7 +27,7 @@ public class FirebaseAccountManager {
     private static MutableLiveData<AccountStatus> currentAccountStatus = new MutableLiveData<>();
     private static FirebaseFirestore firestore = FirebaseFirestore.getInstance();
 
-    public static final String FIRESTORE_USERS = "users";
+    private static final String FIRESTORE_USERS = "users";
 
     private static final String TAG = FirebaseAccountManager.class.getSimpleName();
 

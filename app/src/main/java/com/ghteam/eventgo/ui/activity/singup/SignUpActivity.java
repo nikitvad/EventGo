@@ -35,6 +35,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -43,7 +44,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     private static final String TAG = SignUpActivity.class.getSimpleName();
     private ActivitySignUpBinding mDataBinding;
-    Calendar dateAndTime = Calendar.getInstance();
+    private Calendar dateAndTime = Calendar.getInstance();
 
     private SignUpViewModel mViewModel;
 
@@ -159,7 +160,7 @@ public class SignUpActivity extends AppCompatActivity {
                 DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_YEAR));
     }
 
-    DatePickerDialog.OnDateSetListener d = new DatePickerDialog.OnDateSetListener() {
+    private DatePickerDialog.OnDateSetListener d = new DatePickerDialog.OnDateSetListener() {
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
             dateAndTime.set(Calendar.YEAR, year);
             dateAndTime.set(Calendar.MONTH, monthOfYear);
@@ -176,7 +177,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     private File createImageFile() throws IOException {
         // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ENGLISH).format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
@@ -190,7 +191,7 @@ public class SignUpActivity extends AppCompatActivity {
         return image;
     }
 
-    static final int REQUEST_TAKE_PHOTO = 1;
+    private static final int REQUEST_TAKE_PHOTO = 1;
 
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);

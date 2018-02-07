@@ -1,16 +1,12 @@
 package com.ghteam.eventgo.ui.fragment.eventslist;
 
 import android.arch.lifecycle.MutableLiveData;
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.ghteam.eventgo.data.Repository;
 import com.ghteam.eventgo.data.entity.Event;
-import com.ghteam.eventgo.data.network.LocationFilter;
 import com.ghteam.eventgo.data.task.TaskStatus;
 import com.ghteam.eventgo.util.network.OnTaskStatusChangeListener;
 
@@ -36,20 +32,8 @@ public class EventsListViewModel extends ViewModel {
         taskStatus = repository.getLoadEventsTaskStatus();
     }
 
-//    public void loadEvents(int limit) {
-////        mRepository.loadEvents(limit);
-//    }
-
     public void loadNextEvents(int limit) {
         mRepository.loadNextEvents(limit);
-    }
-
-    public void searchEventByLocation(LocationFilter locationFilter) {
-
-    }
-
-    public void loadNext() {
-
     }
 
     public MutableLiveData<List<Event>> getEventsList() {

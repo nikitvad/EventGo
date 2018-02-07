@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -28,7 +29,7 @@ import com.ghteam.eventgo.util.PrefsUtil;
 import com.google.firebase.auth.FirebaseAuth;
 
 
-public class LoginActivity extends LifecycleActivity {
+public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = LoginActivity.class.getSimpleName();
 
@@ -103,10 +104,10 @@ public class LoginActivity extends LifecycleActivity {
                 case OK:
                     PrefsUtil.setUserDisplayName(user.getFirstName() + " " + user.getLastName());
                     startActivity(EventsActivity.class);
-                    return;
+                    break;
                 case REQUIRE_UPDATE_PROFILE:
                     startActivity(ProfileSettingsActivity.class);
-                    return;
+                    break;
             }
         }
     };

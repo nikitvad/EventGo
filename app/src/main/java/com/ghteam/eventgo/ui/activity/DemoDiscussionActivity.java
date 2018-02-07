@@ -15,9 +15,9 @@ import java.util.Date;
 
 public class DemoDiscussionActivity extends AppCompatActivity {
 
-    ActivityDemoDiscussionBinding activityBinding;
+    private ActivityDemoDiscussionBinding activityBinding;
 
-    EventDiscussionClient discussionClient;
+    private EventDiscussionClient discussionClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

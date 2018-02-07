@@ -63,9 +63,7 @@ public class SearchEventsFragment extends Fragment {
 
 
     public static SearchEventsFragment newInstance() {
-        SearchEventsFragment fragment = new SearchEventsFragment();
-
-        return fragment;
+        return new SearchEventsFragment();
     }
 
     @Override

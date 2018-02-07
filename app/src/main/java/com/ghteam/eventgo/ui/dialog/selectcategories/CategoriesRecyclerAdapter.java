@@ -34,7 +34,7 @@ public class CategoriesRecyclerAdapter extends RecyclerView.Adapter<CategoriesRe
     public static final int SELECTION_TYPE_MULTI_SELECT = 2;
 
     private HashSet<Integer> mSelectedItems;
-    public static final String TAG = CategoriesRecyclerAdapter.class.getSimpleName();
+    private static final String TAG = CategoriesRecyclerAdapter.class.getSimpleName();
 
     public CategoriesRecyclerAdapter() {
         mItems = new ArrayList<>();
