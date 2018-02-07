@@ -18,14 +18,12 @@ import java.util.List;
 public class EventDiscussionViewModel extends ViewModel {
 
     private Repository mRepository;
-    private String mEventId;
 
     private MutableLiveData<List<DiscussionMessage>> messages;
     private MutableLiveData<TaskStatus> loadMessagesTaskStatus;
 
     private EventDiscussionViewModel(Repository repository, String eventId) {
         this.mRepository = repository;
-        mEventId = eventId;
 
         messages = mRepository.initializeDiscussionMessages(eventId);
         loadMessagesTaskStatus = mRepository.getLoadDiscussionMessagesTaskStatus();

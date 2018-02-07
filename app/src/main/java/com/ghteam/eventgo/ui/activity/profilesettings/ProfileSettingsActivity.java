@@ -21,6 +21,7 @@ import com.ghteam.eventgo.ui.adapter.SelectedCategoriesRecyclerAdapter;
 import com.ghteam.eventgo.ui.dialog.selectcategories.CategoriesDialog;
 import com.ghteam.eventgo.util.CustomTextWatcher;
 import com.ghteam.eventgo.util.InjectorUtil;
+import com.ghteam.eventgo.util.PrefsUtil;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -170,9 +171,20 @@ public class ProfileSettingsActivity extends AppCompatActivity {
         viewModel.getUpdateUserTaskStatus().observeForever(new Observer<TaskStatus>() {
             @Override
             public void onChanged(@Nullable TaskStatus taskStatus) {
-                if (taskStatus != null) {
-                    handleTaskStatus(taskStatus);
+                switch (taskStatus) {
+                    case IN_PROGRESS:
+                        showProgressBar();
+                        return;
+
+                    case SUCCESS:
+                        PrefsUtil.setUserDisplayName(viewModel.getFirstName().getValue() + " "
+                                + viewModel.getLastName().getValue());
+                        PrefsUtil.setUserProfilePicture(viewModel.getImageUrl().getValue());
+                        hideProgressBar();
+                    default:
+                        hideProgressBar();
                 }
+
             }
         });
 

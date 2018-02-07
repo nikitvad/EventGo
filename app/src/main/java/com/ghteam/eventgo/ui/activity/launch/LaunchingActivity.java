@@ -10,6 +10,7 @@ import android.view.View;
 import com.ghteam.eventgo.R;
 import com.ghteam.eventgo.data.entity.DiscussionMessage;
 import com.ghteam.eventgo.databinding.ActivityLaunchingBinding;
+import com.ghteam.eventgo.ui.activity.DemoDiscussionActivity;
 import com.ghteam.eventgo.ui.activity.createevent.CreateEventActivity;
 import com.ghteam.eventgo.ui.activity.eventdetails.EventDetailsActivity;
 import com.ghteam.eventgo.ui.activity.eventslist.EventsActivity;
@@ -134,7 +135,15 @@ public class LaunchingActivity extends AppCompatActivity {
             }
 
         });
+
+        activityBinding.btDemoEventDiscussion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(DemoDiscussionActivity.class);
+            }
+        });
     }
+
 
 
     private void startActivity(Class<? extends Activity> activity) {

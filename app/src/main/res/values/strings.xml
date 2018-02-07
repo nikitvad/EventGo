@@ -44,6 +44,8 @@
     <string name="log_in_with_facebook"> Log in with facebook</string>
 
 
+    <string name="def_profile_picture">https://firebasestorage.googleapis.com/v0/b/eventgo-c6240.appspot.com/o/app%20images%2Fpersonalise-web-experience2-01.png?alt=media&amp;token=639e5890-91b7-46aa-92ec-e1c4eff824b1</string>
+
     <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipisicing
         elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
         Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut

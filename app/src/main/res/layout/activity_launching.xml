@@ -80,6 +80,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
+            <Button
+                android:id="@+id/bt_demo_event_discussion"
+                android:text="create demo discussion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+
         </LinearLayout>
     </RelativeLayout>
 </layout>

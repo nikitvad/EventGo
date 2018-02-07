@@ -101,6 +101,7 @@ public class LoginActivity extends LifecycleActivity {
         public void onChanged(@Nullable User user) {
             switch (AccountUtil.checkUserAccount(user)) {
                 case OK:
+                    PrefsUtil.setUserDisplayName(user.getFirstName() + " " + user.getLastName());
                     startActivity(EventsActivity.class);
                     return;
                 case REQUIRE_UPDATE_PROFILE:
@@ -157,7 +158,7 @@ public class LoginActivity extends LifecycleActivity {
         activityBinding.btFacebookLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            viewModel.logInWithFacebook(LoginActivity.this, mCallbackManager);
+                viewModel.logInWithFacebook(LoginActivity.this, mCallbackManager);
             }
         });
     }
