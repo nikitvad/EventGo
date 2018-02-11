@@ -17,6 +17,7 @@ import com.ghteam.eventgo.data.entity.Location;
 import com.ghteam.eventgo.data.task.TaskStatus;
 import com.ghteam.eventgo.util.LiveDataList;
 import com.ghteam.eventgo.util.MapLiveData;
+import com.ghteam.eventgo.util.PrefsUtil;
 import com.ghteam.eventgo.util.network.FirebaseUtil;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -139,8 +140,12 @@ public class CreateEventViewModel extends ViewModel {
         if (getCategories().getValue() != null && getCategories().getValue().size() > 0) {
             event.setCategory(getCategories().getValue().get(0));
         }
-        event.setImages(new RealmList<String>((String[]) imageUrlsOnCloudStorage.toArray()));
+
+        event.setImages(imageUrlsOnCloudStorage);
+
         event.setOwnerId(mFirebaseUser.getUid());
+        event.setOwnerName(PrefsUtil.getUserDisplayName());
+        event.setOwnerProfilePicture(PrefsUtil.getUserProfilePicture());
         event.setDate(mDate);
 
         if (mEventLocation.getValue() != null) {
@@ -151,7 +156,7 @@ public class CreateEventViewModel extends ViewModel {
         return event;
     }
 
-    public void postEvent(){
+    public void postEvent() {
         mRepository.postNewEvent(getEventEntry());
     }
 
@@ -162,8 +167,6 @@ public class CreateEventViewModel extends ViewModel {
     public MutableLiveData<String> getPostedEventId() {
         return postedEventId;
     }
-
-    //----------------------------------------------
 
     private void uploadEventImage(final Uri imageUri, FirebaseUser user) {
         final File imageFile = new File(imageUri.getPath());

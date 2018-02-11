@@ -102,6 +102,7 @@ public class LoginActivity extends AppCompatActivity {
         public void onChanged(@Nullable User user) {
             switch (AccountUtil.checkUserAccount(user)) {
                 case OK:
+                    PrefsUtil.setUserProfilePicture(user.getProfileImageUrl());
                     PrefsUtil.setUserDisplayName(user.getFirstName() + " " + user.getLastName());
                     startActivity(EventsActivity.class);
                     break;

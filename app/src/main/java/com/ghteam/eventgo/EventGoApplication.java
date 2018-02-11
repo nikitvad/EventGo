@@ -6,7 +6,6 @@ import com.facebook.stetho.Stetho;
 import com.ghteam.eventgo.data.database.DatabaseMigration;
 import com.ghteam.eventgo.util.PrefsUtil;
 
-
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
@@ -23,7 +22,7 @@ public class EventGoApplication extends Application {
 
         RealmConfiguration realmDefConfiguration = new RealmConfiguration.Builder()
                 .name("event_go.realm")
-                .schemaVersion(4)
+                .schemaVersion(5)
                 .migration(new DatabaseMigration())
                 .build();
         Realm.setDefaultConfiguration(realmDefConfiguration);

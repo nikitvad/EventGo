@@ -7,7 +7,11 @@ import com.ghteam.eventgo.data.entity.Event;
 import com.ghteam.eventgo.util.network.FirestoreUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by nikit on 25.01.2018.
@@ -28,11 +32,13 @@ public class PostEvent extends BaseTask<Void, String> {
         changeStatus(TaskStatus.IN_PROGRESS);
 
         DocumentReference documentReference = FirestoreUtil.getReferenceToEvents().document();
+        CollectionReference userEventsReference = FirestoreUtil.getReferenceToUsersEvents(mEvent.getOwnerId());
+
 
         final String eventId = documentReference.getId();
         mEvent.setId(eventId);
 
-        documentReference.set(eventId).addOnCompleteListener(new OnCompleteListener<Void>() {
+        documentReference.set(mEvent).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.getException() == null && task.isSuccessful()) {
@@ -45,5 +51,9 @@ public class PostEvent extends BaseTask<Void, String> {
                 }
             }
         });
+
+        Map<String, String> collectionPath =  new HashMap<>();
+        collectionPath.put("path", documentReference.getPath());
+        userEventsReference.document(eventId).set(collectionPath);
     }
 }

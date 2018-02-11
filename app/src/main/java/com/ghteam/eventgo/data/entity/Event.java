@@ -4,6 +4,8 @@ package com.ghteam.eventgo.data.entity;
 import android.support.annotation.Nullable;
 
 import com.google.firebase.firestore.Exclude;
+import com.google.firebase.firestore.IgnoreExtraProperties;
+import com.google.firebase.firestore.ThrowOnExtraProperties;
 
 import java.util.Date;
 import java.util.List;
@@ -23,6 +25,10 @@ public class Event extends RealmObject {
 
     private String ownerId;
 
+    private String ownerName;
+
+    private String ownerProfilePicture;
+
     private String name;
 
     private String description;
@@ -37,13 +43,49 @@ public class Event extends RealmObject {
 
     private boolean isDiscussionEnabled = false;
 
+    private int interestedCount;
+
+    private int goingCount;
+
+    public String getOwnerName() {
+        return ownerName;
+    }
+
+    public void setOwnerName(String ownerName) {
+        this.ownerName = ownerName;
+    }
+
+    public String getOwnerProfilePicture() {
+        return ownerProfilePicture;
+    }
+
+    public void setOwnerProfilePicture(String ownerProfilePicture) {
+        this.ownerProfilePicture = ownerProfilePicture;
+    }
+
+    public int getInterestedCount() {
+        return interestedCount;
+    }
+
+    public void setInterestedCount(int interestedCount) {
+        this.interestedCount = interestedCount;
+    }
+
+    public int getGoingCount() {
+        return goingCount;
+    }
+
+    public void setGoingCount(int goingCount) {
+        this.goingCount = goingCount;
+    }
+
     @Nullable
     public String getDiscussionId() {
         return discussionId;
     }
 
     public void setDiscussionId(String discussionId) {
-        if(isDiscussionEnabled){
+        if (isDiscussionEnabled) {
             this.discussionId = discussionId;
         }
     }
@@ -149,6 +191,7 @@ public class Event extends RealmObject {
         return realmImages;
     }
 
+    @Exclude
     public void setRealmImages(RealmList<String> realmImages) {
         this.realmImages = realmImages;
     }

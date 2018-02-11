@@ -13,6 +13,7 @@ public class FirestoreUtil {
     private static final String STR_EVENT_CATEGORIES = "event_categories";
     private static final String STR_USERS = "users";
     private static final String STR_DISCUSSIONS = "event_discussions";
+    private static final String SRT_MY_EVENTS = "my_events";
 
     public static CollectionReference getReferenceToEvents() {
         return FirebaseFirestore.getInstance().collection(STR_EVENTS);
@@ -28,6 +29,10 @@ public class FirestoreUtil {
 
     public static CollectionReference getReferenceToDiscussions() {
         return FirebaseFirestore.getInstance().collection(STR_DISCUSSIONS);
+    }
+
+    public static CollectionReference getReferenceToUsersEvents(String uid){
+        return getReferenceToUsers().document(uid).collection(SRT_MY_EVENTS);
     }
 
 }

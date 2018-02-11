@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_item_events_list"
+        android:enabled="true"
+        android:icon="@drawable/ic_menu_camera"
+        android:title="Events"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/menu_item_my_interests"
+        android:enabled="true"
+        android:icon="@drawable/ic_menu_manage"
+        android:title="Interested"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/menu_item_going"
+        android:enabled="true"
+        android:icon="@drawable/ic_menu_gallery"
+        android:title="Events"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/menu_item_more"
+        android:enabled="true"
+        android:icon="@drawable/ic_menu_share"
+        android:title="more"
+        app:showAsAction="ifRoom" />
+</menu>

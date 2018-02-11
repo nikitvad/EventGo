@@ -41,6 +41,15 @@ public class DatabaseMigration implements RealmMigration {
             oldVersion++;
         }
 
+        if(oldVersion == 4){
+            realmSchema.get("Event")
+                    .addField("ownerName", String.class)
+                    .addField("ownerProfilePicture", String.class)
+                    .addField("interestedCount", int.class)
+                    .addField("goingCount", int.class);
+            oldVersion++;
+        }
+
 
     }
 }

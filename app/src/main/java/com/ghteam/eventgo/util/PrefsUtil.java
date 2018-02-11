@@ -29,7 +29,6 @@ public class PrefsUtil {
     public static final String USER_PROFILE_PICTURE = "user_profile_picture";
     public static final String USER_DISPLAY_NAME = "user_display_name";
 
-
     private PrefsUtil() {
     }
 

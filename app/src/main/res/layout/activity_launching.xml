@@ -8,13 +8,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-            <ImageView
-                android:layout_centerInParent="true"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:visibility="gone"
-                android:src="@mipmap/ic_launcher"
-                tools:ignore="ContentDescription" />
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_centerInParent="true"
+            android:src="@mipmap/ic_launcher"
+            android:visibility="gone"
+            tools:ignore="ContentDescription" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -77,15 +77,15 @@
 
             <Button
                 android:id="@+id/bt_create_demo_discussion"
-                android:text="create demo discussion"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="create demo discussion" />
 
             <Button
                 android:id="@+id/bt_demo_event_discussion"
-                android:text="create demo discussion"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="create demo discussion" />
 
 
         </LinearLayout>
