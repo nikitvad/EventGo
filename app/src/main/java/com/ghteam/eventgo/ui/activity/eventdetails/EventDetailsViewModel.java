@@ -39,6 +39,14 @@ public class EventDetailsViewModel extends ViewModel {
         return event;
     }
 
+    public void addEventToInterested() {
+        mRepository.addEventToInterested(eventId);
+    }
+
+    public void addEventToGoing() {
+        mRepository.addEventToGoing(eventId);
+    }
+
     public MutableLiveData<List<DiscussionMessage>> getDiscussionMessages() {
         mRepository.loadNextDiscussionMessages(10);
         return discussionMessages;

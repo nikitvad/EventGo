@@ -153,6 +153,20 @@ public class EventDetailsActivity extends AppCompatActivity {
             }
         });
 
+        activityBinding.ivGoing.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewModel.addEventToGoing();
+            }
+        });
+
+        activityBinding.ivInterested.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewModel.addEventToInterested();
+            }
+        });
+
     }
 
     private void setUpImageSwitcher() {

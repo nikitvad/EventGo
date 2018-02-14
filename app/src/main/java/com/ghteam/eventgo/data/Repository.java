@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -13,6 +14,7 @@ import com.ghteam.eventgo.data.entity.Category;
 import com.ghteam.eventgo.data.entity.DiscussionMessage;
 import com.ghteam.eventgo.data.entity.Event;
 import com.ghteam.eventgo.data.entity.User;
+import com.ghteam.eventgo.data.network.NetworkEventManager;
 import com.ghteam.eventgo.data.task.FirestoreCollectionLoader;
 import com.ghteam.eventgo.data.task.LoadCurrentUser;
 import com.ghteam.eventgo.data.task.LoadUserById;
@@ -25,6 +27,7 @@ import com.ghteam.eventgo.data.task.TaskStatusListener;
 import com.ghteam.eventgo.data.task.UpdateUser;
 import com.ghteam.eventgo.util.PrefsUtil;
 import com.ghteam.eventgo.util.network.FirestoreUtil;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.List;
 
@@ -43,10 +46,29 @@ public class Repository {
 
     private final AppExecutors appExecutors;
 
+    private NetworkEventManager networkEventManager;
+
+    private FirebaseAuth firebaseAuth;
+
 
     private Repository(Context context, AppExecutors executors) {
 
         this.appExecutors = executors;
+
+        firebaseAuth = FirebaseAuth.getInstance();
+
+        if(firebaseAuth.getCurrentUser()!=null){
+            networkEventManager = new NetworkEventManager(firebaseAuth.getCurrentUser().getUid());
+        }
+
+        firebaseAuth.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                if (firebaseAuth.getCurrentUser() != null) {
+                    networkEventManager = new NetworkEventManager(firebaseAuth.getCurrentUser().getUid());
+                }
+            }
+        });
 
         events = new MutableLiveData<>();
         loadEventsTaskStatus = new MutableLiveData<>();
@@ -467,6 +489,19 @@ public class Repository {
 
     public void loadNextDiscussionMessages(int limit) {
         discussionLoader.loadNext(limit);
+    }
+
+
+    /**
+     * managing events
+     */
+
+    public void addEventToInterested(String eventId) {
+        networkEventManager.addEventToInterests(eventId);
+    }
+
+    public void addEventToGoing(String eventId) {
+        networkEventManager.addEventToGoing(eventId);
     }
 
 }
