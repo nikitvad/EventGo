@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import com.ghteam.eventgo.BR;
 import com.ghteam.eventgo.R;
@@ -23,6 +24,7 @@ import com.ghteam.eventgo.ui.RecyclerBindingAdapter;
 import com.ghteam.eventgo.util.PrefsUtil;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class EventDiscussionFragment extends Fragment {
@@ -31,11 +33,16 @@ public class EventDiscussionFragment extends Fragment {
 
     private static final String ARG_EVENT_ID = "arg_event_id";
 
+    public static final String TAG = EventDiscussionFragment.class.getSimpleName();
+
     private FragmentEventDiscussionBinding fragmentBinding;
 
     private RecyclerBindingAdapter<DiscussionMessage> recyclerBindingAdapter;
 
     private EventDiscussionClient eventDiscussionClient;
+
+    private RecyclerView rvMessages;
+    private EditText etNewMessage;
 
     public EventDiscussionFragment() {
 
@@ -63,25 +70,29 @@ public class EventDiscussionFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if (getArguments() != null) {
+
+            rvMessages = fragmentBinding.rvMessages;
+            etNewMessage = fragmentBinding.etNewMessage;
             mEventId = getArguments().getString(ARG_EVENT_ID);
 
             if (mEventId != null) {
 
-
                 fragmentBinding.setVariable(BR.userProfilePicture, PrefsUtil.getUserProfilePicture());
 
-                recyclerBindingAdapter = new RecyclerBindingAdapter<>(R.layout.layout_discussion_message
-                        , BR.message, new ArrayList<DiscussionMessage>());
+                recyclerBindingAdapter = new RecyclerBindingAdapter<>(R.layout.layout_discussion_message,
+                        BR.message, new ArrayList<DiscussionMessage>());
 
-
-                fragmentBinding.rvMessages.setAdapter(recyclerBindingAdapter);
-                fragmentBinding.rvMessages.setLayoutManager(new LinearLayoutManager(getContext()));
+                rvMessages.setAdapter(recyclerBindingAdapter);
+                rvMessages.setLayoutManager(new LinearLayoutManager(getContext()));
 
                 eventDiscussionClient = new EventDiscussionClient(mEventId);
                 eventDiscussionClient.setDiscussionListener(new EventDiscussionClient.DiscussionListener() {
                     @Override
-                    public void onAddedMessages(DiscussionMessage newMessages) {
-                        recyclerBindingAdapter.addItem(newMessages);
+                    public void onAddedMessages(List<DiscussionMessage> newMessages) {
+
+                        recyclerBindingAdapter.addItems(newMessages);
+                        rvMessages.scrollToPosition(recyclerBindingAdapter.getItemCount() - 1);
+
                     }
 
                     @Override
@@ -101,17 +112,27 @@ public class EventDiscussionFragment extends Fragment {
                     }
                 });
 
-                eventDiscussionClient.loadDiscussion(5);
-
-                fragmentBinding.rvMessages.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                fragmentBinding.ivSend.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                        if (!recyclerView.canScrollVertically(1)) {
-                            eventDiscussionClient.loadNextMessages(5);
+                    public void onClick(View v) {
+                        if (etNewMessage.length() > 0) {
+                            eventDiscussionClient.sendMessage(etNewMessage.getText().toString(), new TaskStatusListener() {
+                                @Override
+                                public void onStatusChanged(TaskStatus status) {
+                                    if (status == TaskStatus.IN_PROGRESS) {
+                                        fragmentBinding.sendMessageProgress.setVisibility(View.VISIBLE);
+                                        fragmentBinding.ivSend.setVisibility(View.GONE);
+                                    } else if (status == TaskStatus.SUCCESS) {
+                                        etNewMessage.setText("");
+                                        fragmentBinding.sendMessageProgress.setVisibility(View.GONE);
+                                        fragmentBinding.ivSend.setVisibility(View.VISIBLE);
+                                    }
+                                    //TODO: display task result (progress bar or message about error)
+                                }
+                            });
                         }
                     }
                 });
-
             }
         }
     }

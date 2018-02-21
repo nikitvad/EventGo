@@ -28,6 +28,7 @@ public class PrefsUtil {
 
     public static final String USER_PROFILE_PICTURE = "user_profile_picture";
     public static final String USER_DISPLAY_NAME = "user_display_name";
+    public static final String USER_ID = "user_id";
 
     private PrefsUtil() {
     }
@@ -53,7 +54,15 @@ public class PrefsUtil {
         putString(USER_DISPLAY_NAME, displayName);
     }
 
-    public static String getUserDisplayName(){
+    public static void setUserId(String uid) {
+        putString(USER_ID, uid);
+    }
+
+    public static String getUserId() {
+        return getString(USER_ID);
+    }
+
+    public static String getUserDisplayName() {
         return getString(USER_DISPLAY_NAME);
     }
 

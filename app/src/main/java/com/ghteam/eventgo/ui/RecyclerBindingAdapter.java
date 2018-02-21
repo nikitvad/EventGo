@@ -88,6 +88,14 @@ public class RecyclerBindingAdapter<T>
             super(v);
 
             binding = DataBindingUtil.bind(v);
+            if (onItemClickListener != null) {
+                binding.getRoot().setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onItemClickListener.onItemClick(getAdapterPosition(), mItems.get(getAdapterPosition()));
+                    }
+                });
+            }
         }
 
         public ViewDataBinding getBinding() {

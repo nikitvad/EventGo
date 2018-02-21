@@ -5,6 +5,8 @@ import android.app.Application;
 import com.facebook.stetho.Stetho;
 import com.ghteam.eventgo.data.database.DatabaseMigration;
 import com.ghteam.eventgo.util.PrefsUtil;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -26,6 +28,12 @@ public class EventGoApplication extends Application {
                 .migration(new DatabaseMigration())
                 .build();
         Realm.setDefaultConfiguration(realmDefConfiguration);
+
+        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                .setPersistenceEnabled(false)
+                .build();
+        FirebaseFirestore.getInstance().setFirestoreSettings(settings);
+
 
         PrefsUtil.init(getApplicationContext());
 

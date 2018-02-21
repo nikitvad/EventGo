@@ -129,6 +129,7 @@ public class LaunchingActivity extends AppCompatActivity {
                     DiscussionMessage chatMessage = new DiscussionMessage();
                     chatMessage.setId(messageReference.getId());
                     chatMessage.setDate(new Date());
+                    chatMessage.setOwnerName("Jon Snow");
                     chatMessage.setMessage("lol!!! bOOOm!!!" + i);
                     messageReference.set(chatMessage);
                 }

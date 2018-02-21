@@ -6,11 +6,9 @@ import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.NonNull;
 
 import com.ghteam.eventgo.data.Repository;
-import com.ghteam.eventgo.data.entity.DiscussionMessage;
 import com.ghteam.eventgo.data.entity.Event;
 import com.ghteam.eventgo.data.entity.User;
-
-import java.util.List;
+import com.ghteam.eventgo.data.task.TaskResultListener;
 
 /**
  * Created by nikit on 13.12.2017.
@@ -21,14 +19,24 @@ public class EventDetailsViewModel extends ViewModel {
     private String eventId;
 
 
-    private MutableLiveData<List<DiscussionMessage>> discussionMessages;
     private MutableLiveData<User> owner;
+    private MutableLiveData<Boolean> isInterestedByUser;
+    private MutableLiveData<Boolean> isUserGoing;
 
     private EventDetailsViewModel(Repository repository, final String eventId) {
         mRepository = repository;
         this.eventId = eventId;
 
         owner = repository.initializeUser();
+        isInterestedByUser = new MutableLiveData<>();
+        isUserGoing = new MutableLiveData<>();
+
+        mRepository.isUserInterestedEvent(eventId, new TaskResultListener<Boolean>() {
+            @Override
+            public void onResult(Boolean result) {
+                isInterestedByUser.setValue(result);
+            }
+        });
 
     }
 
@@ -39,17 +47,48 @@ public class EventDetailsViewModel extends ViewModel {
         return event;
     }
 
+    public MutableLiveData<Boolean> getIsInterestedByUser() {
+        return isInterestedByUser;
+    }
+
     public void addEventToInterested() {
-        mRepository.addEventToInterested(eventId);
+        mRepository.addEventToInterested(eventId, new TaskResultListener<Boolean>() {
+            @Override
+            public void onResult(Boolean result) {
+                isInterestedByUser.setValue(result);
+            }
+        });
+    }
+
+    public void removeFromInterested() {
+        mRepository.removeFromInterested(eventId, new TaskResultListener<Boolean>() {
+            @Override
+            public void onResult(Boolean result) {
+                isInterestedByUser.setValue(!result);
+            }
+        });
     }
 
     public void addEventToGoing() {
-        mRepository.addEventToGoing(eventId);
+        mRepository.addEventToGoing(eventId, new TaskResultListener<Boolean>() {
+            @Override
+            public void onResult(Boolean result) {
+                isUserGoing.setValue(result);
+            }
+        });
     }
 
-    public MutableLiveData<List<DiscussionMessage>> getDiscussionMessages() {
-        mRepository.loadNextDiscussionMessages(10);
-        return discussionMessages;
+    public void removeFromGoing() {
+        mRepository.removeEventFromGoing(eventId, new TaskResultListener<Boolean>() {
+            @Override
+            public void onResult(Boolean result) {
+                isUserGoing.setValue(!result);
+            }
+        });
+    }
+
+    public MutableLiveData<Boolean> getIsUserGoing(){
+        return isUserGoing;
     }
 
     public MutableLiveData<User> getOwner() {

@@ -1,14 +1,16 @@
 package com.ghteam.eventgo.ui;
 
 import android.databinding.BindingAdapter;
+import android.text.Spannable;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.ghteam.eventgo.data.entity.Location;
-import com.ghteam.eventgo.util.network.LocationUtil;
+import com.ghteam.eventgo.R;
+import com.ghteam.eventgo.data.entity.DiscussionMessage;
 import com.squareup.picasso.Picasso;
 
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -25,34 +27,34 @@ public class BindingAdapters {
                 .load(url).into(view);
     }
 
-    @BindingAdapter({"address", "location"})
-    public static void addressLocationAdapter(TextView textView, String address, Location location) {
-        String finalText = "";
-
-        if (address != null) {
-            finalText = finalText + " " + address;
-        }
-
-        if (location != null && LocationUtil.getLastKnownLocation() != null) {
-            android.location.Location lastKnownLocation = LocationUtil.getLastKnownLocation();
-
-            double distance = LocationUtil.calculateDistance(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude(),
-                    location.getLatitude(), location.getLongitude());
-
-
-            DecimalFormat decimalFormat = new DecimalFormat("#.##");
-
-            finalText = finalText + " " + decimalFormat.format(distance) + " km";
-        }
-
-        textView.setText(finalText);
+    @BindingAdapter("android:text")
+    public static void intAdapter(TextView textView, int numb) {
+        textView.setText(numb + "");
     }
 
     @BindingAdapter("android:text")
     public static void dateAdapter(TextView textView, Date date) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("mmm dd 'at' hh:mm a", Locale.ENGLISH);
+        if(date!=null) {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM dd 'at' hh:mm a", Locale.ENGLISH);
 
-        textView.setText(simpleDateFormat.format(date));
+            textView.setText(simpleDateFormat.format(date));
+        }else{
+            textView.setText("");
+        }
+    }
+
+    @BindingAdapter("android:text")
+    public static void messageAdapter(TextView textView, DiscussionMessage discussionMessage) {
+        String ownerName = discussionMessage.getOwnerName();
+        String message = discussionMessage.getMessage();
+
+        textView.setText(ownerName + " " + message, TextView.BufferType.SPANNABLE);
+
+        Spannable spannable = (Spannable) textView.getText();
+        int end = ownerName.length();
+        ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(textView.getResources()
+                .getColor(R.color.lightBlue));
+        spannable.setSpan(foregroundColorSpan, 0, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
 
 }

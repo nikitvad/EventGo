@@ -4,11 +4,11 @@ package com.ghteam.eventgo.data.entity;
 import android.support.annotation.Nullable;
 
 import com.google.firebase.firestore.Exclude;
-import com.google.firebase.firestore.IgnoreExtraProperties;
-import com.google.firebase.firestore.ThrowOnExtraProperties;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
@@ -43,9 +43,9 @@ public class Event extends RealmObject {
 
     private boolean isDiscussionEnabled = false;
 
-    private int interestedCount;
+    private int interestedCount = 0;
 
-    private int goingCount;
+    private int goingCount = 0;
 
     public String getOwnerName() {
         return ownerName;
@@ -208,15 +208,42 @@ public class Event extends RealmObject {
         return "Event{" +
                 "id='" + id + '\'' +
                 ", ownerId='" + ownerId + '\'' +
+                ", ownerName='" + ownerName + '\'' +
+                ", ownerProfilePicture='" + ownerProfilePicture + '\'' +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", date=" + date +
                 ", address='" + address + '\'' +
                 ", category=" + category +
+                ", discussionId='" + discussionId + '\'' +
+                ", isDiscussionEnabled=" + isDiscussionEnabled +
+                ", interestedCount=" + interestedCount +
+                ", goingCount=" + goingCount +
                 ", realmImages=" + realmImages +
                 ", images=" + images +
                 ", location=" + location +
                 '}';
+    }
+
+    public Map<String, Object> toMap() {
+        Map<String, Object> result = new HashMap<>();
+
+        result.put("id", id);
+        result.put("ownerId", ownerId);
+        result.put("ownerProfilePicture", ownerProfilePicture);
+        result.put("name", name);
+        result.put("description", description);
+        result.put("date", date);
+        result.put("address", address);
+        result.put("category", category.toMap());
+        result.put("discussionId", discussionId);
+        result.put("isDiscussionEnabled", isDiscussionEnabled);
+        result.put("interestedCount", interestedCount);
+        result.put("goingCount", goingCount);
+        result.put("images", images);
+        result.put("location", location.toMap());
+
+        return result;
     }
 
 

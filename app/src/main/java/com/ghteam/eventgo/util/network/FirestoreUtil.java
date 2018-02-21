@@ -42,7 +42,7 @@ public class FirestoreUtil {
     }
 
     public static CollectionReference getReferenceToUserGoingEvents(String uid){
-        return getReferenceToUsers().document(uid).collection(SRT_MY_EVENTS);
+        return getReferenceToUsers().document(uid).collection(SRT_GOING_EVENTS);
     }
 
 }

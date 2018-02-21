@@ -57,7 +57,7 @@ public class Repository {
 
         firebaseAuth = FirebaseAuth.getInstance();
 
-        if(firebaseAuth.getCurrentUser()!=null){
+        if (firebaseAuth.getCurrentUser() != null) {
             networkEventManager = new NetworkEventManager(firebaseAuth.getCurrentUser().getUid());
         }
 
@@ -496,12 +496,24 @@ public class Repository {
      * managing events
      */
 
-    public void addEventToInterested(String eventId) {
-        networkEventManager.addEventToInterests(eventId);
+    public void addEventToInterested(String eventId, TaskResultListener<Boolean> resultListener) {
+        networkEventManager.addEventToInterests(eventId, resultListener);
     }
 
-    public void addEventToGoing(String eventId) {
-        networkEventManager.addEventToGoing(eventId);
+    public void removeFromInterested(String eventId, TaskResultListener<Boolean> resultListener){
+        networkEventManager.removeEventFromInterested(eventId, resultListener);
+    }
+
+    public void addEventToGoing(String eventId, TaskResultListener<Boolean> listener) {
+        networkEventManager.addEventToGoing(eventId, listener);
+    }
+
+    public void removeEventFromGoing(String eventId, TaskResultListener<Boolean> resultListener){
+        networkEventManager.removeEventFromGoing(eventId, resultListener);
+    }
+
+    public void isUserInterestedEvent(String eventId, TaskResultListener<Boolean> taskResultListener) {
+        networkEventManager.isUserInterestedEvent(eventId, taskResultListener);
     }
 
 }

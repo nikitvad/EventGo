@@ -43,9 +43,7 @@
             <FrameLayout
                 android:id="@+id/lf_images"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
-
-                android:visibility="visible">
+                android:layout_height="200dp">
 
                 <ImageSwitcher
                     android:id="@+id/is_images"
@@ -147,17 +145,17 @@
                         android:layout_height="40dp"
                         android:layout_gravity="center_horizontal"
                         android:scaleType="fitCenter"
-                        android:src="@drawable/ic_menu_camera" />
+                        android:src="@drawable/ic_grade_black_24dp"
+                        android:tint="@color/grey" />
 
                     <TextView
                         android:id="@+id/tv_interested_numb"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
-                        android:text="45"
+                        android:text="@{event.interestedCount}"
                         android:textSize="24sp" />
                 </LinearLayout>
-
 
                 <LinearLayout
                     android:id="@+id/ll_going"
@@ -180,14 +178,15 @@
                         android:layout_height="40dp"
                         android:layout_gravity="center_horizontal"
                         android:scaleType="fitCenter"
-                        android:src="@drawable/ic_menu_share" />
+                        android:src="@drawable/ic_done_black_24dp"
+                        android:tint="@color/grey" />
 
                     <TextView
                         android:id="@+id/tv_going_numb"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
-                        android:text="23"
+                        android:text="@{event.goingCount}"
                         android:textSize="24sp" />
                 </LinearLayout>
 
@@ -303,13 +302,6 @@
                     android:layout_alignParentEnd="true"
                     android:layout_gravity="center_vertical"
                     android:text="@string/on_map" />
-
-
-                <EditText
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:inputType="text"
-                    android:text="@={event.name}" />
 
                 <TextView
 

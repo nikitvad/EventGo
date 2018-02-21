@@ -10,7 +10,9 @@
     <color name="secondaryTextColor">#eeeeee</color>
     <color name="lightBlue">#FF1C77FF</color>
     <color name="white">#FFF</color>
-    <color name="grey">#eee</color>
+    <color name="lightGrey">#eee</color>
+    <color name="grey">#aaa</color>
+
     <color name="orange">#ffc107</color>
 
 </resources>

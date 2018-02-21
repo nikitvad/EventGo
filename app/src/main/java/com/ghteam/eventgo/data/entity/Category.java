@@ -1,5 +1,8 @@
 package com.ghteam.eventgo.data.entity;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import io.realm.RealmObject;
 
 /**
@@ -61,6 +64,14 @@ public class Category extends RealmObject {
     public int hashCode() {
         int result = name != null ? name.hashCode() : 0;
         result = 31 * result + (icon != null ? icon.hashCode() : 0);
+        return result;
+    }
+
+    public Map<String, Object> toMap(){
+        Map<String, Object> result = new HashMap<>();
+        result.put("name", name);
+        result.put("icon", icon);
+
         return result;
     }
 }

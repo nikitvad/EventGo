@@ -121,7 +121,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="40dp"
                     android:layout_marginStart="5dp"
-                    android:text="65" />
+                    android:text="@{event.interestedCount}" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -132,7 +132,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
-                    android:text="23" />
+                    android:text="@{event.goingCount}" />
             </LinearLayout>
 
         </RelativeLayout>

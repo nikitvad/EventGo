@@ -34,11 +34,10 @@ public class PostEvent extends BaseTask<Void, String> {
         DocumentReference documentReference = FirestoreUtil.getReferenceToEvents().document();
         CollectionReference userEventsReference = FirestoreUtil.getReferenceToUsersEvents(mEvent.getOwnerId());
 
-
         final String eventId = documentReference.getId();
         mEvent.setId(eventId);
 
-        documentReference.set(mEvent).addOnCompleteListener(new OnCompleteListener<Void>() {
+        documentReference.set(mEvent.toMap()).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.getException() == null && task.isSuccessful()) {

@@ -1,5 +1,8 @@
 package com.ghteam.eventgo.data.entity;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import io.realm.RealmObject;
 
 /**
@@ -48,4 +51,13 @@ public class Location extends RealmObject {
     public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
+
+    public Map<String, Object> toMap() {
+        Map<String, Object> result = new HashMap<>();
+        result.put("latitude", latitude);
+        result.put("longitude", longitude);
+        return result;
+    }
 }
+
+

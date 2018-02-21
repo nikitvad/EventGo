@@ -104,6 +104,7 @@ public class LoginActivity extends AppCompatActivity {
                 case OK:
                     PrefsUtil.setUserProfilePicture(user.getProfileImageUrl());
                     PrefsUtil.setUserDisplayName(user.getFirstName() + " " + user.getLastName());
+                    PrefsUtil.setUserId(user.getId());
                     startActivity(EventsActivity.class);
                     break;
                 case REQUIRE_UPDATE_PROFILE:

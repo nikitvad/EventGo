@@ -7,6 +7,7 @@ import android.databinding.Observable;
 import android.databinding.ObservableInt;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -61,26 +62,25 @@ public class EventDetailsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         activityBinding.includeToolbar.toolbar.setTitleTextColor(getResources().getColor(R.color.white));
 
-        currentImagePos = new ObservableInt(0);
+        currentImagePos = new ObservableInt();
 
-        final String eventId = getIntent().getStringExtra("eventId");
+        String eventId = getIntent().getStringExtra("eventId");
+
+        if(eventId == null || eventId.isEmpty()){
+            eventId = "qmYHsryGnznAm0f7YrsC";
+        }
 
         EventDetailsViewModelFactory viewModelFactory = InjectorUtil
-                .provideEventDetailsViewModelFactory(this, "1DaM4uttOQV6EHYPwnMu");
+                .provideEventDetailsViewModelFactory(this, eventId);
 
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(EventDetailsViewModel.class);
 
+        registerViewModelObservers();
+
         EventDiscussionFragment eventDiscussionFragment = EventDiscussionFragment.newInstance("1DaM4uttOQV6EHYPwnMu");
         getSupportFragmentManager().beginTransaction().replace(R.id.discussion_container,
                 eventDiscussionFragment).commit();
-
-        viewModel.getOwner().observe(this, new Observer<User>() {
-            @Override
-            public void onChanged(@Nullable User user) {
-                activityBinding.setVariable(BR.user, user);
-            }
-        });
 
         event = viewModel.getEvent();
 
@@ -93,10 +93,11 @@ public class EventDetailsActivity extends AppCompatActivity {
         bindEventTime(event.getDate());
 
         switcherPicasso = new ImageSwitcherPicasso(EventDetailsActivity.this, activityBinding.isImages);
+        Log.d(TAG, "onCreate: ");
 
         if (event.getRealmImages().size() > 0) {
             activityBinding.lfImages.setVisibility(View.VISIBLE);
-
+            currentImagePos.set(0);
             Picasso.with(this).load(event.getRealmImages().get(currentImagePos.get())).into(switcherPicasso);
             if (event.getRealmImages().size() == 1) {
                 activityBinding.ivNextImage.setVisibility(GONE);
@@ -106,6 +107,7 @@ public class EventDetailsActivity extends AppCompatActivity {
             currentImagePos.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
                 @Override
                 public void onPropertyChanged(Observable observable, int i) {
+                    Log.d(TAG, "onPropertyChanged: " + i);
                     if (i >= event.getRealmImages().size()) {
                         activityBinding.ivNextImage.setVisibility(GONE);
                     } else {
@@ -120,9 +122,45 @@ public class EventDetailsActivity extends AppCompatActivity {
                 }
             });
 
+        }else{
+            activityBinding.lfImages.setVisibility(View.GONE);
         }
-
         bindClickListeners();
+    }
+
+    private void registerViewModelObservers() {
+        viewModel.getOwner().observe(this, new Observer<User>() {
+            @Override
+            public void onChanged(@Nullable User user) {
+                activityBinding.setVariable(BR.user, user);
+            }
+        });
+
+        viewModel.getIsInterestedByUser().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(@Nullable Boolean aBoolean) {
+                if (aBoolean) {
+                    activityBinding.ivInterested.setColorFilter(ContextCompat
+                            .getColor(EventDetailsActivity.this, R.color.primaryLightColor));
+                } else {
+                    activityBinding.ivInterested.setColorFilter(ContextCompat
+                            .getColor(EventDetailsActivity.this, R.color.grey));
+                }
+            }
+        });
+
+        viewModel.getIsUserGoing().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(@Nullable Boolean aBoolean) {
+                if (aBoolean) {
+                    activityBinding.ivGoing.setColorFilter(ContextCompat
+                            .getColor(EventDetailsActivity.this, R.color.primaryLightColor));
+                } else {
+                    activityBinding.ivGoing.setColorFilter(ContextCompat
+                            .getColor(EventDetailsActivity.this, R.color.grey));
+                }
+            }
+        });
     }
 
     private void bindClickListeners() {
@@ -156,14 +194,23 @@ public class EventDetailsActivity extends AppCompatActivity {
         activityBinding.ivGoing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                viewModel.addEventToGoing();
+
+                if (viewModel.getIsUserGoing().getValue() != null && viewModel.getIsUserGoing().getValue()) {
+                    viewModel.removeFromGoing();
+                } else {
+                    viewModel.addEventToGoing();
+                }
             }
         });
 
         activityBinding.ivInterested.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                viewModel.addEventToInterested();
+                if (viewModel.getIsInterestedByUser().getValue() != null && viewModel.getIsInterestedByUser().getValue()) {
+                    viewModel.removeFromInterested();
+                } else {
+                    viewModel.addEventToInterested();
+                }
             }
         });
 
