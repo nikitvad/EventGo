@@ -1,5 +1,6 @@
 package com.ghteam.eventgo.ui.activity.createevent;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModel;
@@ -9,6 +10,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.ghteam.eventgo.data.Repository;
 import com.ghteam.eventgo.data.entity.Category;
@@ -32,8 +34,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import io.realm.RealmList;
-
 /**
  * Created by nikit on 30.11.2017.
  */
@@ -46,8 +46,11 @@ public class CreateEventViewModel extends ViewModel {
     private MutableLiveData<String> mEventAddress;
     private MutableLiveData<LatLng> mEventLocation;
     private LiveDataList<String> mImageSources;
-    private LiveDataList<Category> mCategories;
+    private MutableLiveData<Category> selectedCategory;
     private Date mDate;
+
+    private MutableLiveData<List<Category>> availableCategories;
+
 
     private MutableLiveData<String> postedEventId;
     private MutableLiveData<TaskStatus> postEventTaskStatus;
@@ -68,10 +71,12 @@ public class CreateEventViewModel extends ViewModel {
         mEventAddress = new MutableLiveData<>();
         mEventLocation = new MutableLiveData<>();
         mImageSources = new LiveDataList<>(new ArrayList<String>());
-        mCategories = new LiveDataList<>();
+        selectedCategory = new MutableLiveData<>();
 
         postedEventId = mRepository.initializePostedEventId();
         postEventTaskStatus = mRepository.getPostEventTaskStatus();
+
+        availableCategories = mRepository.initializeCategories();
 
         mUploadingImages = new MapLiveData<>(new HashMap<String, Boolean>());
 
@@ -109,8 +114,12 @@ public class CreateEventViewModel extends ViewModel {
         return mEventAddress;
     }
 
-    LiveDataList<Category> getCategories() {
-        return mCategories;
+    void setEventAddress(String address){
+        mEventAddress.setValue(address);
+    }
+
+    MutableLiveData<Category> getSelectedCategory() {
+        return selectedCategory;
     }
 
     MutableLiveData<LatLng> getEventLocation() {
@@ -131,15 +140,18 @@ public class CreateEventViewModel extends ViewModel {
         mRepository.postNewEvent(getEventEntry());
     }
 
+    public MutableLiveData<List<Category>> getAvailableCategories() {
+        return availableCategories;
+    }
+
     private Event getEventEntry() {
         Event event = new Event();
         event.setName(mEventName);
         event.setDescription(mEventDescription);
 
         event.setAddress(mEventAddress.getValue());
-        if (getCategories().getValue() != null && getCategories().getValue().size() > 0) {
-            event.setCategory(getCategories().getValue().get(0));
-        }
+        event.setCategory(getSelectedCategory().getValue());
+
 
         event.setImages(imageUrlsOnCloudStorage);
 
@@ -192,8 +204,7 @@ public class CreateEventViewModel extends ViewModel {
         });
     }
 
-
-    static class CreateEventViewModelFactory extends ViewModelProvider.NewInstanceFactory {
+    public static class CreateEventViewModelFactory extends ViewModelProvider.NewInstanceFactory {
         private FirebaseUser mUser;
         private Repository mRepository;
 

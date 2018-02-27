@@ -13,6 +13,7 @@ import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -55,6 +56,19 @@ public class BindingAdapters {
         ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(textView.getResources()
                 .getColor(R.color.lightBlue));
         spannable.setSpan(foregroundColorSpan, 0, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+    }
+
+    @BindingAdapter("android:text")
+    public static void stringListAdapter(TextView textView, List<String> strings){
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for(String item: strings){
+            stringBuilder.append(item + ", ");
+        }
+
+        if(stringBuilder.length()>0){
+            textView.setText(stringBuilder);
+        }
     }
 
 }

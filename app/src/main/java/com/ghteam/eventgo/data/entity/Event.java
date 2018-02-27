@@ -230,6 +230,7 @@ public class Event extends RealmObject {
 
         result.put("id", id);
         result.put("ownerId", ownerId);
+        result.put("ownerName", ownerName);
         result.put("ownerProfilePicture", ownerProfilePicture);
         result.put("name", name);
         result.put("description", description);

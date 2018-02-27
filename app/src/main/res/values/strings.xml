@@ -131,5 +131,8 @@
     <string name="add">Add</string>
     <string name="you_interests">You interests</string>
     <string name="interested">Interested</string>
+    <string name="category">Category</string>
+    <string name="enter_name_of_your_event">Enter the name of your event</string>
+    <string name="enter_description_of_event">Enter the description of your event</string>
 
 </resources>

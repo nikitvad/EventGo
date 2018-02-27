@@ -24,6 +24,7 @@ import com.ghteam.eventgo.data.entity.Event;
 import com.ghteam.eventgo.data.entity.User;
 import com.ghteam.eventgo.databinding.ActivityEventDetailsBinding;
 import com.ghteam.eventgo.ui.activity.eventdetails.EventDetailsViewModel.EventDetailsViewModelFactory;
+import com.ghteam.eventgo.ui.dialog.users.UsersDialog;
 import com.ghteam.eventgo.ui.fragment.eventdiscussion.EventDiscussionFragment;
 import com.ghteam.eventgo.util.ImageSwitcherPicasso;
 import com.ghteam.eventgo.util.InjectorUtil;
@@ -66,7 +67,7 @@ public class EventDetailsActivity extends AppCompatActivity {
 
         String eventId = getIntent().getStringExtra("eventId");
 
-        if(eventId == null || eventId.isEmpty()){
+        if (eventId == null || eventId.isEmpty()) {
             eventId = "qmYHsryGnznAm0f7YrsC";
         }
 
@@ -122,7 +123,7 @@ public class EventDetailsActivity extends AppCompatActivity {
                 }
             });
 
-        }else{
+        } else {
             activityBinding.lfImages.setVisibility(View.GONE);
         }
         bindClickListeners();
@@ -174,6 +175,16 @@ public class EventDetailsActivity extends AppCompatActivity {
                     Picasso.with(EventDetailsActivity.this).load(event.getRealmImages().get(currentImagePos.get()))
                             .into(switcherPicasso);
                 }
+            }
+        });
+
+        activityBinding.tvGoingNumb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UsersDialog usersDialog = new UsersDialog();
+
+                usersDialog.show(getFragmentManager(),"TAG");
+
             }
         });
 

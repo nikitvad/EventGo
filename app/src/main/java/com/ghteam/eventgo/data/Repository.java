@@ -28,6 +28,7 @@ import com.ghteam.eventgo.data.task.UpdateUser;
 import com.ghteam.eventgo.util.PrefsUtil;
 import com.ghteam.eventgo.util.network.FirestoreUtil;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 
@@ -514,6 +515,16 @@ public class Repository {
 
     public void isUserInterestedEvent(String eventId, TaskResultListener<Boolean> taskResultListener) {
         networkEventManager.isUserInterestedEvent(eventId, taskResultListener);
+    }
+
+    public void loadGoingList(String eventId){
+
+        FirestoreCollectionLoader<String> firestoreCollectionLoader
+                = new FirestoreCollectionLoader<>(FirestoreUtil.getReferenceToEvents().document(eventId)
+        .collection("going"), String.class);
+
+        firestoreCollectionLoader.load(null);
+
     }
 
 }

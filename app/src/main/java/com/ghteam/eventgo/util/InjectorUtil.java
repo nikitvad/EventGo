@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.ghteam.eventgo.AppExecutors;
 import com.ghteam.eventgo.data.Repository;
+import com.ghteam.eventgo.ui.activity.createevent.CreateEventViewModel;
 import com.ghteam.eventgo.ui.activity.eventdetails.EventDetailsViewModel.EventDetailsViewModelFactory;
 import com.ghteam.eventgo.ui.activity.login.LoginViewModel;
 import com.ghteam.eventgo.ui.activity.profilesettings.ProfileSettingsViewModel;
@@ -11,6 +12,7 @@ import com.ghteam.eventgo.ui.activity.userslist.PeopleViewModel;
 import com.ghteam.eventgo.ui.fragment.eventdiscussion.EventDiscussionViewModel;
 import com.ghteam.eventgo.ui.fragment.eventslist.EventsListViewModel;
 import com.ghteam.eventgo.ui.fragment.searchevents.SearchEventsViewModel;
+import com.google.firebase.auth.FirebaseUser;
 
 /**
  * Created by nikit on 13.12.2017.
@@ -45,6 +47,10 @@ public class InjectorUtil {
 
     public static PeopleViewModel.UsersViewModelFactory provideUsersViewModelFactory(Context context) {
         return new PeopleViewModel.UsersViewModelFactory(provideRepository(context));
+    }
+
+    public static CreateEventViewModel.CreateEventViewModelFactory provideCreateEventViewModelFactory(Context context, FirebaseUser firebaseUser){
+        return new CreateEventViewModel.CreateEventViewModelFactory(provideRepository(context), firebaseUser);
     }
 
     public static EventDiscussionViewModel.EventDiscussionViewModelFactory provideEventDiscussionViewModelFactory(Context context, String eventId) {

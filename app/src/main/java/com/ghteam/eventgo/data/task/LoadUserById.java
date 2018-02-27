@@ -21,18 +21,22 @@ public class LoadUserById extends BaseTask<String, User> {
         changeStatus(TaskStatus.IN_PROGRESS);
         CollectionReference collectionReference = FirestoreUtil.getReferenceToUsers();
 
-        collectionReference.document(params[0]).addSnapshotListener(new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
-                if (e == null) {
-                    publishResult(documentSnapshot.toObject(User.class));
-                    changeStatus(TaskStatus.SUCCESS);
-                }else{
-                    exception = e;
-                    changeStatus(TaskStatus.ERROR);
-                    Log.w(TAG, "onEvent: " , e );
+        for (String id : params) {
+            collectionReference.document(id).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                @Override
+                public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
+                    if (e == null && documentSnapshot.exists()) {
+                        publishResult(documentSnapshot.toObject(User.class));
+                        changeStatus(TaskStatus.SUCCESS);
+                    } else {
+                        exception = e;
+                        changeStatus(TaskStatus.ERROR);
+                        Log.w(TAG, "onEvent: ", e);
+                    }
                 }
-            }
-        });
+            });
+        }
+
+
     }
 }

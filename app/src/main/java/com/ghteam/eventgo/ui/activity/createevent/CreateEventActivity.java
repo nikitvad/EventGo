@@ -12,10 +12,11 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.transition.TransitionManager;
 import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.ghteam.eventgo.R;
@@ -23,7 +24,7 @@ import com.ghteam.eventgo.data.entity.Category;
 import com.ghteam.eventgo.data.task.TaskStatus;
 import com.ghteam.eventgo.databinding.ActivityCreateEventBinding;
 import com.ghteam.eventgo.ui.dialog.datetimepicker.DateAndTimePicker;
-import com.ghteam.eventgo.ui.dialog.selectcategories.CategoriesDialog;
+import com.ghteam.eventgo.ui.dialog.selectcategories.CategoriesRecyclerAdapter;
 import com.ghteam.eventgo.util.CameraUtil;
 import com.ghteam.eventgo.util.CustomTextWatcher;
 import com.ghteam.eventgo.util.InjectorUtil;
@@ -42,11 +43,10 @@ import java.util.Locale;
 
 public class CreateEventActivity extends AppCompatActivity {
 
-
     private ActivityCreateEventBinding activityBinding;
     private CameraUtil mCameraUtil;
     private ImageRecyclerAdapter imageAdapter;
-    private CategoriesDialog categoriesDialog;
+    private CategoriesRecyclerAdapter categoriesRecyclerAdapter;
 
     private DateAndTimePicker dateAndTimePicker;
 
@@ -68,16 +68,14 @@ public class CreateEventActivity extends AppCompatActivity {
 
         activityBinding = DataBindingUtil.setContentView(this, R.layout.activity_create_event);
 
-        viewModel = ViewModelProviders.of(this, new CreateEventViewModel
-                .CreateEventViewModelFactory(InjectorUtil.provideRepository(this), mAuth.getCurrentUser()))
-                .get(CreateEventViewModel.class);
+        viewModel = ViewModelProviders.of(this, InjectorUtil.provideCreateEventViewModelFactory(
+                this, mAuth.getCurrentUser())).get(CreateEventViewModel.class);
 
         mAuth = FirebaseAuth.getInstance();
 
-        bindOnClickListeners();
+        bindClickListeners();
         bindTextChangedListeners();
 
-        categoriesDialog = getCategoriesDialog();
         dateAndTimePicker = getDateAndTimePicker();
 
         mCameraUtil = new CameraUtil(this);
@@ -91,17 +89,15 @@ public class CreateEventActivity extends AppCompatActivity {
             }
         });
 
-        activityBinding.btSelectCategory.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                categoriesDialog.show(getSupportFragmentManager(), TAG);
-            }
-        });
+        categoriesRecyclerAdapter = makeCategoriesRecyclerAdapter();
+        categoriesRecyclerAdapter.setSelectionType(CategoriesRecyclerAdapter.SINGLE);
 
         activityBinding.rvPhotos.setAdapter(imageAdapter);
         activityBinding.rvPhotos.setLayoutManager(
                 new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.HORIZONTAL));
 
+        activityBinding.rvCategories.setAdapter(categoriesRecyclerAdapter);
+        activityBinding.rvCategories.setLayoutManager(new LinearLayoutManager(this));
         registerViewModelObservers();
     }
 
@@ -112,7 +108,7 @@ public class CreateEventActivity extends AppCompatActivity {
 
                 Place place = PlacePicker.getPlace(data, this);
                 viewModel.getEventLocation().setValue(place.getLatLng());
-                viewModel.getEventAddress().setValue(place.getAddress().toString());
+                viewModel.setEventAddress(place.getAddress().toString());
             }
         } else if (requestCode == REQUEST_CAMERA && resultCode == RESULT_OK) {
             if (mCameraUtil.getPhotoPath() != null) {
@@ -147,6 +143,28 @@ public class CreateEventActivity extends AppCompatActivity {
 
     }
 
+    private CategoriesRecyclerAdapter makeCategoriesRecyclerAdapter() {
+
+        final CategoriesRecyclerAdapter result = new CategoriesRecyclerAdapter();
+        result.setSelectionType(CategoriesRecyclerAdapter.SINGLE);
+        result.setSelectItemListener(new CategoriesRecyclerAdapter.OnSelectItemListener() {
+            @Override
+            public void onSelected(Category category) {
+                viewModel.getSelectedCategory().setValue(category);
+                activityBinding.tvSelectedCategory.setText(getString(R.string.category) + ": " + category.getName());
+
+            }
+
+            @Override
+            public void onUnselected(Category category) {
+                viewModel.getSelectedCategory().setValue(null);
+                activityBinding.tvSelectedCategory.setText(R.string.category);
+            }
+        });
+
+        return result;
+    }
+
     private void bindTextChangedListeners() {
 
         activityBinding.etEventName.addTextChangedListener(new CustomTextWatcher() {
@@ -162,9 +180,16 @@ public class CreateEventActivity extends AppCompatActivity {
                 viewModel.setEventDescription(s.toString());
             }
         });
+
+        activityBinding.etEventAddress.addTextChangedListener(new CustomTextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                viewModel.setEventAddress(s.toString());
+            }
+        });
     }
 
-    private void bindOnClickListeners() {
+    private void bindClickListeners() {
 
         activityBinding.btSetAddressOnMap.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -188,7 +213,25 @@ public class CreateEventActivity extends AppCompatActivity {
         activityBinding.btCreateEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                viewModel.postEvent();
+                if (validateFrom()) {
+                    viewModel.postEvent();
+                }
+            }
+        });
+
+        activityBinding.ivShowCategories.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int visibility = activityBinding.rvCategories.getVisibility();
+
+                if (visibility != View.GONE) {
+//                    TransitionManager.beginDelayedTransition(activityBinding.selectCategory);
+                    activityBinding.rvCategories.setVisibility(View.GONE);
+
+                } else {
+                    TransitionManager.beginDelayedTransition(activityBinding.selectCategory);
+                    activityBinding.rvCategories.setVisibility(View.VISIBLE);
+                }
             }
         });
     }
@@ -211,29 +254,22 @@ public class CreateEventActivity extends AppCompatActivity {
         return dateAndTimePicker;
     }
 
-    private CategoriesDialog getCategoriesDialog() {
-        CategoriesDialog dialog = new CategoriesDialog();
-        dialog.setSelectionType(CategoriesDialog.SINGLE_SELECT);
+    private boolean validateFrom() {
+        boolean result = true;
 
-        dialog.setOnConfirmListener(new CategoriesDialog.OnConfirmChoiceListener() {
-            @Override
-            public void onConfirm(List<Category> categories) {
-                viewModel.getCategories().setValue(categories);
-            }
-        });
-        return dialog;
+        if (viewModel.getEventName() == null || viewModel.getEventName().length() == 0) {
+            activityBinding.etEventName.setError(getString(R.string.enter_name_of_your_event));
+            result = false;
+        }
+
+        if (viewModel.getEventDescription() == null || viewModel.getEventDescription().length() == 0) {
+            activityBinding.etEventDescription.setError(getString(R.string.enter_description_of_event));
+            result = false;
+        }
+        return result;
     }
 
     private void registerViewModelObservers() {
-
-        viewModel.getCategories().observeForever(new Observer<List<Category>>() {
-            @Override
-            public void onChanged(@Nullable List<Category> categories) {
-                if (categories != null && categories.size() > 0) {
-                    activityBinding.btSelectCategory.setText(categories.get(0).getName());
-                }
-            }
-        });
 
         viewModel.getImageSources().addInsertObserver(new Observer<String>() {
             @Override
@@ -256,9 +292,10 @@ public class CreateEventActivity extends AppCompatActivity {
         viewModel.getEventAddress().observeForever(new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
-                activityBinding.tvEventAddress.setText(s);
+                activityBinding.etEventAddress.setText(s);
             }
         });
+
         viewModel.getPostEventTaskStatus().observe(this, new Observer<TaskStatus>() {
             @Override
             public void onChanged(@Nullable TaskStatus taskStatus) {
@@ -267,6 +304,14 @@ public class CreateEventActivity extends AppCompatActivity {
                 } else {
                     hideProgressBar();
                 }
+            }
+        });
+
+        viewModel.getAvailableCategories().observe(this, new Observer<List<Category>>() {
+            @Override
+            public void onChanged(@Nullable List<Category> categories) {
+                Log.d(TAG, "onChanged: " + categories.toString());
+                categoriesRecyclerAdapter.setItems(categories);
             }
         });
     }
@@ -304,16 +349,16 @@ public class CreateEventActivity extends AppCompatActivity {
 
 
     private void showProgressBar() {
-        activityBinding.progressBar.setVisibility(View.VISIBLE);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        activityBinding.mainContainer.setAlpha(0.5f);
+//        activityBinding.progressBar.setVisibility(View.VISIBLE);
+//        getWindow().addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+//        activityBinding.mainContainer.setAlpha(0.5f);
     }
 
 
     private void hideProgressBar() {
-        activityBinding.progressBar.setVisibility(View.GONE);
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        activityBinding.mainContainer.setAlpha(1f);
+//        activityBinding.progressBar.setVisibility(View.GONE);
+//        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+//        activityBinding.mainContainer.setAlpha(1f);
     }
 
 }

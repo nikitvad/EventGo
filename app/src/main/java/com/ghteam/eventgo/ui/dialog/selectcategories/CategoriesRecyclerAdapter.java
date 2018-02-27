@@ -29,9 +29,9 @@ public class CategoriesRecyclerAdapter extends RecyclerView.Adapter<CategoriesRe
 
     private int selectionType = 0;
 
-    public static final int SELECTION_TYPE_NONE = 0;
-    public static final int SELECTION_TYPE_ENABLED = 1;
-    public static final int SELECTION_TYPE_MULTI_SELECT = 2;
+    public static final int NONE = 0;
+    public static final int SINGLE = 1;
+    public static final int MULTI = 2;
 
     private HashSet<Integer> mSelectedItems;
     private static final String TAG = CategoriesRecyclerAdapter.class.getSimpleName();
@@ -78,7 +78,7 @@ public class CategoriesRecyclerAdapter extends RecyclerView.Adapter<CategoriesRe
                 @Override
                 public void onClick(View view) {
 
-                    if (selectionType != SELECTION_TYPE_NONE && mSelectItemListener != null) {
+                    if (selectionType != NONE && mSelectItemListener != null) {
 
                         if (mSelectedItems.contains(pos)) {
                             removeItemFromSelected(pos);
@@ -124,11 +124,11 @@ public class CategoriesRecyclerAdapter extends RecyclerView.Adapter<CategoriesRe
     public void addItemToSelected(int pos) {
 
         switch (selectionType) {
-            case SELECTION_TYPE_MULTI_SELECT:
+            case MULTI:
                 mSelectedItems.add(pos);
                 notifyItemChanged(pos);
                 break;
-            case SELECTION_TYPE_ENABLED:
+            case SINGLE:
                 mSelectedItems.clear();
                 mSelectedItems.add(pos);
                 notifyDataSetChanged();
