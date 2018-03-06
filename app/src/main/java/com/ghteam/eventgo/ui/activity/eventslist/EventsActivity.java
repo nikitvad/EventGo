@@ -23,6 +23,7 @@ import com.ghteam.eventgo.R;
 import com.ghteam.eventgo.databinding.ActivityEventsBinding;
 import com.ghteam.eventgo.ui.activity.createevent.CreateEventActivity;
 import com.ghteam.eventgo.ui.fragment.eventslist.EventsListFragment;
+import com.ghteam.eventgo.ui.fragment.interestedevents.InterestedEventsFragment;
 import com.ghteam.eventgo.ui.fragment.searchevents.SearchEventsFragment;
 
 public class EventsActivity extends AppCompatActivity
@@ -45,10 +46,6 @@ public class EventsActivity extends AppCompatActivity
         Toolbar toolbar = activityBinding.includeToolbar.toolbar;
         setSupportActionBar(toolbar);
 
-
-
-
-
     }
 
     @Override
@@ -57,18 +54,19 @@ public class EventsActivity extends AppCompatActivity
 
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
 
-        EventsListFragment eventsListFragment = EventsListFragment.newInstance();
+//        EventsListFragment eventsListFragment = EventsListFragment.newInstance();
 
-        SearchEventsFragment searchEventsFragment = SearchEventsFragment.newInstance();
+//        SearchEventsFragment searchEventsFragment = SearchEventsFragment.newInstance();
 
-        fragmentTransaction.replace(R.id.fl_container, eventsListFragment).commit();
+        InterestedEventsFragment interestedEventsFragment = new InterestedEventsFragment();
+
+        fragmentTransaction.replace(R.id.fl_container, interestedEventsFragment).commit();
     }
 
     @Override
     public void onFragmentInteraction(Uri uri) {
 
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

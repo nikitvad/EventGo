@@ -109,7 +109,7 @@ public class FirestoreCollectionLoader<R> implements TaskStatusInterface {
     }
 
     public void loadNext(long limit) {
-
+        Log.d(TAG, "loadNext: ");
         if (!isCollectionFullyLoaded) {
             changeStatus(TaskStatus.IN_PROGRESS);
             lastDocumentsCountLimit = limit;

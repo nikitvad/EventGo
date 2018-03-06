@@ -2,6 +2,7 @@ package com.ghteam.eventgo.data.network;
 
 import android.support.annotation.NonNull;
 
+import com.ghteam.eventgo.data.entity.Event;
 import com.ghteam.eventgo.data.task.TaskResultListener;
 import com.ghteam.eventgo.util.network.FirestoreUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -34,24 +35,25 @@ public class NetworkEventManager {
         usersInterestsRef = FirestoreUtil.getReferenceToUserInterestedEvents(uid);
     }
 
-    public void addEventToInterests(String eventId, final TaskResultListener<Boolean> resultListener) {
-        Map<String, String> refToEvent = new HashMap<>();
-        refToEvent.put("eventId", eventId);
-        usersInterestsRef.document(eventId).set(refToEvent);
+    public void addEventToInterests(Event event, final TaskResultListener<Boolean> resultListener) {
+        if(event.getId()!=null && event.getId().length()>0) {
 
-        Map<String, String> refToUser = new HashMap<>();
-        refToUser.put("userId", userId);
+            usersInterestsRef.document(event.getId()).set(event.toMap());
 
-        eventsReference.document(eventId).collection("interested").document(userId).set(refToUser)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                       resultListener.onResult(task.isSuccessful());
-                    }
-                });
+            Map<String, String> refToUser = new HashMap<>();
+            refToUser.put("userId", userId);
+
+            eventsReference.document(event.getId()).collection("interested").document(userId).set(refToUser)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            resultListener.onResult(task.isSuccessful());
+                        }
+                    });
+        }
     }
 
-    public void removeEventFromInterested(String eventId, final TaskResultListener<Boolean> resultListener){
+    public void removeEventFromInterested(String eventId, final TaskResultListener<Boolean> resultListener) {
         usersInterestsRef.document(eventId).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
@@ -62,23 +64,24 @@ public class NetworkEventManager {
         eventsReference.document(eventId).collection("interested").document(userId).delete();
     }
 
-    public void addEventToGoing(String eventId, final TaskResultListener<Boolean> resultListener) {
-        Map<String, String> map = new HashMap<>();
-        map.put("eventId", eventId);
-        usersGoingRef.document(eventId).set(map);
+    public void addEventToGoing(Event event, final TaskResultListener<Boolean> resultListener) {
+        if (event.getId() != null && event.getId().length() > 0) {
 
-        Map<String, String> refToUser = new HashMap<>();
-        refToUser.put("userId", userId);
-        eventsReference.document(eventId).collection("going").document(userId).set(refToUser)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        resultListener.onResult(task.isSuccessful());
-                    }
-                });
+            usersGoingRef.document(event.getId()).set(event.toMap());
+
+            Map<String, String> refToUser = new HashMap<>();
+            refToUser.put("userId", userId);
+            eventsReference.document(event.getId()).collection("going").document(userId).set(refToUser)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            resultListener.onResult(task.isSuccessful());
+                        }
+                    });
+        }
     }
 
-    public void removeEventFromGoing(String eventId, final TaskResultListener<Boolean> resultListener){
+    public void removeEventFromGoing(String eventId, final TaskResultListener<Boolean> resultListener) {
         usersGoingRef.document(eventId).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {

@@ -21,7 +21,6 @@ public class EventsListViewModel extends ViewModel {
 
     private MutableLiveData<List<Event>> mEventsList;
     private MutableLiveData<TaskStatus> taskStatus;
-    private MutableLiveData<OnTaskStatusChangeListener.TaskStatus> mLoadingEventsTaskStatus;
 
     private static final String TAG = EventsListViewModel.class.getSimpleName();
 

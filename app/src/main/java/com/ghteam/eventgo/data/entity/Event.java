@@ -3,6 +3,7 @@ package com.ghteam.eventgo.data.entity;
 
 import android.support.annotation.Nullable;
 
+import com.ghteam.eventgo.util.network.LocationUtil;
 import com.google.firebase.firestore.Exclude;
 
 import java.util.Date;
@@ -42,6 +43,9 @@ public class Event extends RealmObject {
     private String discussionId;
 
     private boolean isDiscussionEnabled = false;
+
+    @Ignore
+    private long serializedLocation;
 
     private int interestedCount = 0;
 
@@ -159,6 +163,14 @@ public class Event extends RealmObject {
         isDiscussionEnabled = discussionEnabled;
     }
 
+    public double getSerializedLocation() {
+        return serializedLocation;
+    }
+
+    public void setSerializedLocation(long serializedLocation) {
+        this.serializedLocation = serializedLocation;
+    }
+
     public String getAddress() {
         return address;
     }
@@ -197,10 +209,12 @@ public class Event extends RealmObject {
     }
 
     public void setImages(List<String> images) {
-        this.images = images;
-        RealmList<String> realmList = new RealmList<>();
-        realmList.addAll(images);
-        realmImages = realmList;
+        if (images != null && images.size() > 0) {
+            this.images = images;
+            RealmList<String> realmList = new RealmList<>();
+            realmList.addAll(images);
+            realmImages = realmList;
+        }
     }
 
     @Override
@@ -228,6 +242,10 @@ public class Event extends RealmObject {
     public Map<String, Object> toMap() {
         Map<String, Object> result = new HashMap<>();
 
+        if (location != null) {
+            serializedLocation = LocationUtil.serializeLatLong(location.getLatitude(), location.getLongitude());
+        }
+
         result.put("id", id);
         result.put("ownerId", ownerId);
         result.put("ownerName", ownerName);
@@ -242,8 +260,11 @@ public class Event extends RealmObject {
         result.put("interestedCount", interestedCount);
         result.put("goingCount", goingCount);
         result.put("images", images);
-        result.put("location", location.toMap());
+        result.put("serializedLocation", serializedLocation);
 
+        if (location != null) {
+            result.put("location", location.toMap());
+        }
         return result;
     }
 

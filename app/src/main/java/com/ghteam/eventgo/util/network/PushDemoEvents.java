@@ -1,11 +1,14 @@
 package com.ghteam.eventgo.util.network;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 
+import com.ghteam.eventgo.data.Repository;
 import com.ghteam.eventgo.data.entity.Category;
 import com.ghteam.eventgo.data.entity.Event;
 import com.ghteam.eventgo.data.entity.Location;
 import com.ghteam.eventgo.data.network.FirebaseDatabaseManager;
+import com.ghteam.eventgo.util.InjectorUtil;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
@@ -34,7 +37,11 @@ public class PushDemoEvents {
 
     private Random r;
 
-    public PushDemoEvents() {
+    Context context;
+
+    public PushDemoEvents(Context context) {
+
+        this.context = context;
 
         r = new Random(7365);
         names = new String[10];
@@ -97,20 +104,12 @@ public class PushDemoEvents {
     }
 
     public void push() {
+        Repository repository = InjectorUtil.provideRepository(context);
         List<Event> events = generateDemoEvents();
 
         for (Event item : events) {
-            FirebaseDatabaseManager.pushNewEvent(item, new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void aVoid) {
 
-                }
-            }, new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-
-                }
-            });
+            repository.postNewEvent(item);
         }
     }
 
@@ -124,6 +123,7 @@ public class PushDemoEvents {
                 event.setName(names[i]);
                 event.setDescription(item);
                 event.setOwnerId(owners[i]);
+                event.setOwnerName(owners[i]);
 
                 ArrayList<String> eventImages = new ArrayList<>();
 
@@ -131,7 +131,7 @@ public class PushDemoEvents {
                     eventImages.add(images[r.nextInt(images.length - 1)]);
                 }
                 event.setDate(new Date());
-                event.setImages(new RealmList<String>((String[])eventImages.toArray()));
+                event.setImages(eventImages);
                 event.setLocation(locations[r.nextInt(locations.length - 1)]);
                 event.setCategory(categories.get(r.nextInt(categories.size() - 1)));
 

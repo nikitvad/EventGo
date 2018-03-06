@@ -1,6 +1,7 @@
 package com.ghteam.eventgo.ui;
 
 import android.databinding.BindingAdapter;
+import android.graphics.drawable.BitmapDrawable;
 import android.text.Spannable;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
@@ -23,7 +24,7 @@ import java.util.Locale;
 public class BindingAdapters {
 
     @BindingAdapter("android:src")
-    public static void imageViewAdapter(ImageView view, String url) {
+    public static void imageViewAdapterUrl(ImageView view, String url) {
         Picasso.with(view.getContext())
                 .load(url).into(view);
     }
@@ -56,19 +57,6 @@ public class BindingAdapters {
         ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(textView.getResources()
                 .getColor(R.color.lightBlue));
         spannable.setSpan(foregroundColorSpan, 0, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-    }
-
-    @BindingAdapter("android:text")
-    public static void stringListAdapter(TextView textView, List<String> strings){
-        StringBuilder stringBuilder = new StringBuilder();
-
-        for(String item: strings){
-            stringBuilder.append(item + ", ");
-        }
-
-        if(stringBuilder.length()>0){
-            textView.setText(stringBuilder);
-        }
     }
 
 }

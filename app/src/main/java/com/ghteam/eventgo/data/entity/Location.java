@@ -11,10 +11,6 @@ import io.realm.RealmObject;
 
 
 public class Location extends RealmObject {
-//    @PrimaryKey(autoGenerate = true)
-//    public int id;
-
-    public int ownerId;
 
     private double latitude;
     private double longitude;

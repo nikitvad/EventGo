@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.location.Location;
 import android.location.LocationManager;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -57,6 +58,7 @@ public class LocationUtil {
         return lastKnownLocation;
     }
 
+    @Nullable
     public static Location getLastKnownLocation() {
         return lastKnownLocation;
     }
@@ -68,8 +70,8 @@ public class LocationUtil {
         double kilometersPerDegreeOfLongitude = (2 * Math.PI / 360) * EARTH_RADIUS * Math.cos(center.latitude);
         double kilometersPerDegreeOfLatitude = (2 * Math.PI / 360) * EARTH_RADIUS;
 
-        double leftTopLatitude = center.latitude + (height / 2) * kilometersPerDegreeOfLatitude;
-        double leftTopLongitude = center.longitude - (width / 2) * kilometersPerDegreeOfLongitude;
+        double leftTopLatitude = center.latitude + (height / 2) / kilometersPerDegreeOfLatitude;
+        double leftTopLongitude = center.longitude - (width / 2) / kilometersPerDegreeOfLongitude;
 
         double rightBottomLatitude = center.latitude - (height / 2) / kilometersPerDegreeOfLatitude;
         double rightBottomLongitude = center.longitude + (width / 2) / kilometersPerDegreeOfLongitude;
@@ -86,11 +88,106 @@ public class LocationUtil {
         double kilometersPerDegreeOfLongitude = (2 * Math.PI / 360) * EARTH_RADIUS * Math.cos(latitude1);
         double kilometersPerDegreeOfLatitude = (2 * Math.PI / 360) * EARTH_RADIUS;
 
-
         double longitudeCathetus = (longitude1 - longitude2) * kilometersPerDegreeOfLongitude;
         double latitudeCathetus = (latitude1 - latitude2) * kilometersPerDegreeOfLatitude;
 
         return Math.sqrt((longitudeCathetus * longitudeCathetus) + (latitudeCathetus * latitudeCathetus));
     }
+
+    public static Long serializeLatLong(double latitude, double longitude) {
+
+        Date date = new Date();
+        String strLatRes = "";
+        String strLongRes = "";
+
+        if (latitude > 0) {
+            strLatRes = "1";
+        }
+
+        if (longitude > 0) {
+            strLongRes = strLongRes + "1";
+        } else {
+            strLongRes = strLongRes + "0";
+        }
+
+        if (longitude > 100 || longitude > -100) {
+            strLongRes = strLongRes + "0";
+        }
+
+        if (longitude > 10 || longitude > -10) {
+            strLongRes = strLongRes + "0";
+        }
+
+        String strLat = Double.toString(Math.abs(latitude)).replace(".", "") + "000000";
+        String strLong = Double.toString(Math.abs(longitude)).replace(".", "") + "000000";
+
+        String str = Double.toString(Math.abs(latitude));
+
+        strLatRes = strLatRes + strLat.substring(0, 6);
+
+        if (longitude > 100 || longitude < -100) {
+            strLongRes = strLongRes + strLong.substring(0, 7);
+
+        } else {
+            strLongRes = strLongRes + strLong.substring(0, 6);
+        }
+
+        Date date1 = new Date();
+//        Log.d("qwerqwer", "processing time v1: " + (date1.getTime() - date.getTime()));
+
+        return Long.parseLong(strLatRes + strLongRes);
+    }
+
+    public static Long serializeLatLongV2(double latitude, double longitude) {
+
+        Date date = new Date();
+
+        long roundedNormalizedLongitude = Math.abs(Math.round(longitude * 100_000));
+        long roundedNormalizedLatitude = Math.abs(Math.round(latitude * 100_000));
+
+//        Log.d("qwerqwer", "processing time v2: " + roundedNormalizedLongitude );
+
+
+        StringBuilder strLngResult = new StringBuilder(Long.toString(roundedNormalizedLongitude));
+        StringBuilder strLatResult = new StringBuilder(Long.toString(roundedNormalizedLatitude));
+
+//        Log.d("qwerqwer", "processing time v2: " + strLngResult );
+
+        int lngResultLength = strLngResult.length();
+        if (lngResultLength < 8) {
+            for (int i = 0; i < 8 - lngResultLength; i++) {
+                strLngResult.insert(0, 0);
+//                Log.d("qwerqwer", "processing time v2: " + strLngResult);
+
+            }
+        }
+
+        if (longitude > 0) {
+            strLngResult.insert(0, 1);
+        } else {
+            strLngResult.insert(0, 0);
+        }
+
+        int latResultLength = strLatResult.length();
+        if (latResultLength < 7) {
+            for (int i = 0; i < 7 - latResultLength; i++){
+                strLatResult.insert(0, 0);
+            }
+        }
+
+        if(latitude > 0 ){
+            strLatResult.insert(0, 1);
+        }else{
+            strLatResult.insert(0, 0);
+        }
+
+        long result = Long.parseLong(strLatResult.toString() + strLngResult.toString());
+
+
+        Date date1 = new Date();
+
+        return result;
+    }
+
 
 }

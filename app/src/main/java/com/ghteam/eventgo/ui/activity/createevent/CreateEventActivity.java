@@ -289,12 +289,12 @@ public class CreateEventActivity extends AppCompatActivity {
             }
         });
 
-        viewModel.getEventAddress().observeForever(new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                activityBinding.etEventAddress.setText(s);
-            }
-        });
+//        viewModel.getEventAddress().observeForever(new Observer<String>() {
+//            @Override
+//            public void onChanged(@Nullable String s) {
+//                activityBinding.etEventAddress.setText(s);
+//            }
+//        });
 
         viewModel.getPostEventTaskStatus().observe(this, new Observer<TaskStatus>() {
             @Override

@@ -28,7 +28,6 @@ import com.ghteam.eventgo.data.task.UpdateUser;
 import com.ghteam.eventgo.util.PrefsUtil;
 import com.ghteam.eventgo.util.network.FirestoreUtil;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 
@@ -39,7 +38,6 @@ import io.realm.Realm;
  */
 
 public class Repository {
-
 
     private static final String TAG = Repository.class.getSimpleName();
 
@@ -65,8 +63,32 @@ public class Repository {
         firebaseAuth.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                Log.d(TAG, "onAuthStateChanged: ");
                 if (firebaseAuth.getCurrentUser() != null) {
+                    Log.d(TAG, "onAuthStateChanged: ");
                     networkEventManager = new NetworkEventManager(firebaseAuth.getCurrentUser().getUid());
+
+                    usersInterestedEventsLoader = new FirestoreCollectionLoader<Event>(
+                            FirestoreUtil.getReferenceToUserInterestedEvents(firebaseAuth.getCurrentUser().getUid()),
+                            Event.class);
+
+                    usersInterestedEventsLoader.addTaskResultListener(new TaskResultListener<List<Event>>() {
+                        @Override
+                        public void onResult(List<Event> result) {
+                            Log.d(TAG, "onResult: " + result);
+                            usersInterestedEvents.setValue(result);
+                        }
+                    });
+
+                    usersInterestedEventsLoader.addTaskStatusListener(new TaskStatusListener() {
+                        @Override
+                        public void onStatusChanged(TaskStatus status) {
+                            Log.d(TAG, "onStatusChanged: " + status);
+                            loadingUsersInterestedEventsTaskStatus.setValue(status);
+                        }
+                    });
+                } else {
+                    usersInterestedEventsLoader = null;
                 }
             }
         });
@@ -79,6 +101,9 @@ public class Repository {
 
         users = new MutableLiveData<>();
         loadUsersTaskStatus = new MutableLiveData<>();
+
+        usersInterestedEvents = new MutableLiveData<>();
+        loadingUsersInterestedEventsTaskStatus = new MutableLiveData<>();
 
         registerDataObserves();
     }
@@ -123,6 +148,46 @@ public class Repository {
                     }
                 })
                 .load(limit);
+    }
+
+    private MutableLiveData<List<Event>> usersInterestedEvents;
+    private MutableLiveData<TaskStatus> loadingUsersInterestedEventsTaskStatus;
+
+    private FirestoreCollectionLoader<Event> usersInterestedEventsLoader;
+
+    public MutableLiveData<TaskStatus> getLoadingUsersInterestedEventsTaskStatus() {
+        return loadingUsersInterestedEventsTaskStatus;
+    }
+
+    public MutableLiveData<List<Event>> getUsersInterestedEvents() {
+        return usersInterestedEvents;
+    }
+
+    public void loadNextUsersInterestedEvents(int countLimit) {
+        if (usersInterestedEventsLoader != null) {
+            Log.d(TAG, "loadNextUsersInterestedEvents: ");
+            usersInterestedEventsLoader.loadNext(countLimit);
+        }
+    }
+
+    private MutableLiveData<List<Event>> usersGoingEvents;
+    private MutableLiveData<TaskStatus> loadingUsersGoingEventsTaskStatus;
+
+    private FirestoreCollectionLoader<Event> usersGoingEventsLoader;
+
+    public MutableLiveData<TaskStatus> getLoadingUsersGoingEventsTaskStatus() {
+        return loadingUsersGoingEventsTaskStatus;
+    }
+
+    public MutableLiveData<List<Event>> getUsersGoingEvents() {
+        return usersInterestedEvents;
+    }
+
+    public void loadNextUsersGoingEvents(int countLimit) {
+        if (usersGoingEventsLoader != null) {
+            Log.d(TAG, "loadNextUsersInterestedEvents: ");
+            usersGoingEventsLoader.loadNext(countLimit);
+        }
     }
 
     private FirestoreCollectionLoader<Event> eventsLoader;
@@ -224,6 +289,7 @@ public class Repository {
                 .load(limit);
     }
 
+
     public MutableLiveData<List<User>> initializeUsers() {
         return users;
     }
@@ -293,7 +359,8 @@ public class Repository {
         return loadCurrentUserTaskStatus;
     }
 
-    private MutableLiveData<String> userId = new MutableLiveData<>();
+    private MutableLiveData<String> currentUserId = new MutableLiveData<>();
+
     private MutableLiveData<TaskStatus> logInTaskStatus = new MutableLiveData<>();
 
     /*
@@ -301,12 +368,12 @@ public class Repository {
      */
 
     public void loginWithEmail(String email, String password) {
-        userId.setValue("");
+        currentUserId.setValue("");
         new LogInByEmailAndPassword(email, password)
                 .addTaskResultListener(new TaskResultListener<String>() {
                     @Override
                     public void onResult(String result) {
-                        userId.setValue(result);
+                        currentUserId.setValue(result);
                         PrefsUtil.setLoggedType(PrefsUtil.LOGGED_TYPE_EMAIL);
                     }
                 })
@@ -320,7 +387,7 @@ public class Repository {
     }
 
     public MutableLiveData<String> getCurrentUserId() {
-        return userId;
+        return currentUserId;
     }
 
     public MutableLiveData<TaskStatus> getLogInTaskStatus() {
@@ -337,7 +404,7 @@ public class Repository {
                 .addTaskResultListener(new TaskResultListener<String>() {
                     @Override
                     public void onResult(String result) {
-                        userId.setValue(result);
+                        currentUserId.setValue(result);
                     }
                 })
                 .addTaskStatusListener(new TaskStatusListener() {
@@ -382,12 +449,7 @@ public class Repository {
     }
 
 
-    /*
-     * Post eventInLocalDb to remote DB
-     */
-
-
-    private MutableLiveData<String> postedEventId;
+    private MutableLiveData<String> postedEventId = new MutableLiveData<>();
     private MutableLiveData<TaskStatus> postEventTaskStatus = new MutableLiveData<>();
 
     public MutableLiveData<String> initializePostedEventId() {
@@ -497,34 +559,24 @@ public class Repository {
      * managing events
      */
 
-    public void addEventToInterested(String eventId, TaskResultListener<Boolean> resultListener) {
-        networkEventManager.addEventToInterests(eventId, resultListener);
+    public void addEventToInterested(Event event, TaskResultListener<Boolean> resultListener) {
+        networkEventManager.addEventToInterests(event, resultListener);
     }
 
-    public void removeFromInterested(String eventId, TaskResultListener<Boolean> resultListener){
+    public void removeFromInterested(String eventId, TaskResultListener<Boolean> resultListener) {
         networkEventManager.removeEventFromInterested(eventId, resultListener);
     }
 
-    public void addEventToGoing(String eventId, TaskResultListener<Boolean> listener) {
-        networkEventManager.addEventToGoing(eventId, listener);
+    public void addEventToGoing(Event event, TaskResultListener<Boolean> listener) {
+        networkEventManager.addEventToGoing(event, listener);
     }
 
-    public void removeEventFromGoing(String eventId, TaskResultListener<Boolean> resultListener){
+    public void removeEventFromGoing(String eventId, TaskResultListener<Boolean> resultListener) {
         networkEventManager.removeEventFromGoing(eventId, resultListener);
     }
 
     public void isUserInterestedEvent(String eventId, TaskResultListener<Boolean> taskResultListener) {
         networkEventManager.isUserInterestedEvent(eventId, taskResultListener);
-    }
-
-    public void loadGoingList(String eventId){
-
-        FirestoreCollectionLoader<String> firestoreCollectionLoader
-                = new FirestoreCollectionLoader<>(FirestoreUtil.getReferenceToEvents().document(eventId)
-        .collection("going"), String.class);
-
-        firestoreCollectionLoader.load(null);
-
     }
 
 }

@@ -5,12 +5,12 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 
 import com.ghteam.eventgo.R;
 import com.ghteam.eventgo.data.entity.DiscussionMessage;
 import com.ghteam.eventgo.databinding.ActivityLaunchingBinding;
-import com.ghteam.eventgo.ui.activity.DemoDiscussionActivity;
 import com.ghteam.eventgo.ui.activity.createevent.CreateEventActivity;
 import com.ghteam.eventgo.ui.activity.eventdetails.EventDetailsActivity;
 import com.ghteam.eventgo.ui.activity.eventslist.EventsActivity;
@@ -19,6 +19,9 @@ import com.ghteam.eventgo.ui.activity.profilesettings.ProfileSettingsActivity;
 import com.ghteam.eventgo.ui.activity.userslist.PeopleActivity;
 import com.ghteam.eventgo.util.PrefsUtil;
 import com.ghteam.eventgo.util.network.FirestoreUtil;
+import com.ghteam.eventgo.util.network.LocationUtil;
+import com.ghteam.eventgo.util.network.PushDemoEvents;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 
@@ -106,7 +109,7 @@ public class LaunchingActivity extends AppCompatActivity {
         activityBinding.btPushDemoEvents.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                new PushDemoEvents().push();
+                new PushDemoEvents(LaunchingActivity.this).push();
             }
         });
 
@@ -140,15 +143,20 @@ public class LaunchingActivity extends AppCompatActivity {
         activityBinding.btDemoEventDiscussion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(DemoDiscussionActivity.class);
+                LatLng latLng = new LatLng(50.508476, 30.607208);
+                LatLng[] result = LocationUtil.calculateRectangle(latLng, 1, 1);
+
+                Log.d("qwerqwer", "onClick: " + LocationUtil.serializeLatLongV2(50.508476, 130.607208));
+                Log.d("qwerqwer", "onClick: " + LocationUtil.serializeLatLongV2(0.508476, -0.607208));
+                Log.d("qwerqwer", "onClick: " + LocationUtil.serializeLatLongV2(-5.508476, 1.607208));
+
             }
         });
     }
 
 
-
     private void startActivity(Class<? extends Activity> activity) {
-        Intent intent = new Intent(LaunchingActivity.this, activity);
+        Intent intent = new Intent( LaunchingActivity.this, activity);
         startActivity(intent);
     }
 }

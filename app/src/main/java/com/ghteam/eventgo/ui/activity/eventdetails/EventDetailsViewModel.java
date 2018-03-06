@@ -18,6 +18,7 @@ public class EventDetailsViewModel extends ViewModel {
     private Repository mRepository;
     private String eventId;
 
+    private Event event;
 
     private MutableLiveData<User> owner;
     private MutableLiveData<Boolean> isInterestedByUser;
@@ -38,11 +39,11 @@ public class EventDetailsViewModel extends ViewModel {
             }
         });
 
+
     }
 
     public Event getEvent() {
-        Event event = mRepository.getEventFromLocalDb(eventId);
-
+        event = mRepository.getEventFromLocalDb(eventId);
         mRepository.loadUserById(event.getOwnerId());
         return event;
     }
@@ -52,7 +53,7 @@ public class EventDetailsViewModel extends ViewModel {
     }
 
     public void addEventToInterested() {
-        mRepository.addEventToInterested(eventId, new TaskResultListener<Boolean>() {
+        mRepository.addEventToInterested(event, new TaskResultListener<Boolean>() {
             @Override
             public void onResult(Boolean result) {
                 isInterestedByUser.setValue(result);
@@ -70,7 +71,7 @@ public class EventDetailsViewModel extends ViewModel {
     }
 
     public void addEventToGoing() {
-        mRepository.addEventToGoing(eventId, new TaskResultListener<Boolean>() {
+        mRepository.addEventToGoing(event, new TaskResultListener<Boolean>() {
             @Override
             public void onResult(Boolean result) {
                 isUserGoing.setValue(result);
@@ -87,7 +88,7 @@ public class EventDetailsViewModel extends ViewModel {
         });
     }
 
-    public MutableLiveData<Boolean> getIsUserGoing(){
+    public MutableLiveData<Boolean> getIsUserGoing() {
         return isUserGoing;
     }
 

@@ -11,6 +11,7 @@ import com.ghteam.eventgo.ui.activity.profilesettings.ProfileSettingsViewModel;
 import com.ghteam.eventgo.ui.activity.userslist.PeopleViewModel;
 import com.ghteam.eventgo.ui.fragment.eventdiscussion.EventDiscussionViewModel;
 import com.ghteam.eventgo.ui.fragment.eventslist.EventsListViewModel;
+import com.ghteam.eventgo.ui.fragment.interestedevents.InterestedEventsViewModel;
 import com.ghteam.eventgo.ui.fragment.searchevents.SearchEventsViewModel;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -49,12 +50,16 @@ public class InjectorUtil {
         return new PeopleViewModel.UsersViewModelFactory(provideRepository(context));
     }
 
-    public static CreateEventViewModel.CreateEventViewModelFactory provideCreateEventViewModelFactory(Context context, FirebaseUser firebaseUser){
+    public static CreateEventViewModel.CreateEventViewModelFactory provideCreateEventViewModelFactory(Context context, FirebaseUser firebaseUser) {
         return new CreateEventViewModel.CreateEventViewModelFactory(provideRepository(context), firebaseUser);
     }
 
     public static EventDiscussionViewModel.EventDiscussionViewModelFactory provideEventDiscussionViewModelFactory(Context context, String eventId) {
         return new EventDiscussionViewModel.EventDiscussionViewModelFactory(provideRepository(context), eventId);
+    }
+
+    public static InterestedEventsViewModel.InterestedEventsViewModelFactory provideInterestedEventViewModelFactory(Context context) {
+        return new InterestedEventsViewModel.InterestedEventsViewModelFactory(provideRepository(context));
     }
 
 }
