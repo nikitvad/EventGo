@@ -2,29 +2,20 @@ package com.ghteam.eventgo.ui.activity.eventslist;
 
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.SearchView;
 
 import com.ghteam.eventgo.R;
 import com.ghteam.eventgo.databinding.ActivityEventsBinding;
-import com.ghteam.eventgo.ui.activity.createevent.CreateEventActivity;
 import com.ghteam.eventgo.ui.fragment.eventslist.EventsListFragment;
-import com.ghteam.eventgo.ui.fragment.interestedevents.InterestedEventsFragment;
-import com.ghteam.eventgo.ui.fragment.searchevents.SearchEventsFragment;
 
 public class EventsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, EventsListFragment.OnFragmentInteractionListener {
@@ -54,13 +45,9 @@ public class EventsActivity extends AppCompatActivity
 
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
 
-//        EventsListFragment eventsListFragment = EventsListFragment.newInstance();
+        EventsListFragment eventsListFragment = EventsListFragment.newInstance();
 
-//        SearchEventsFragment searchEventsFragment = SearchEventsFragment.newInstance();
-
-        InterestedEventsFragment interestedEventsFragment = new InterestedEventsFragment();
-
-        fragmentTransaction.replace(R.id.fl_container, interestedEventsFragment).commit();
+        fragmentTransaction.replace(R.id.fl_container, eventsListFragment).commit();
     }
 
     @Override

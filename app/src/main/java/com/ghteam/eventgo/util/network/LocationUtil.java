@@ -94,7 +94,7 @@ public class LocationUtil {
         return Math.sqrt((longitudeCathetus * longitudeCathetus) + (latitudeCathetus * latitudeCathetus));
     }
 
-    public static Long serializeLatLong(double latitude, double longitude) {
+    public static Long serializeLatLongV2(double latitude, double longitude) {
 
         Date date = new Date();
         String strLatRes = "";
@@ -138,7 +138,11 @@ public class LocationUtil {
         return Long.parseLong(strLatRes + strLongRes);
     }
 
-    public static Long serializeLatLongV2(double latitude, double longitude) {
+    public static long serializeLatLong(LatLng latLng){
+        return serializeLatLong(latLng.latitude, latLng.longitude);
+    }
+
+    public static long serializeLatLong(double latitude, double longitude) {
 
         Date date = new Date();
 

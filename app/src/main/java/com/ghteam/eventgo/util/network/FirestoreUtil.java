@@ -16,6 +16,7 @@ public class FirestoreUtil {
     private static final String SRT_MY_EVENTS = "my_events";
     private static final String SRT_INTERESTED_EVENTS = "my_interested_events";
     private static final String SRT_GOING_EVENTS = "my_going_events";
+    private static final String SRT_USER_LOCATION_INFO = "user_location_info";
 
     public static CollectionReference getReferenceToEvents() {
         return FirebaseFirestore.getInstance().collection(STR_EVENTS);
@@ -33,16 +34,20 @@ public class FirestoreUtil {
         return FirebaseFirestore.getInstance().collection(STR_DISCUSSIONS);
     }
 
-    public static CollectionReference getReferenceToUsersEvents(String uid){
+    public static CollectionReference getReferenceToUsersEvents(String uid) {
         return getReferenceToUsers().document(uid).collection(SRT_MY_EVENTS);
     }
 
-    public static CollectionReference getReferenceToUserInterestedEvents(String uid){
+    public static CollectionReference getReferenceToUserInterestedEvents(String uid) {
         return getReferenceToUsers().document(uid).collection(SRT_INTERESTED_EVENTS);
     }
 
-    public static CollectionReference getReferenceToUserGoingEvents(String uid){
+    public static CollectionReference getReferenceToUserGoingEvents(String uid) {
         return getReferenceToUsers().document(uid).collection(SRT_GOING_EVENTS);
+    }
+
+    public static CollectionReference getReferenceToUserLocationInfo() {
+        return FirebaseFirestore.getInstance().collection(SRT_USER_LOCATION_INFO);
     }
 
 }

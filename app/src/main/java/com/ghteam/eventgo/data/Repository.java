@@ -28,6 +28,9 @@ import com.ghteam.eventgo.data.task.UpdateUser;
 import com.ghteam.eventgo.util.PrefsUtil;
 import com.ghteam.eventgo.util.network.FirestoreUtil;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.List;
 
@@ -157,6 +160,23 @@ public class Repository {
 
     public MutableLiveData<TaskStatus> getLoadingUsersInterestedEventsTaskStatus() {
         return loadingUsersInterestedEventsTaskStatus;
+    }
+
+    public void loadEventsByLocation(long topLeftCorner, long bottomRightCorner, EventListener<QuerySnapshot> eventListener) {
+        CollectionReference collectionReference = FirestoreUtil.getReferenceToEvents();
+
+        long firstLimit, secondLimit;
+
+        if (topLeftCorner > bottomRightCorner) {
+            firstLimit = bottomRightCorner;
+            secondLimit = topLeftCorner;
+        } else {
+            firstLimit = topLeftCorner;
+            secondLimit = bottomRightCorner;
+        }
+
+        collectionReference.whereGreaterThan("serializedLocation", firstLimit)
+                .whereLessThan("serializedLocation", secondLimit).addSnapshotListener(eventListener);
     }
 
     public MutableLiveData<List<Event>> getUsersInterestedEvents() {

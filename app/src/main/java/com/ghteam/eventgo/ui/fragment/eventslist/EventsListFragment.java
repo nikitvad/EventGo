@@ -27,6 +27,7 @@ import android.view.WindowManager;
 
 import com.ghteam.eventgo.BR;
 import com.ghteam.eventgo.R;
+import com.ghteam.eventgo.data.Repository;
 import com.ghteam.eventgo.data.entity.Event;
 import com.ghteam.eventgo.data.network.LocationFilter;
 import com.ghteam.eventgo.data.task.TaskStatus;
@@ -36,6 +37,9 @@ import com.ghteam.eventgo.ui.activity.eventdetails.EventDetailsActivity;
 import com.ghteam.eventgo.util.InjectorUtil;
 import com.ghteam.eventgo.util.network.LocationUtil;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -113,16 +117,43 @@ public class EventsListFragment extends Fragment implements LocationListener {
                 super.onScrollStateChanged(recyclerView, newState);
 
                 if (mViewModel.getTaskStatus().getValue() != TaskStatus.IN_PROGRESS) {
-                    if(!recyclerView.canScrollVertically(1)){
-                        mViewModel.loadNextEvents(5);
+                    if (!recyclerView.canScrollVertically(1)) {
+//                        mViewModel.loadNextEvents(5);
                     }
                 }
             }
         });
 
-        mViewModel.loadNextEvents(5);
+//        mViewModel.loadNextEvents(5);
+
+
 //        updateCurrentLocation();
 //        searchEventsByCurrentLocation(10);
+
+        Repository repository = InjectorUtil.provideRepository(getContext());
+
+        LatLng latLng = new LatLng(49.423209, 32.038296);
+
+
+        LatLng[] rectangle = LocationUtil.calculateRectangle(latLng, 500, 500);
+
+        long topLeft = LocationUtil.serializeLatLong(rectangle[0]);
+        long bottomRight = LocationUtil.serializeLatLong(rectangle[1]);
+
+        repository.loadEventsByLocation(topLeft, bottomRight, new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
+                if (documentSnapshots.size() > 0) {
+                    List<Event> events = documentSnapshots.toObjects(Event.class);
+
+                    for (Event item : events) {
+                        Log.d(TAG, "onEvent: " + item.getId() + " " +
+                                LocationUtil.calculateDistance(49.423209, 32.038296,
+                                        item.getLocation().getLatitude(), item.getLocation().getLongitude()));
+                    }
+                }
+            }
+        });
 
     }
 
