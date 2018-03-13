@@ -19,6 +19,7 @@ import com.ghteam.eventgo.data.entity.Category;
 import com.ghteam.eventgo.data.task.TaskStatus;
 import com.ghteam.eventgo.databinding.DialogSelectCategoriesBinding;
 import com.ghteam.eventgo.util.InjectorUtil;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,6 +62,7 @@ public class CategoriesDialog extends DialogFragment {
                 inflater, R.layout.dialog_select_categories, container, false);
 
         return dialogBinding.getRoot();
+
     }
 
     @Override

@@ -1,6 +1,5 @@
 package com.ghteam.eventgo.ui.activity.createevent;
 
-import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModel;
@@ -10,7 +9,6 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.ghteam.eventgo.data.Repository;
 import com.ghteam.eventgo.data.entity.Category;
@@ -30,7 +28,7 @@ import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -47,10 +45,12 @@ public class CreateEventViewModel extends ViewModel {
     private MutableLiveData<LatLng> mEventLocation;
     private LiveDataList<String> mImageSources;
     private MutableLiveData<Category> selectedCategory;
-    private Date mDate;
+//    private Date mDate;
+
+    private MutableLiveData<Calendar> eventDate;
+    private MutableLiveData<Calendar> eventTime;
 
     private MutableLiveData<List<Category>> availableCategories;
-
 
     private MutableLiveData<String> postedEventId;
     private MutableLiveData<TaskStatus> postEventTaskStatus;
@@ -72,6 +72,9 @@ public class CreateEventViewModel extends ViewModel {
         mEventLocation = new MutableLiveData<>();
         mImageSources = new LiveDataList<>(new ArrayList<String>());
         selectedCategory = new MutableLiveData<>();
+
+        eventDate = new MutableLiveData<>();
+        eventTime = new MutableLiveData<>();
 
         postedEventId = mRepository.initializePostedEventId();
         postEventTaskStatus = mRepository.getPostEventTaskStatus();
@@ -98,8 +101,12 @@ public class CreateEventViewModel extends ViewModel {
         mEventName = name;
     }
 
-    void setDate(Date date) {
-        mDate = date;
+    public MutableLiveData<Calendar> getEventDate() {
+        return eventDate;
+    }
+
+    public MutableLiveData<Calendar> getEventTime() {
+        return eventTime;
     }
 
     String getEventDescription() {
@@ -114,7 +121,7 @@ public class CreateEventViewModel extends ViewModel {
         return mEventAddress;
     }
 
-    void setEventAddress(String address){
+    void setEventAddress(String address) {
         mEventAddress.setValue(address);
     }
 
@@ -152,13 +159,24 @@ public class CreateEventViewModel extends ViewModel {
         event.setAddress(mEventAddress.getValue());
         event.setCategory(getSelectedCategory().getValue());
 
-
         event.setImages(imageUrlsOnCloudStorage);
 
         event.setOwnerId(mFirebaseUser.getUid());
         event.setOwnerName(PrefsUtil.getUserDisplayName());
         event.setOwnerProfilePicture(PrefsUtil.getUserProfilePicture());
-        event.setDate(mDate);
+
+        Calendar calendarFullDateOfEvent = Calendar.getInstance();
+
+        Calendar calendarDateOfEvent = eventDate.getValue();
+        Calendar calendarTimeOfEvent = eventTime.getValue();
+
+        calendarFullDateOfEvent.set(calendarDateOfEvent.get(Calendar.YEAR),
+                calendarDateOfEvent.get(Calendar.MONTH),
+                calendarDateOfEvent.get(Calendar.DATE),
+                calendarTimeOfEvent.get(Calendar.HOUR_OF_DAY),
+                calendarTimeOfEvent.get(Calendar.MINUTE));
+
+        event.setDate(calendarFullDateOfEvent.getTime());
 
         if (mEventLocation.getValue() != null) {
             event.setLocation(new Location(mEventLocation.getValue().latitude,

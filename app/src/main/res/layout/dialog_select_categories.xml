@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:gravity="center"
-            android:text="@string/select_images"
+            android:text="@string/select_category"
             android:textSize="20sp" />
 
         <RelativeLayout
@@ -47,16 +47,16 @@
 
             <Button
                 android:id="@+id/bt_cancel"
-                android:layout_width="0dp"
                 style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="0dp"
                 android:layout_height="?attr/actionBarSize"
                 android:layout_weight="1"
                 android:text="@string/cancel" />
 
             <Button
                 android:id="@+id/bt_apply"
-                android:layout_width="0dp"
                 style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="0dp"
                 android:layout_height="?attr/actionBarSize"
                 android:layout_weight="1"
                 android:text="@string/apply" />

@@ -1,5 +1,7 @@
 package com.ghteam.eventgo.ui.activity.createevent;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
@@ -10,21 +12,23 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BaseTransientBottomBar;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.transition.TransitionManager;
 import android.util.Log;
 import android.view.View;
+import android.widget.DatePicker;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.ghteam.eventgo.R;
 import com.ghteam.eventgo.data.entity.Category;
 import com.ghteam.eventgo.data.task.TaskStatus;
 import com.ghteam.eventgo.databinding.ActivityCreateEventBinding;
-import com.ghteam.eventgo.ui.dialog.datetimepicker.DateAndTimePicker;
-import com.ghteam.eventgo.ui.dialog.selectcategories.CategoriesRecyclerAdapter;
+import com.ghteam.eventgo.ui.dialog.datepickerdialog.DatePickerFragment;
+import com.ghteam.eventgo.ui.dialog.selectcategories.CategoriesDialog;
+import com.ghteam.eventgo.ui.dialog.timepickerdialog.TimePickerFragment;
 import com.ghteam.eventgo.util.CameraUtil;
 import com.ghteam.eventgo.util.CustomTextWatcher;
 import com.ghteam.eventgo.util.InjectorUtil;
@@ -34,9 +38,11 @@ import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.firebase.auth.FirebaseAuth;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -45,10 +51,13 @@ public class CreateEventActivity extends AppCompatActivity {
 
     private ActivityCreateEventBinding activityBinding;
     private CameraUtil mCameraUtil;
-    private ImageRecyclerAdapter imageAdapter;
-    private CategoriesRecyclerAdapter categoriesRecyclerAdapter;
 
-    private DateAndTimePicker dateAndTimePicker;
+    private Snackbar snackbarUploadingImage;
+
+    private DatePickerFragment datePickerFragment;
+    private TimePickerFragment timePickerFragment;
+
+    private CategoriesDialog categoriesDialog;
 
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
@@ -60,6 +69,8 @@ public class CreateEventActivity extends AppCompatActivity {
 
     private static final int REQUEST_GALLERY = 1002;
 
+    private static final int DATE_PICKER_DIALOG_ID = 2000;
+
     private static final String TAG = CreateEventActivity.class.getSimpleName();
 
     @Override
@@ -68,36 +79,59 @@ public class CreateEventActivity extends AppCompatActivity {
 
         activityBinding = DataBindingUtil.setContentView(this, R.layout.activity_create_event);
 
+        setSupportActionBar(activityBinding.toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+
+        snackbarUploadingImage = Snackbar.make(activityBinding.getRoot(), "Uploading image...", BaseTransientBottomBar.LENGTH_INDEFINITE);
+
         viewModel = ViewModelProviders.of(this, InjectorUtil.provideCreateEventViewModelFactory(
                 this, mAuth.getCurrentUser())).get(CreateEventViewModel.class);
+
+        datePickerFragment = new DatePickerFragment();
+        datePickerFragment.setDateSetListener(new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(year, month, dayOfMonth);
+                viewModel.getEventDate().setValue(calendar);
+            }
+        });
+
+        timePickerFragment = new TimePickerFragment();
+        timePickerFragment.setTimeSetListener(new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(0, 0, 0, hourOfDay, minute);
+                viewModel.getEventTime().setValue(calendar);
+            }
+        });
+
+        categoriesDialog = new CategoriesDialog();
+        categoriesDialog.setSelectionType(CategoriesDialog.SINGLE_SELECT);
+        categoriesDialog.setOnConfirmListener(new CategoriesDialog.OnConfirmChoiceListener() {
+            @Override
+            public void onConfirm(List<Category> categories) {
+                viewModel.getSelectedCategory().setValue(categories.get(0));
+            }
+        });
 
         mAuth = FirebaseAuth.getInstance();
 
         bindClickListeners();
         bindTextChangedListeners();
 
-        dateAndTimePicker = getDateAndTimePicker();
 
         mCameraUtil = new CameraUtil(this);
         mCameraUtil.setRequestImageCapture(REQUEST_CAMERA);
 
-        imageAdapter = new ImageRecyclerAdapter();
-        imageAdapter.setAddItemClickListener(new ImageRecyclerAdapter.OnAddItemClickListener() {
-            @Override
-            public void onClick() {
-                selectImage();
-            }
-        });
+//        activityBinding.rvPhotos.setAdapter(imageAdapter);
+//        activityBinding.rvPhotos.setLayoutManager(
+//                new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.HORIZONTAL));
 
-        categoriesRecyclerAdapter = makeCategoriesRecyclerAdapter();
-        categoriesRecyclerAdapter.setSelectionType(CategoriesRecyclerAdapter.SINGLE);
-
-        activityBinding.rvPhotos.setAdapter(imageAdapter);
-        activityBinding.rvPhotos.setLayoutManager(
-                new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.HORIZONTAL));
-
-        activityBinding.rvCategories.setAdapter(categoriesRecyclerAdapter);
-        activityBinding.rvCategories.setLayoutManager(new LinearLayoutManager(this));
+//        activityBinding.rvCategories.setAdapter(categoriesRecyclerAdapter);
+//        activityBinding.rvCategories.setLayoutManager(new LinearLayoutManager(this));
         registerViewModelObservers();
     }
 
@@ -143,28 +177,6 @@ public class CreateEventActivity extends AppCompatActivity {
 
     }
 
-    private CategoriesRecyclerAdapter makeCategoriesRecyclerAdapter() {
-
-        final CategoriesRecyclerAdapter result = new CategoriesRecyclerAdapter();
-        result.setSelectionType(CategoriesRecyclerAdapter.SINGLE);
-        result.setSelectItemListener(new CategoriesRecyclerAdapter.OnSelectItemListener() {
-            @Override
-            public void onSelected(Category category) {
-                viewModel.getSelectedCategory().setValue(category);
-                activityBinding.tvSelectedCategory.setText(getString(R.string.category) + ": " + category.getName());
-
-            }
-
-            @Override
-            public void onUnselected(Category category) {
-                viewModel.getSelectedCategory().setValue(null);
-                activityBinding.tvSelectedCategory.setText(R.string.category);
-            }
-        });
-
-        return result;
-    }
-
     private void bindTextChangedListeners() {
 
         activityBinding.etEventName.addTextChangedListener(new CustomTextWatcher() {
@@ -181,17 +193,11 @@ public class CreateEventActivity extends AppCompatActivity {
             }
         });
 
-        activityBinding.etEventAddress.addTextChangedListener(new CustomTextWatcher() {
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                viewModel.setEventAddress(s.toString());
-            }
-        });
     }
 
     private void bindClickListeners() {
 
-        activityBinding.btSetAddressOnMap.setOnClickListener(new View.OnClickListener() {
+        activityBinding.tvLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
@@ -203,56 +209,45 @@ public class CreateEventActivity extends AppCompatActivity {
             }
         });
 
-        activityBinding.tvEventDate.setOnClickListener(new View.OnClickListener() {
+        activityBinding.fabAddImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dateAndTimePicker.show(getFragmentManager(), TAG);
+                selectImage();
             }
         });
 
-        activityBinding.btCreateEvent.setOnClickListener(new View.OnClickListener() {
+        activityBinding.tvStartDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (validateFrom()) {
-                    viewModel.postEvent();
-                }
+                datePickerFragment.show(getSupportFragmentManager(), "TAG");
             }
         });
 
-        activityBinding.ivShowCategories.setOnClickListener(new View.OnClickListener() {
+        activityBinding.tvStartTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int visibility = activityBinding.rvCategories.getVisibility();
-
-                if (visibility != View.GONE) {
-//                    TransitionManager.beginDelayedTransition(activityBinding.selectCategory);
-                    activityBinding.rvCategories.setVisibility(View.GONE);
-
-                } else {
-                    TransitionManager.beginDelayedTransition(activityBinding.selectCategory);
-                    activityBinding.rvCategories.setVisibility(View.VISIBLE);
-                }
+                timePickerFragment.show(getSupportFragmentManager(), "TAG");
             }
         });
+
+        activityBinding.tvSelectedCategory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                categoriesDialog.show(getSupportFragmentManager(), "TAG");
+            }
+        });
+
+//        activityBinding.btCreateEvent.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (validateFrom()) {
+//                    viewModel.postEvent();
+//                }
+//            }
+//        });
+
     }
 
-    private DateAndTimePicker getDateAndTimePicker() {
-
-        DateAndTimePicker dateAndTimePicker = new DateAndTimePicker();
-        dateAndTimePicker.setOnOkClickListener(new DateAndTimePicker.OnOkClickListener() {
-            @Override
-            public void onOkClick(Date date) {
-
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM dd EEEE hh:mm", Locale.ENGLISH);
-                Log.d(TAG, "onOkClick: " + simpleDateFormat.format(date));
-                activityBinding.tvEventDate.setText(simpleDateFormat.format(date));
-                viewModel.setDate(date);
-
-            }
-        });
-
-        return dateAndTimePicker;
-    }
 
     private boolean validateFrom() {
         boolean result = true;
@@ -263,7 +258,7 @@ public class CreateEventActivity extends AppCompatActivity {
         }
 
         if (viewModel.getEventDescription() == null || viewModel.getEventDescription().length() == 0) {
-            activityBinding.etEventDescription.setError(getString(R.string.enter_description_of_event));
+//            activityBinding.etEventDescription.setError(getString(R.string.enter_description_of_event));
             result = false;
         }
         return result;
@@ -276,25 +271,55 @@ public class CreateEventActivity extends AppCompatActivity {
             public void onChanged(@Nullable String s) {
                 Log.d(TAG, "onStatusChanged: " + s);
                 if (s != null) {
-                    imageAdapter.addItem(s);
+
+                    Picasso.with(CreateEventActivity.this).load(s).resize(1920, 1080).centerCrop().into(activityBinding.ivEventImage);
                 }
             }
         });
+
+        //TODO: display snackbarUploadingImage better way
 
         viewModel.getUploadingImages().addInsertObserver(new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
                 Log.d(TAG, "onStatusChanged: " + s + " " + viewModel.getUploadingImages().get(s));
-                imageAdapter.setIsLoadingForItem(viewModel.getUploadingImages().get(s), s);
+
+                if (viewModel.getUploadingImages().get(s)) {
+                    snackbarUploadingImage.show();
+                } else {
+                    snackbarUploadingImage.dismiss();
+                }
             }
         });
 
-//        viewModel.getEventAddress().observeForever(new Observer<String>() {
-//            @Override
-//            public void onChanged(@Nullable String s) {
-//                activityBinding.etEventAddress.setText(s);
-//            }
-//        });
+        viewModel.getEventAddress().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(@Nullable String s) {
+                activityBinding.tvLocation.setText(s);
+            }
+        });
+
+        viewModel.getEventDate().observe(this, new Observer<Calendar>() {
+            @Override
+            public void onChanged(@Nullable Calendar calendar) {
+                Date date = calendar.getTime();
+
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE, MMM d, yyyy", Locale.getDefault());
+                activityBinding.tvStartDate.setText(simpleDateFormat.format(date));
+
+            }
+        });
+
+        viewModel.getEventTime().observe(this, new Observer<Calendar>() {
+            @Override
+            public void onChanged(@Nullable Calendar calendar) {
+                Date date = calendar.getTime();
+
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("h:mm a", Locale.getDefault());
+                activityBinding.tvStartTime.setText(simpleDateFormat.format(date));
+
+            }
+        });
 
         viewModel.getPostEventTaskStatus().observe(this, new Observer<TaskStatus>() {
             @Override
@@ -307,11 +332,10 @@ public class CreateEventActivity extends AppCompatActivity {
             }
         });
 
-        viewModel.getAvailableCategories().observe(this, new Observer<List<Category>>() {
+        viewModel.getSelectedCategory().observe(this, new Observer<Category>() {
             @Override
-            public void onChanged(@Nullable List<Category> categories) {
-                Log.d(TAG, "onChanged: " + categories.toString());
-                categoriesRecyclerAdapter.setItems(categories);
+            public void onChanged(@Nullable Category category) {
+                activityBinding.tvSelectedCategory.setText(getString(R.string.category) + ": " + category.getName());
             }
         });
     }
@@ -324,6 +348,7 @@ public class CreateEventActivity extends AppCompatActivity {
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {
+                //TODO: check permissions better way
                 boolean isPermissionGranted = PermissionUtil.checkPermission(CreateEventActivity.this);
                 if (items[item].equals("Take Photo")) {
                     if (isPermissionGranted)

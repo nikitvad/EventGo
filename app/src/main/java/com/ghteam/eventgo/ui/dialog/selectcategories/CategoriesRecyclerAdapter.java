@@ -27,6 +27,7 @@ public class CategoriesRecyclerAdapter extends RecyclerView.Adapter<CategoriesRe
     //private boolean isEnabledToSelectItems;
     private OnSelectItemListener mSelectItemListener;
 
+
     private int selectionType = 0;
 
     public static final int NONE = 0;
@@ -98,9 +99,9 @@ public class CategoriesRecyclerAdapter extends RecyclerView.Adapter<CategoriesRe
             });
 
             if (mSelectedItems.contains(pos)) {
-                itemView.setBackgroundColor(0x22000000);
+                itemView.setBackgroundColor(0xFF1C77FF);
             } else {
-                itemView.setBackgroundColor(0x222);
+                itemView.setBackgroundColor(0x22000000);
             }
 
         }

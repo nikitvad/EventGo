@@ -2,7 +2,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/category_item"
     android:layout_gravity="center_horizontal"
-    android:layout_margin="5dp"
     tools:context="com.ghteam.eventgo.ui.dialog.selectcategories.CategoriesDialog">
 
     <data>
@@ -13,32 +12,38 @@
     </data>
 
     <LinearLayout
-
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minWidth="150dp"
-        android:orientation="horizontal">
+        android:orientation="vertical"
+        android:paddingLeft="30dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:paddingRight="30dp">
+
+        <LinearLayout
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/iv_category_icon"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="start|center_vertical"
+                android:layout_marginStart="5dp"
+                android:src="@{categories.icon}"
+                tools:ignore="ContentDescription" />
 
 
-        <ImageView
-            android:id="@+id/iv_category_icon"
-            android:layout_marginStart="5dp"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="start|center_horizontal"
-            android:src="@{categories.icon}"
-            tools:ignore="ContentDescription" />
-
-
-        <TextView
-            android:id="@+id/tv_category_name"
-            android:layout_margin="10dp"
-            android:textSize="18sp"
-            android:layout_width="match_parent"
-            android:layout_gravity="center_vertical"
-            android:layout_height="wrap_content"
-            android:text="@{categories.name}" />
-
+            <TextView
+                android:id="@+id/tv_category_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="10dp"
+                android:text="@{categories.name}"
+                android:textSize="18sp" />
+        </LinearLayout>
     </LinearLayout>
 
 </layout>
