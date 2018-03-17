@@ -5,8 +5,9 @@ import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.NonNull;
 
-import com.ghteam.eventgo.data.entity.User;
+import com.ghteam.eventgo.data.entity.AppLocation;
 import com.ghteam.eventgo.data.Repository;
+import com.ghteam.eventgo.data.entity.UserLocationInfo;
 import com.ghteam.eventgo.data.task.TaskStatus;
 
 import java.util.List;
@@ -17,7 +18,7 @@ import java.util.List;
 
 public class PeopleViewModel extends ViewModel {
     private Repository mRepository;
-    private MutableLiveData<List<User>> mUsers;
+    private MutableLiveData<List<UserLocationInfo>> mUsers;
 
     private MutableLiveData<TaskStatus> taskStatus;
 
@@ -30,11 +31,11 @@ public class PeopleViewModel extends ViewModel {
 
     }
 
-    public void startLoading(){
-        mRepository.loadUsers(20);
+    public void startLoading(AppLocation currentAppLocation, int height, int width){
+        mRepository.searchUsersByLocation(currentAppLocation, height, width);
     }
 
-    public MutableLiveData<List<User>> getUsers() {
+    public MutableLiveData<List<UserLocationInfo>> getUsers() {
         return mUsers;
     }
 

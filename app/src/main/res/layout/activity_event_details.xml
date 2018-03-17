@@ -17,8 +17,8 @@
             type="com.ghteam.eventgo.data.entity.Category" />
 
         <variable
-            name="location"
-            type="com.ghteam.eventgo.data.entity.Location" />
+            name="appLocation"
+            type="com.ghteam.eventgo.data.entity.AppLocation" />
 
         <import
             alias="v"

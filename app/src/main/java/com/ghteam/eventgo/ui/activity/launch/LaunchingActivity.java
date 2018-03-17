@@ -1,37 +1,29 @@
 package com.ghteam.eventgo.ui.activity.launch;
 
 import android.app.Activity;
-import android.app.job.JobInfo;
-import android.app.job.JobScheduler;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.preference.PreferenceActivity;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 
 import com.ghteam.eventgo.R;
 import com.ghteam.eventgo.data.entity.DiscussionMessage;
 import com.ghteam.eventgo.databinding.ActivityLaunchingBinding;
-import com.ghteam.eventgo.services.UserLocationInfoJobService;
 import com.ghteam.eventgo.ui.activity.createevent.CreateEventActivity;
 import com.ghteam.eventgo.ui.activity.eventdetails.EventDetailsActivity;
 import com.ghteam.eventgo.ui.activity.eventslist.EventsActivity;
 import com.ghteam.eventgo.ui.activity.login.LoginActivity;
 import com.ghteam.eventgo.ui.activity.profilesettings.ProfileSettingsActivity;
-import com.ghteam.eventgo.ui.activity.userslist.PeopleActivity;
-import com.ghteam.eventgo.ui.preferences.SettingsActivity;
+import com.ghteam.eventgo.ui.activity.userslist.InviteUsersActivity;
 import com.ghteam.eventgo.util.PrefsUtil;
 import com.ghteam.eventgo.util.network.FirestoreUtil;
 import com.ghteam.eventgo.util.network.PushDemoEvents;
+import com.ghteam.eventgo.util.network.PushDemoUsersLocationInfo;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 
 import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
 public class LaunchingActivity extends AppCompatActivity {
 
@@ -94,7 +86,7 @@ public class LaunchingActivity extends AppCompatActivity {
         activityBinding.btPeople.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(PeopleActivity.class);
+                startActivity(InviteUsersActivity.class);
             }
         });
 
@@ -149,14 +141,13 @@ public class LaunchingActivity extends AppCompatActivity {
         activityBinding.btDemoEventDiscussion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                scheduleJob(LaunchingActivity.this);
+                PushDemoUsersLocationInfo pushDemoUsersLocationInfo = new PushDemoUsersLocationInfo();
+                pushDemoUsersLocationInfo.push();
             }
         });
     }
 
-    private void scheduleJob(Context context) {
-        startActivity(SettingsActivity.class);
-    }
+
 
     private void startActivity(Class<? extends Activity> activity) {
         Intent intent = new Intent( LaunchingActivity.this, activity);

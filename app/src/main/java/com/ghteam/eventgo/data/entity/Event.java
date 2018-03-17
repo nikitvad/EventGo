@@ -102,7 +102,7 @@ public class Event extends RealmObject {
     @Ignore
     private List<String> images;
 
-    private Location location;
+    private AppLocation appLocation;
 
     public Event() {
     }
@@ -131,12 +131,12 @@ public class Event extends RealmObject {
         this.id = id;
     }
 
-    public Location getLocation() {
-        return location;
+    public AppLocation getAppLocation() {
+        return appLocation;
     }
 
-    public void setLocation(Location location) {
-        this.location = location;
+    public void setAppLocation(AppLocation appLocation) {
+        this.appLocation = appLocation;
     }
 
     public String getName() {
@@ -235,15 +235,15 @@ public class Event extends RealmObject {
                 ", goingCount=" + goingCount +
                 ", realmImages=" + realmImages +
                 ", images=" + images +
-                ", location=" + location +
+                ", appLocation=" + appLocation +
                 '}';
     }
 
     public Map<String, Object> toMap() {
         Map<String, Object> result = new HashMap<>();
 
-        if (location != null) {
-            serializedLocation = LocationUtil.serializeLatLong(location.getLatitude(), location.getLongitude());
+        if (appLocation != null) {
+            serializedLocation = LocationUtil.serializeLatLong(appLocation.getLatitude(), appLocation.getLongitude());
         }
 
         result.put("id", id);
@@ -262,8 +262,8 @@ public class Event extends RealmObject {
         result.put("images", images);
         result.put("serializedLocation", serializedLocation);
 
-        if (location != null) {
-            result.put("location", location.toMap());
+        if (appLocation != null) {
+            result.put("appLocation", appLocation.toMap());
         }
         return result;
     }

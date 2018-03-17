@@ -4,8 +4,8 @@ import android.annotation.SuppressLint;
 import android.location.Location;
 import android.location.LocationManager;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
+import com.ghteam.eventgo.data.entity.AppLocation;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.Date;
@@ -82,6 +82,11 @@ public class LocationUtil {
         return new LatLng[]{topLeft, bottomRight};
     }
 
+    public static LatLng[] calculateRectangle(AppLocation center, double height, double width) {
+        LatLng latLng = new LatLng(center.getLatitude(), center.getLongitude());
+        return calculateRectangle(latLng, height, width);
+    }
+
     public static double calculateDistance(double latitude1, double longitude1,
                                            double latitude2, double longitude2) {
 
@@ -138,7 +143,7 @@ public class LocationUtil {
         return Long.parseLong(strLatRes + strLongRes);
     }
 
-    public static long serializeLatLong(LatLng latLng){
+    public static long serializeLatLong(LatLng latLng) {
         return serializeLatLong(latLng.latitude, latLng.longitude);
     }
 
@@ -174,14 +179,14 @@ public class LocationUtil {
 
         int latResultLength = strLatResult.length();
         if (latResultLength < 7) {
-            for (int i = 0; i < 7 - latResultLength; i++){
+            for (int i = 0; i < 7 - latResultLength; i++) {
                 strLatResult.insert(0, 0);
             }
         }
 
-        if(latitude > 0 ){
+        if (latitude > 0) {
             strLatResult.insert(0, 1);
-        }else{
+        } else {
             strLatResult.insert(0, 0);
         }
 

@@ -82,7 +82,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyC01M4nvT9veni6H1eg3R2oZONgbWkfqZg" />
 
-        <activity android:name=".ui.activity.userslist.PeopleActivity" />
+        <activity android:name=".ui.activity.userslist.InviteUsersActivity" />
         <activity
             android:name=".ui.activity.eventdetails.EventDetailsActivity"
             android:label="Details"

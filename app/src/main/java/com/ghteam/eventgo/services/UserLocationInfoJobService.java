@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
+import com.ghteam.eventgo.data.entity.AppLocation;
 import com.ghteam.eventgo.data.entity.UserLocationInfo;
 import com.ghteam.eventgo.util.PrefsUtil;
 import com.ghteam.eventgo.util.network.FirestoreUtil;
@@ -32,14 +33,14 @@ public class UserLocationInfoJobService extends JobService {
 
             UserLocationInfo userLocationInfo = new UserLocationInfo();
 
-            com.ghteam.eventgo.data.entity.Location userLocation = new com.ghteam.eventgo.data.entity.Location();
+            AppLocation userAppLocation = new AppLocation();
 
-            userLocation.setLatitude(location.getLatitude());
-            userLocation.setLongitude(location.getLongitude());
+            userAppLocation.setLatitude(location.getLatitude());
+            userAppLocation.setLongitude(location.getLongitude());
 
             Log.d("sadfasdfasdf", "onLocationChanged: " + location.toString());
 
-            userLocationInfo.setLocation(userLocation);
+            userLocationInfo.setAppLocation(userAppLocation);
             userLocationInfo.setUserDisplayName(PrefsUtil.getUserDisplayName());
             userLocationInfo.setUserId(PrefsUtil.getUserId());
             userLocationInfo.setDate(new Date());

@@ -21,7 +21,7 @@
     <CheckBoxPreference
         android:defaultValue="false"
         android:key="enable_sending_location_info"
-        android:title="Enable sending location">
+        android:title="Enable sending appLocation">
     </CheckBoxPreference>
 
 </PreferenceScreen>

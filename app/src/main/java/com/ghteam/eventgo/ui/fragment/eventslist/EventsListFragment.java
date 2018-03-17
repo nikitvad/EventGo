@@ -149,7 +149,7 @@ public class EventsListFragment extends Fragment implements LocationListener {
                     for (Event item : events) {
                         Log.d(TAG, "onEvent: " + item.getId() + " " +
                                 LocationUtil.calculateDistance(49.423209, 32.038296,
-                                        item.getLocation().getLatitude(), item.getLocation().getLongitude()));
+                                        item.getAppLocation().getLatitude(), item.getAppLocation().getLongitude()));
                     }
                 }
             }

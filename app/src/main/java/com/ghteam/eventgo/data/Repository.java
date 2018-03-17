@@ -10,10 +10,12 @@ import android.util.Log;
 
 import com.facebook.CallbackManager;
 import com.ghteam.eventgo.AppExecutors;
+import com.ghteam.eventgo.data.entity.AppLocation;
 import com.ghteam.eventgo.data.entity.Category;
 import com.ghteam.eventgo.data.entity.DiscussionMessage;
 import com.ghteam.eventgo.data.entity.Event;
 import com.ghteam.eventgo.data.entity.User;
+import com.ghteam.eventgo.data.entity.UserLocationInfo;
 import com.ghteam.eventgo.data.network.NetworkEventManager;
 import com.ghteam.eventgo.data.task.FirestoreCollectionLoader;
 import com.ghteam.eventgo.data.task.LoadCurrentUser;
@@ -21,6 +23,7 @@ import com.ghteam.eventgo.data.task.LoadUserById;
 import com.ghteam.eventgo.data.task.LogInByEmailAndPassword;
 import com.ghteam.eventgo.data.task.LogInWithFacebook;
 import com.ghteam.eventgo.data.task.PostEvent;
+import com.ghteam.eventgo.data.task.SearchUsersByLocation;
 import com.ghteam.eventgo.data.task.TaskResultListener;
 import com.ghteam.eventgo.data.task.TaskStatus;
 import com.ghteam.eventgo.data.task.TaskStatusListener;
@@ -286,31 +289,27 @@ public class Repository {
      *  Loading users
      */
 
-    private MutableLiveData<List<User>> users;
+    private MutableLiveData<List<UserLocationInfo>> users;
     private MutableLiveData<TaskStatus> loadUsersTaskStatus;
 
-    public void loadUsers(Integer limit) {
-        new FirestoreCollectionLoader<User>(FirestoreUtil.getReferenceToUsers(), User.class)
-                .addTaskResultListener(new TaskResultListener<List<User>>() {
-                    @Nullable
-                    @Override
-                    public void onResult(List<User> result) {
-                        users.setValue(result);
-                        Log.d(TAG, "onResult: " + result);
-                    }
-                })
+    public void searchUsersByLocation(AppLocation currentAppLocation, int rectangleHeight, int rectangleWidth) {
+        new SearchUsersByLocation(currentAppLocation, rectangleHeight, rectangleWidth)
                 .addTaskStatusListener(new TaskStatusListener() {
                     @Override
                     public void onStatusChanged(TaskStatus status) {
                         loadUsersTaskStatus.setValue(status);
-                        Log.d(TAG, "onStatusChanged: " + status);
                     }
                 })
-                .load(limit);
+                .addTaskResultListener(new TaskResultListener<List<UserLocationInfo>>() {
+                    @Override
+                    public void onResult(List<UserLocationInfo> result) {
+                        users.setValue(result);
+                    }
+                }).execute();
     }
 
 
-    public MutableLiveData<List<User>> initializeUsers() {
+    public MutableLiveData<List<UserLocationInfo>> initializeUsers() {
         return users;
     }
 

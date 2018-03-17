@@ -10,17 +10,17 @@ import io.realm.RealmObject;
  */
 
 
-public class Location extends RealmObject {
+public class AppLocation extends RealmObject {
 
     private double latitude;
     private double longitude;
 
-    public Location(double latitude, double longitude) {
+    public AppLocation(double latitude, double longitude) {
         this.latitude = latitude;
         this.longitude = longitude;
     }
 
-    public Location() {
+    public AppLocation() {
 
     }
 
@@ -38,7 +38,7 @@ public class Location extends RealmObject {
 
     @Override
     public String toString() {
-        return "Location{" +
+        return "AppLocation{" +
                 "latitude=" + latitude +
                 ", longitude=" + longitude +
                 '}';

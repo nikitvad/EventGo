@@ -13,8 +13,9 @@ import java.util.Map;
 public class UserLocationInfo {
     private String userId;
     private String userDisplayName;
+    private String profileImageUrl;
 
-    private Location location;
+    private AppLocation appLocation;
 
     private Date date;
 
@@ -44,12 +45,12 @@ public class UserLocationInfo {
         this.userDisplayName = userDisplayName;
     }
 
-    public Location getLocation() {
-        return location;
+    public AppLocation getAppLocation() {
+        return appLocation;
     }
 
-    public void setLocation(Location location) {
-        this.location = location;
+    public void setAppLocation(AppLocation appLocation) {
+        this.appLocation = appLocation;
     }
 
     public long getSerializedLocation() {
@@ -65,20 +66,58 @@ public class UserLocationInfo {
         return "UserLocationInfo{" +
                 "userId='" + userId + '\'' +
                 ", userDisplayName='" + userDisplayName + '\'' +
-                ", location=" + location +
+                ", appLocation=" + appLocation +
                 ", serializedLocation=" + serializedLocation +
                 '}';
+    }
+
+    public String getProfileImageUrl() {
+        return profileImageUrl;
+    }
+
+    public void setProfileImageUrl(String profileImageUrl) {
+        this.profileImageUrl = profileImageUrl;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        UserLocationInfo that = (UserLocationInfo) o;
+
+        if (serializedLocation != that.serializedLocation) return false;
+        if (userId != null ? !userId.equals(that.userId) : that.userId != null) return false;
+        if (userDisplayName != null ? !userDisplayName.equals(that.userDisplayName) : that.userDisplayName != null)
+            return false;
+        if (profileImageUrl != null ? !profileImageUrl.equals(that.profileImageUrl) : that.profileImageUrl != null)
+            return false;
+        if (appLocation != null ? !appLocation.equals(that.appLocation) : that.appLocation != null)
+            return false;
+        return date != null ? date.equals(that.date) : that.date == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = userId != null ? userId.hashCode() : 0;
+        result = 31 * result + (userDisplayName != null ? userDisplayName.hashCode() : 0);
+        result = 31 * result + (profileImageUrl != null ? profileImageUrl.hashCode() : 0);
+        result = 31 * result + (appLocation != null ? appLocation.hashCode() : 0);
+        result = 31 * result + (date != null ? date.hashCode() : 0);
+        result = 31 * result + (int) (serializedLocation ^ (serializedLocation >>> 32));
+        return result;
     }
 
     public Map<String, Object> toMap() {
         Map<String, Object> result = new HashMap<>();
 
         result.put("userId", userId);
+        result.put("profileImageUrl", profileImageUrl);
         result.put("userDisplayName", userDisplayName);
         result.put("date", date);
-        result.put("location", location.toMap());
+        result.put("appLocation", appLocation.toMap());
 
-        serializedLocation = LocationUtil.serializeLatLong(location.getLatitude(), location.getLongitude());
+        serializedLocation = LocationUtil.serializeLatLong(appLocation.getLatitude(), appLocation.getLongitude());
 
         result.put("serializedLocation", serializedLocation);
 
